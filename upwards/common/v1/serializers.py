@@ -51,3 +51,10 @@ class ProfessionTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProfessionType
         fields = ('id', 'type_name', 'is_active')
+
+
+class LoanPurposeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.LoanPurpose
+        fields = ('id', 'name', 'is_active')

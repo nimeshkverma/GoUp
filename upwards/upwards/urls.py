@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^', include('activity.urls')),
     url(r'^', include('common.urls')),
     url(r'^', include('customer.urls')),
+    url(r'^', include('loan_product.urls')),
     url(r'^', include('messenger.urls')),
     url(r'^', include('social.urls')),
     # url(r'^', include('eligibility.urls')),

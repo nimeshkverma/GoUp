@@ -11,6 +11,7 @@ ACTOR_CHOICES = (
 
 
 SIGN_UP = 'sign_up'
+LOAN_PRODUCT_SUBMIT = 'loan_product_submit'
 PAN_SUBMIT = 'pan_submit'
 PROFESSIONAL_SUBMIT = 'professional_submit'
 FINANCE_SUBMIT_EMAIL_UNVERIFIED = 'finance_submit_email_unverified'
@@ -20,6 +21,7 @@ ELIGIBILITY_SUBMIT = 'eligibility_submit'
 ELIGIBILITY_RESULT_PROCCESSING = 'eligibility_result_proccessing'
 ELIGIBILITY_RESULT_APPROVED = 'eligibility_result_approved'
 ELIGIBILITY_RESULT_REJECTED = 'eligibility_result_rejected'
+ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT = 'eligibility_rejected_loan_product_submit'
 AADHAAR_SUBMIT = 'aadhaar_submit'
 AADHAAR_DETAIL_SUBMIT = 'aadhaar_detail_submit'
 PERSONAL_CONTACT_SUBMIT = 'personal_contact_submit'
@@ -38,12 +40,15 @@ LOAN_APPLICATION_ERRORED = 'loan_application_errored'
 
 CUSTOMER_ACTIVITY_TYPE_CHOICES = (
     (SIGN_UP, 'sign_up'),
+    (LOAN_PRODUCT_SUBMIT, 'loan_product_submit'),
     (PAN_SUBMIT, 'pan_submit'),
     (PROFESSIONAL_SUBMIT, 'professional_submit'),
     (FINANCE_SUBMIT_EMAIL_UNVERIFIED, 'finance_submit_email_unverified'),
     (EDUCATION_SUBMIT, 'education_submit'),
     (FINANCE_SUBMIT_EMAIL_VERIFIED, 'finance_submit_email_verified'),
     (ELIGIBILITY_SUBMIT, 'eligibility_submit'),
+    (ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT,
+     'eligibility_rejected_loan_product_submit'),
     (AADHAAR_SUBMIT, 'aadhaar_submit'),
     (AADHAAR_DETAIL_SUBMIT, 'aadhaar_detail_submit'),
     (PERSONAL_CONTACT_SUBMIT, 'personal_contact_submit'),
@@ -70,6 +75,7 @@ ACTIVITY_TYPE_CHOICES = CUSTOMER_ACTIVITY_TYPE_CHOICES and UPWARDS_TYPE_CHOICES
 
 UNKNOWN_STATE = 'unknown'
 SIGN_UP_STATE = 'sign_up'
+LOAN_PRODUCT_SUBMIT_STATE = 'loan_product_submit'
 PAN_SUBMIT_STATE = 'pan_submit'
 PROFESSIONAL_SUBMIT_STATE = 'professional_submit'
 FINANCE_SUBMIT_EMAIL_UNVERIFIED_STATE = 'finance_submit_email_unverified'
@@ -78,6 +84,7 @@ FINANCE_SUBMIT_EMAIL_VERIFIED_STATE = 'finance_submit_email_verified'
 ELIGIBILITY_SUBMIT_STATE = 'eligibility_submit'
 ELIGIBILITY_RESULT_APPROVED_STATE = 'eligibility_result_approved'
 ELIGIBILITY_RESULT_REJECTED_STATE = 'eligibility_result_rejected'
+ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT_STATE = 'eligibility_rejected_loan_product_submit'
 AADHAAR_SUBMIT_STATE = 'aadhaar_submit'
 AADHAAR_DETAIL_SUBMIT_STATE = 'aadhaar_detail_submit'
 PERSONAL_CONTACT_SUBMIT_STATE = 'personal_contact_submit'
@@ -95,6 +102,7 @@ LOAN_APPLICATION_ERRORED_STATE = 'loan_application_errored'
 CUSTOMER_STATE_CHOICES = (
     (UNKNOWN_STATE, 'unknown'),
     (SIGN_UP_STATE, 'sign_up'),
+    (LOAN_PRODUCT_SUBMIT_STATE, 'loan_product_submit'),
     (PAN_SUBMIT_STATE, 'pan_submit'),
     (PROFESSIONAL_SUBMIT_STATE, 'professional_submit'),
     (FINANCE_SUBMIT_EMAIL_UNVERIFIED_STATE, 'finance_submit_email_unverified'),
@@ -103,6 +111,8 @@ CUSTOMER_STATE_CHOICES = (
     (ELIGIBILITY_SUBMIT_STATE, 'eligibility_submit'),
     (ELIGIBILITY_RESULT_APPROVED_STATE, 'eligibility_result_approved'),
     (ELIGIBILITY_RESULT_REJECTED_STATE, 'eligibility_result_rejected'),
+    (ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT_STATE,
+     'eligibility_rejected_loan_product_submit'),
     (AADHAAR_SUBMIT_STATE, 'aadhaar_submit'),
     (AADHAAR_DETAIL_SUBMIT_STATE, 'aadhaar_detail_submit'),
     (PERSONAL_CONTACT_SUBMIT_STATE, 'personal_contact_submit'),
@@ -125,10 +135,14 @@ CUSTOMER_STATE_TREE = {
     },
     SIGN_UP_STATE: {
         'from': [UNKNOWN_STATE],
+        'to': [LOAN_PRODUCT_SUBMIT_STATE]
+    },
+    LOAN_PRODUCT_SUBMIT_STATE: {
+        'from': [SIGN_UP_STATE],
         'to': [PAN_SUBMIT_STATE]
     },
     PAN_SUBMIT_STATE: {
-        'from': [SIGN_UP_STATE],
+        'from': [LOAN_PRODUCT_SUBMIT_STATE],
         'to': [PROFESSIONAL_SUBMIT_STATE]
     },
     PROFESSIONAL_SUBMIT_STATE: {
@@ -149,15 +163,19 @@ CUSTOMER_STATE_TREE = {
     },
     ELIGIBILITY_SUBMIT_STATE: {
         'from': [FINANCE_SUBMIT_EMAIL_VERIFIED_STATE],
-        'to': [ELIGIBILITY_RESULT_APPROVED, ELIGIBILITY_RESULT_REJECTED]
+        'to': [ELIGIBILITY_RESULT_APPROVED_STATE, ELIGIBILITY_RESULT_REJECTED_STATE]
     },
     ELIGIBILITY_RESULT_APPROVED_STATE: {
-        'from': [ELIGIBILITY_SUBMIT_STATE],
+        'from': [ELIGIBILITY_SUBMIT_STATE, ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT_STATE],
         'to': [AADHAAR_SUBMIT_STATE]
     },
     ELIGIBILITY_RESULT_REJECTED_STATE: {
         'from': [ELIGIBILITY_SUBMIT_STATE],
-        'to': [ELIGIBILITY_SUBMIT_STATE]
+        'to': [ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT_STATE]
+    },
+    ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT_STATE: {
+        'from': [ELIGIBILITY_RESULT_REJECTED_STATE],
+        'to': [ELIGIBILITY_RESULT_APPROVED_STATE]
     },
     AADHAAR_SUBMIT_STATE: {
         'from': [ELIGIBILITY_RESULT_APPROVED_STATE],

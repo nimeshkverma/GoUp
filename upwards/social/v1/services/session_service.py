@@ -74,7 +74,6 @@ def create_new_session(session_input, social_profile):
 
 def update_session(session_pk, session_data):
     session_data['social_data'] = "abc"
-    print session_data
     Login.objects.filter(pk=session_pk).update(**session_data)
     session_obj = Login.objects.get(pk=session_pk)
     return session_success_data(session_obj)
