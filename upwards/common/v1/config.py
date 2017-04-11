@@ -1,6 +1,7 @@
 from django.conf import settings
 from common.models import OrganisationType, SalaryPaymentMode, ProfessionType
 from . serializers import SalaryPaymentModeSerializer, OrganisationTypeSerializer, ProfessionTypeSerializer
+from customer.v1.service.homepage_config import LOAN_CONSTANTS
 # from participant.models import BorrowerType
 # from participant.v1.serializers import BorrowerTypeSerializer
 # from loan.models import LoanType
@@ -19,37 +20,6 @@ class Config(object):
     email_type = {
         'personal': 'customer_alternate_email',
         'professional': 'customer_profession_email'
-    }
-
-    loan_constants = {
-        'loan_amount_maximum': 100000,
-        'loan_amount_minimum': 10000,
-        'loan_tenure_maximum': 24,
-        'loan_tenure_minimum': 3,
-        'loan_increment_value': 20000,
-        'number_of_increments': 5,
-        'loan_tenure': {
-            '0-10000': {
-                'maximum_tenure': 6,
-                'minimum_tenure': 3
-            },
-            '10000-20000': {
-                'maximum_tenure': 6,
-                'minimum_tenure': 3
-            },
-            '20000-30000': {
-                'maximum_tenure': 6,
-                'minimum_tenure': 3
-            },
-            '30000-40000': {
-                'maximum_tenure': 6,
-                'minimum_tenure': 3
-            },
-            '50000-100000': {
-                'maximum_tenure': 24,
-                'minimum_tenure': 3,
-            },
-        }
     }
 
     def __init__(self):
@@ -102,7 +72,7 @@ class Config(object):
             'organisation_type': self.__get_organisation_type(),
             'profession_type': self.__get_profession_type(),
             'customer_default_profile_pic': self.__get_customer_default_profile_pic(),
-            'loan_constants': self.loan_constants,
+            'loan_constants': LOAN_CONSTANTS,
             # 'borrower_type': self.__get_borrower_type(),
             # 'loan_type': self.__get_loan_type(),
         }
