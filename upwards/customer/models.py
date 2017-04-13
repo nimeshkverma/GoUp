@@ -6,7 +6,7 @@ from django.db.models.signals import post_save
 from common.models import ActiveModel, ActiveObjectManager, mobile_number_regex, pincode_regex
 from messenger.models import EmailVerification, PERSONAL
 from activity.models import register_customer_state
-from activity.model_constants import BANK_DETAIL_SUBMIT
+from activity.model_constants import BANK_DETAIL_SUBMIT_STATE
 
 
 class Customer(ActiveModel):
@@ -75,8 +75,8 @@ class BankDetails(ActiveModel):
     @staticmethod
     def register_bank_submit_customer_state(sender, instance, created, **kwargs):
         if created:
-            register_customer_state(
-                BANK_DETAIL_SUBMIT, instance.customer_id)
+            print 1, register_customer_state(
+                BANK_DETAIL_SUBMIT_STATE, instance.customer_id)
 
     class Meta(object):
         db_table = "customer_bank_details"

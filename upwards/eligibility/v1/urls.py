@@ -19,6 +19,8 @@ urlpatterns = [
     url(r'^customer/vahan/$', views.VahanCreate.as_view(), name='VahanCreate'),
     url(r'^customer/(?P<pk>[0-9]+)/vahan/$',
         views.VahanDetail.as_view(), name='VahanDetail'),
+    url(r'^customer/(?P<pk>[0-9]+)/eligibility_review_submit/$',
+        views.EligibilityReviewSubmit.as_view(), name='EligibilityReviewSubmit'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -2,8 +2,8 @@ from django.conf import settings
 from common.models import OrganisationType, SalaryPaymentMode, ProfessionType
 from . serializers import SalaryPaymentModeSerializer, OrganisationTypeSerializer, ProfessionTypeSerializer
 from customer.v1.service.homepage_config import LOAN_CONSTANTS
-# from participant.models import BorrowerType
-# from participant.v1.serializers import BorrowerTypeSerializer
+from participant.models import BorrowerType
+from participant.v1.serializers import BorrowerTypeSerializer
 # from loan.models import LoanType
 # from loan.v1.serializers import LoanTypeSerializer
 
@@ -52,9 +52,9 @@ class Config(object):
     def __get_customer_default_profile_pic(self):
         return settings.CUSTOMER_DEFAULT_PROFILE_PIC
 
-    # def __get_borrower_type(self):
-    #     borrower_type_objects = BorrowerType.objects.all()
-    #     return BorrowerTypeSerializer(borrower_type_objects, many=True).data
+    def __get_borrower_type(self):
+        borrower_type_objects = BorrowerType.objects.all()
+        return BorrowerTypeSerializer(borrower_type_objects, many=True).data
 
     # def __get_loan_type(self):
     #     loan_type_objects = LoanType.objects.all()
@@ -73,7 +73,7 @@ class Config(object):
             'profession_type': self.__get_profession_type(),
             'customer_default_profile_pic': self.__get_customer_default_profile_pic(),
             'loan_constants': LOAN_CONSTANTS,
-            # 'borrower_type': self.__get_borrower_type(),
+            'borrower_type': self.__get_borrower_type(),
             # 'loan_type': self.__get_loan_type(),
         }
         return config_data

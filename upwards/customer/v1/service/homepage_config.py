@@ -8,6 +8,7 @@ LOAN_CONSTANTS = {
     'loan_tenure_minimum': 3,
     'loan_increment_value': 20000,
     'number_of_increments': 5,
+    'rate_of_interest': 0.03,
     'loan_tenure': {
         '0-10000': {
             'maximum_tenure': 6,

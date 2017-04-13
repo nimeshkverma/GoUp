@@ -7,6 +7,7 @@ from common.v1.utils.model_utils import check_pk_existence
 from common.v1.exceptions import NotAcceptableError
 from customer.models import Customer
 from services.vahan_service import Vahan
+from services.eligibility_service import CustomerEligibility
 
 
 class FinanceSerializer(serializers.ModelSerializer):
@@ -134,3 +135,10 @@ class VahanSerializer(serializers.Serializer):
         if not deleted_objects:
             deleted = False
         return deleted
+
+
+class EligibilityReviewSubmitSerializer(serializers.Serializer):
+    customer_id = serializers.IntegerField()
+
+    def eligibility_review_submission(self):
+        return CustomerEligibility(self.validated_data.get('customer_id')).determine_eligibility()

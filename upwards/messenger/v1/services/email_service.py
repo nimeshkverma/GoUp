@@ -5,7 +5,7 @@ from django.template.loader import get_template
 
 from django.conf import settings
 from customer.models import Customer
-# from eligibility.models import Profession
+from eligibility.models import Profession
 from activity.models import register_customer_state
 from activity.model_constants import FINANCE_SUBMIT_EMAIL_VERIFIED_STATE, DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE
 
@@ -28,11 +28,11 @@ email_model_fields = {
         'email_verified_field': 'is_alternate_email_id_verified',
         'user_state': DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE,
     },
-    # 'customer_profession_email': {
-    #     'model': Profession,
-    #     'email_verified_field': 'is_email_verified',
-    #     'user_state': FINANCE_SUBMIT_EMAIL_VERIFIED_STATE,
-    # }
+    'customer_profession_email': {
+        'model': Profession,
+        'email_verified_field': 'is_email_verified',
+        'user_state': FINANCE_SUBMIT_EMAIL_VERIFIED_STATE,
+    }
 }
 
 
