@@ -19,6 +19,9 @@ urlpatterns = [
     url(r'^common/profession_type/$', views.ProfessionTypeList.as_view()),
     url(r'^common/profession_type/(?P<pk>[0-9]+)/$',
         views.ProfessionTypeDetail.as_view()),
+    url(r'^common/loan_purpose/$', views.LoanPurposeList.as_view()),
+    url(r'^common/loan_purpose/(?P<pk>[0-9]+)/$',
+        views.LoanPurposeDetail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

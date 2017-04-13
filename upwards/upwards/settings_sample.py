@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'transaction.apps.TransactionConfig',
     'analytics.apps.AnalyticsConfig',
     'thirdpartyleads.apps.ThirdpartyleadsConfig',
+    'loan_product.apps.LoanProductConfig',
 ]
 
 MIDDLEWARE = [

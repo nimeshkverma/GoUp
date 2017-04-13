@@ -1,7 +1,57 @@
 ELIGIBILITY_TITLE = "Eligibility & Credit Limit Check"
 KYC_TITLE = "KYC & Document Upload"
 
+LOAN_CONSTANTS = {
+    'loan_amount_maximum': 100000,
+    'loan_amount_minimum': 10000,
+    'loan_tenure_maximum': 24,
+    'loan_tenure_minimum': 3,
+    'loan_increment_value': 20000,
+    'number_of_increments': 5,
+    'rate_of_interest': 0.03,
+    'loan_tenure': {
+        '0-10000': {
+            'maximum_tenure': 6,
+            'minimum_tenure': 3
+        },
+        '10000-20000': {
+            'maximum_tenure': 6,
+            'minimum_tenure': 3
+        },
+        '20000-30000': {
+            'maximum_tenure': 6,
+            'minimum_tenure': 3
+        },
+        '30000-40000': {
+            'maximum_tenure': 6,
+            'minimum_tenure': 3
+        },
+        '50000-100000': {
+            'maximum_tenure': 24,
+            'minimum_tenure': 3,
+        },
+    }
+}
+
+LOAN_PRODUCT_STATES = [
+    'unknown',
+    'sign_up',
+    'eligibility_result_rejected',
+]
+
+USER_STATES_WITHOUT_ELIGIBILITY_AMOUNT = [
+    'loan_product_submit',
+    'pan_submit',
+    'professional_submit',
+    'finance_submit_email_unverified',
+    'education_submit',
+    'finance_submit_email_verified',
+    'eligibility_submit',
+    'eligibility_result_proccessing',
+]
+
 USER_STATES_WITH_ELIGIBILITY_AMOUNT = [
+    'eligibility_rejected_loan_product_submit',
     'eligibility_result_approved',
     'aadhaar_submit',
     'aadhaar_detail_submit',
@@ -40,6 +90,16 @@ USER_STATE_MESSAGES = {
     'sign_up': {
         'eligibility': {
             'message': 'Please start your application by completing this section',
+            'completion_percentage': 0,
+        },
+        'kyc': {
+            'message': "Please complete the 'Eligibility & Credit Limit Check' section prior to this section",
+            'completion_percentage': 0,
+        },
+    },
+    'loan_product_submit': {
+        'eligibility': {
+            'message': 'Please provide your Eligibility Information.',
             'completion_percentage': 0,
         },
         'kyc': {
@@ -114,6 +174,16 @@ USER_STATE_MESSAGES = {
         },
         'kyc': {
             'message': 'Please complete your application by filling this section',
+            'completion_percentage': 0,
+        },
+    },
+    'eligibility_result_rejected': {
+        'eligibility': {
+            'message': 'Unfortunately, you are not eligible. Please reapply after sometime or contact us.',
+            'completion_percentage': 100,
+        },
+        'kyc': {
+            'message': 'Unfortunately, you are not eligible',
             'completion_percentage': 0,
         },
     },

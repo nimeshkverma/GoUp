@@ -146,3 +146,16 @@ class ProfessionType(ActiveModel):
 
     def __unicode__(self):
         return "%s__%s" % (str(self.type_name), str(self.is_active))
+
+
+class LoanPurpose(ActiveModel):
+    name = models.CharField(blank=False, null=False,
+                            max_length=256, unique=True)
+    objects = models.Manager()
+    active_objects = ActiveObjectManager()
+
+    class Meta(object):
+        db_table = "loan_purpose"
+
+    def __unicode__(self):
+        return "%s__%s" % (str(self.name), str(self.is_active))
