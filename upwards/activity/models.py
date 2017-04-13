@@ -38,7 +38,11 @@ def register_customer_state(present_state, customer_id, comments=None):
         customer_id=customer_id)
     if state_objects:
         state_object = state_objects[0]
+        print state_object
         from_state = state_object.present_state
+        print CUSTOMER_STATE_TREE.get(from_state, {}).get('to'), CUSTOMER_STATE_TREE.get(present_state, {}).get('from')
+        print(present_state in CUSTOMER_STATE_TREE.get(from_state, {}).get('to')), (
+            from_state in CUSTOMER_STATE_TREE.get(present_state, {}).get('from'))
         if (present_state in CUSTOMER_STATE_TREE.get(from_state, {}).get('to')) and (from_state in CUSTOMER_STATE_TREE.get(present_state, {}).get('from')):
             state_object.from_state = from_state
             state_object.present_state = present_state

@@ -24,6 +24,7 @@ ELIGIBILITY_RESULT_REJECTED = 'eligibility_result_rejected'
 ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT = 'eligibility_rejected_loan_product_submit'
 AADHAAR_SUBMIT = 'aadhaar_submit'
 AADHAAR_DETAIL_SUBMIT = 'aadhaar_detail_submit'
+BANK_DETAIL_SUBMIT = 'bank_detail_submit'
 PERSONAL_CONTACT_SUBMIT = 'personal_contact_submit'
 DOCUMENT_SUBMIT_EMAIL_UNVERIFIED = 'document_submit_email_unverified'
 DOCUMENT_SUBMIT_EMAIL_VERIFIED = 'document_submit_email_verified'
@@ -31,8 +32,9 @@ KYC_SUBMIT = 'kyc_submit'
 KYC_RESULT_PROCCESSING = 'kyc_result_proccessing'
 KYC_RESULT_APPROVED = 'kyc_result_approved'
 KYC_RESULT_REJECTED = 'kyc_result_rejected'
-BANK_DETAIL_SUBMIT = 'bank_detail_submit'
-LOAN_AMOUNT_SUBMIT = 'loan_amount_submit'
+LOAN_SPECIFICATION_REVIEW = 'loan_specification_review'
+LOAN_SUBMIT_AGGREMENT_SIGNED = 'loan_submit_aggrement_signed'
+LOAN_SUBMIT_AGGREMENT_UNSIGNED = 'loan_submit_aggrement_unsigned'
 LOAN_APPLICATION_PROCCESSING = 'loan_application_proccessing'
 LOAN_APPLICATION_PROCCESSED = 'loan_application_proccessed'
 LOAN_APPLICATION_ERRORED = 'loan_application_errored'
@@ -51,12 +53,14 @@ CUSTOMER_ACTIVITY_TYPE_CHOICES = (
      'eligibility_rejected_loan_product_submit'),
     (AADHAAR_SUBMIT, 'aadhaar_submit'),
     (AADHAAR_DETAIL_SUBMIT, 'aadhaar_detail_submit'),
+    (BANK_DETAIL_SUBMIT, 'bank_detail_submit'),
     (PERSONAL_CONTACT_SUBMIT, 'personal_contact_submit'),
     (DOCUMENT_SUBMIT_EMAIL_UNVERIFIED, 'document_submit_email_unverified'),
     (DOCUMENT_SUBMIT_EMAIL_VERIFIED, 'document_submit_email_verified'),
     (KYC_SUBMIT, 'kyc_submit'),
-    (BANK_DETAIL_SUBMIT, 'bank_detail_submit'),
-    (LOAN_AMOUNT_SUBMIT, 'loan_amount_submit'),
+    (LOAN_SPECIFICATION_REVIEW, 'loan_specification_review'),
+    (LOAN_SUBMIT_AGGREMENT_SIGNED, 'loan_submit_aggrement_signed'),
+    (LOAN_SUBMIT_AGGREMENT_UNSIGNED, 'loan_submit_aggrement_unsigned'),
 )
 
 UPWARDS_TYPE_CHOICES = (
@@ -87,14 +91,16 @@ ELIGIBILITY_RESULT_REJECTED_STATE = 'eligibility_result_rejected'
 ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT_STATE = 'eligibility_rejected_loan_product_submit'
 AADHAAR_SUBMIT_STATE = 'aadhaar_submit'
 AADHAAR_DETAIL_SUBMIT_STATE = 'aadhaar_detail_submit'
+BANK_DETAIL_SUBMIT_STATE = 'bank_detail_submit'
 PERSONAL_CONTACT_SUBMIT_STATE = 'personal_contact_submit'
 DOCUMENT_SUBMIT_EMAIL_UNVERIFIED_STATE = 'document_submit_email_unverified'
 DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE = 'document_submit_email_verified'
 KYC_SUBMIT_STATE = 'kyc_submit'
 KYC_RESULT_APPROVED_STATE = 'kyc_result_approved'
 KYC_RESULT_REJECTED_STATE = 'kyc_result_rejected'
-BANK_DETAIL_SUBMIT_STATE = 'bank_detail_submit'
-LOAN_AMOUNT_SUBMIT_STATE = 'loan_amount_submit'
+LOAN_SPECIFICATION_REVIEW_STATE = 'loan_specification_review'
+LOAN_SUBMIT_AGGREMENT_SIGNED_STATE = 'loan_submit_aggrement_signed'
+LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE = 'loan_submit_aggrement_unsigned'
 LOAN_APPLICATION_PROCCESSING_STATE = 'loan_application_proccessing'
 LOAN_APPLICATION_PROCCESSED_STATE = 'loan_application_proccessed'
 LOAN_APPLICATION_ERRORED_STATE = 'loan_application_errored'
@@ -115,14 +121,16 @@ CUSTOMER_STATE_CHOICES = (
      'eligibility_rejected_loan_product_submit'),
     (AADHAAR_SUBMIT_STATE, 'aadhaar_submit'),
     (AADHAAR_DETAIL_SUBMIT_STATE, 'aadhaar_detail_submit'),
+    (BANK_DETAIL_SUBMIT_STATE, 'bank_detail_submit'),
     (PERSONAL_CONTACT_SUBMIT_STATE, 'personal_contact_submit'),
     (DOCUMENT_SUBMIT_EMAIL_UNVERIFIED_STATE, 'document_submit_email_unverified'),
     (DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE, 'document_submit_email_verified'),
     (KYC_SUBMIT_STATE, 'kyc_submit'),
     (KYC_RESULT_APPROVED_STATE, 'kyc_result_approved'),
     (KYC_RESULT_REJECTED_STATE, 'kyc_result_rejected'),
-    (BANK_DETAIL_SUBMIT_STATE, 'bank_detail_submit'),
-    (LOAN_AMOUNT_SUBMIT_STATE, 'loan_amount_submit'),
+    (LOAN_SPECIFICATION_REVIEW_STATE, 'loan_specification_review'),
+    (LOAN_SUBMIT_AGGREMENT_SIGNED_STATE, 'loan_submit_aggrement_signed'),
+    (LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE, 'loan_submit_aggrement_unsigned'),
     (LOAN_APPLICATION_PROCCESSING_STATE, 'loan_application_proccessing'),
     (LOAN_APPLICATION_PROCCESSED_STATE, 'loan_application_proccessed'),
     (LOAN_APPLICATION_ERRORED_STATE, 'loan_application_errored'),
@@ -207,32 +215,36 @@ CUSTOMER_STATE_TREE = {
     },
     KYC_RESULT_APPROVED_STATE: {
         'from': [KYC_SUBMIT_STATE],
-        'to': [BANK_DETAIL_SUBMIT_STATE]
+        'to': [LOAN_SPECIFICATION_REVIEW_STATE]
     },
     KYC_RESULT_REJECTED_STATE: {
         'from': [KYC_SUBMIT_STATE],
-        'to': [KYC_SUBMIT_STATE]
+        'to': []
     },
-    # BANK_DETAIL_SUBMIT_STATE: {
-    #     'from': [KYC_RESULT_APPROVED_STATE],
-    #     'to': [LOAN_AMOUNT_SUBMIT_STATE]
-    # },
-    # LOAN_AMOUNT_SUBMIT_STATE: {
-    #     'from': [BANK_DETAIL_SUBMIT_STATE],
-    #     'to': [LOAN_APPLICATION_PROCCESSING_STATE]
-    # },
-    # LOAN_APPLICATION_PROCCESSING_STATE: {
-    #     'from': [LOAN_AMOUNT_SUBMIT_STATE],
-    #     'to': [LOAN_APPLICATION_PROCCESSED_STATE, LOAN_APPLICATION_ERRORED_STATE]
-    # },
-    # LOAN_APPLICATION_PROCCESSED_STATE: {
-    #     'from': [LOAN_APPLICATION_PROCCESSING_STATE],
-    #     'to': []
-    # },
-    # LOAN_APPLICATION_ERRORED_STATE: {
-    #     'from': [LOAN_APPLICATION_PROCCESSING_STATE],
-    #     'to': []
-    # },
+    LOAN_SPECIFICATION_REVIEW_STATE: {
+        'from': [KYC_RESULT_APPROVED_STATE],
+        'to': [LOAN_SUBMIT_AGGREMENT_SIGNED_STATE, LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE]
+    },
+    LOAN_SUBMIT_AGGREMENT_SIGNED_STATE: {
+        'from': [LOAN_SPECIFICATION_REVIEW_STATE, LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE],
+        'to': [LOAN_APPLICATION_PROCCESSING_STATE]
+    },
+    LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE: {
+        'from': [LOAN_SPECIFICATION_REVIEW_STATE],
+        'to': [LOAN_SUBMIT_AGGREMENT_SIGNED_STATE]
+    },
+    LOAN_APPLICATION_PROCCESSING_STATE: {
+        'from': [LOAN_SUBMIT_AGGREMENT_SIGNED_STATE],
+        'to': [LOAN_APPLICATION_PROCCESSED_STATE, LOAN_APPLICATION_ERRORED_STATE]
+    },
+    LOAN_APPLICATION_PROCCESSED_STATE: {
+        'from': [LOAN_APPLICATION_PROCCESSING_STATE],
+        'to': []
+    },
+    LOAN_APPLICATION_ERRORED_STATE: {
+        'from': [LOAN_APPLICATION_PROCCESSING_STATE],
+        'to': []
+    },
 }
 
 
@@ -242,22 +254,25 @@ CUSTOMER_STATE_ORDER_LIST = [
     LOAN_PRODUCT_SUBMIT_STATE,
     PAN_SUBMIT_STATE,
     PROFESSIONAL_SUBMIT_STATE,
+    FINANCE_SUBMIT_EMAIL_UNVERIFIED_STATE,
     EDUCATION_SUBMIT_STATE,
     FINANCE_SUBMIT_EMAIL_VERIFIED_STATE,
-    FINANCE_SUBMIT_EMAIL_UNVERIFIED_STATE,
     ELIGIBILITY_SUBMIT_STATE,
     ELIGIBILITY_RESULT_APPROVED_STATE,
     ELIGIBILITY_RESULT_REJECTED_STATE,
+    ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT_STATE,
     AADHAAR_SUBMIT_STATE,
     AADHAAR_DETAIL_SUBMIT_STATE,
     BANK_DETAIL_SUBMIT_STATE,
     PERSONAL_CONTACT_SUBMIT_STATE,
-    DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE,
     DOCUMENT_SUBMIT_EMAIL_UNVERIFIED_STATE,
+    DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE,
     KYC_SUBMIT_STATE,
     KYC_RESULT_APPROVED_STATE,
     KYC_RESULT_REJECTED_STATE,
-    LOAN_AMOUNT_SUBMIT_STATE,
+    LOAN_SPECIFICATION_REVIEW_STATE,
+    LOAN_SUBMIT_AGGREMENT_SIGNED_STATE,
+    LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE,
     LOAN_APPLICATION_PROCCESSING_STATE,
     LOAN_APPLICATION_PROCCESSED_STATE,
     LOAN_APPLICATION_ERRORED_STATE,
