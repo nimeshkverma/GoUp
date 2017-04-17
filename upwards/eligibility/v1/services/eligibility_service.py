@@ -4,7 +4,7 @@ from loan_product.models import LoanProduct
 from analytics.v1.services import algo360_service, credit_service
 from analytics import models
 from customer.v1.service.homepage_config import LOAN_CONSTANTS
-from common.v1.utils.finance_utils import get_tenure, get_emi
+from common.v1.utils.finance_utils import LoanCalculator
 from activity.models import register_customer_state
 from activity.model_constants import (ELIGIBILITY_SUBMIT_STATE,
                                       ELIGIBILITY_RESULT_REJECTED_STATE,
@@ -55,13 +55,15 @@ class CustomerEligibility(object):
             self.loan_amount = loan_product_objects[0].loan_amount
 
     def __get_tuned_loan_constants(self):
-        tuned_tenure = get_tenure(
-            self.loan_amount, self.customer_credit_limit, LOAN_CONSTANTS.get('rate_of_interest', 3))
-        tuned_emi = get_emi(self.loan_amount, tuned_tenure,
-                            LOAN_CONSTANTS.get('rate_of_interest', 3))
+        loan_calculator = LoanCalculator(
+            self.loan_amount, LOAN_CONSTANTS.get('rate_of_interest', .03))
+        tuned_tenure = loan_calculator.loan_tenure_ceiled(
+            self.customer_credit_limit)
+        tuned_emi = loan_calculator.loan_emi_ceiled(tuned_tenure)
         customer_loan_constants = {
             'emi': tuned_emi,
             'tenure': tuned_tenure,
+            'amount': self.loan_amount,
         }
         return customer_loan_constants
 
@@ -72,6 +74,7 @@ class CustomerEligibility(object):
             'customer_loan_constants': {
                 'emi': self.loan_emi,
                 'tenure': self.loan_tenure,
+                'amount': self.loan_amount,
             }
         }
         if self.customer_credit_limit >= self.loan_emi:
