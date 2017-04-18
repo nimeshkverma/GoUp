@@ -307,7 +307,7 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_S3_ACCESS_KEY_ID = 'AWS_S3_ACCESS_KEY_ID'
 AWS_S3_SECRET_ACCESS_KEY = 'AWS_S3_SECRET_ACCESS_KEY'
 AWS_STORAGE_BUCKET_NAME = 'AWS_STORAGE_BUCKET_NAME'
-S3_URL = "https://s3-us-west-2.amazonaws.com/kycdocument/"
+S3_URL = "S3_URL"
 PDF_CONVERSION = {
     'zoom': 4
 }
@@ -337,6 +337,7 @@ ELIGIBILITY_LIMIT = {
     'lower': 7500,
 }
 
-CREDIT_ELIGIBILITY_FACTOR = 2.5
+CREDIT_ELIGIBILITY_FACTOR = 5
+LOAN_INTEREST_RATE = 0.03
 
 VAHAN_API = "VAHAN_API_BASE_URL?reg1={reg1}&reg2={reg2}&reg3={reg3}&reg4={reg4}&vertical={vertical}"

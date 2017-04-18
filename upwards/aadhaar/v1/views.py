@@ -147,9 +147,6 @@ class LoanAgreement(View):
     loan_agreement_template = 'aadhaar/v1/loan_agreement.html'
     unauthorized_template = 'aadhaar/v1/unauthorized.html'
 
-    def get_loan_data(self, customer_id):
-        return loan_agreement_service.LoanAgreement(customer_id).data
-
     @catch_exception(LOGGER)
     def get(self, request, pk):
         serializer = serializers.LoanAgreementSerializer(

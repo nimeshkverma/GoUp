@@ -1,5 +1,7 @@
 from rest_framework import serializers
+from decimal import Decimal
 
+from django.conf import settings
 from loan_product import models
 
 from common.v1.utils.model_utils import check_pk_existence
@@ -11,6 +13,7 @@ from common.models import LoanPurpose
 class LoanProductSerializer(serializers.ModelSerializer):
     customer_id = serializers.IntegerField()
     loan_purpose_id = serializers.IntegerField()
+    loan_interest_rate = Decimal(str(settings.LOAN_INTEREST_RATE))
 
     def validate_foreign_keys(self, data=None):
         data = data if data else self.validated_data

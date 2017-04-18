@@ -5,7 +5,7 @@ from django.db.models.signals import post_save
 
 from common.models import InActiveModel, ActiveObjectManager, ActiveModel
 from activity.models import register_customer_state
-from activity.model_constants import ELIGIBILITY_RESULT_APPROVED_STATE
+from activity.model_constants import ELIGIBILITY_SUBMIT_STATE
 
 NBFC = 'nbfc'
 BANK = 'bank'
@@ -33,7 +33,7 @@ class Borrower(InActiveModel):
     def register_eligibility_result_approved_customer_state(sender, instance, created, **kwargs):
         if created:
             register_customer_state(
-                ELIGIBILITY_RESULT_APPROVED_STATE, instance.customer_id)
+                ELIGIBILITY_SUBMIT_STATE, instance.customer_id)
 
     class Meta(object):
         db_table = "borrower"

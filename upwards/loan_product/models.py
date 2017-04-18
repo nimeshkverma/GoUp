@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from decimal import Decimal
 from django.db import models
 from django.db.models.signals import post_save
 from common.models import ActiveObjectManager, ActiveModel
@@ -17,6 +18,8 @@ class LoanProduct(ActiveModel):
     existing_emi = models.IntegerField(default=0, null=False, blank=False)
     loan_tenure = models.IntegerField(default=0, null=False, blank=False)
     loan_emi = models.IntegerField(default=0, null=False, blank=False)
+    loan_interest_rate = models.DecimalField(
+        max_digits=20, decimal_places=4, default=Decimal('0.0300'))
     objects = models.Manager()
     active_objects = ActiveObjectManager()
 

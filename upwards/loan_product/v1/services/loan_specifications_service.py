@@ -1,4 +1,5 @@
 import datetime
+from django.conf import settings
 from loan_product.models import LoanProduct
 from common.v1.utils.finance_utils import LoanCalculator
 from customer.v1.service.homepage_config import LOAN_CONSTANTS
@@ -8,7 +9,7 @@ class LoanSpecifications(object):
 
     def __init__(self, customer_id, loan_start_date=None):
         self.customer_id = customer_id
-        self.interest_rate = LOAN_CONSTANTS.get('rate_of_interest', .03)
+        self.interest_rate = settings.LOAN_INTEREST_RATE
         self.loan_emi = None
         self.loan_tenure = None
         self.loan_amount = None
@@ -25,6 +26,8 @@ class LoanSpecifications(object):
             self.loan_emi = loan_product_objects[0].loan_emi
             self.loan_tenure = loan_product_objects[0].loan_tenure
             self.loan_amount = loan_product_objects[0].loan_amount
+            self.interest_rate = float(
+                loan_product_objects[0].loan_interest_rate)
 
     def __data(self):
         return self.loan_calulator.loan_table(self.loan_start_date)

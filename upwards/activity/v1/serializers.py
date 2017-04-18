@@ -25,3 +25,10 @@ class CustomerStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CustomerState
         exclude = ('customer', 'created_at', 'updated_at', 'is_active')
+
+
+class KYCReviewSubmitSerializer(serializers.Serializer):
+    customer_id = serializers.IntegerField()
+
+    def kyc_review_submission(self):
+        return {}
