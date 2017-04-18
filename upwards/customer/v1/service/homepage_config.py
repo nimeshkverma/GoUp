@@ -1,6 +1,31 @@
 from django.conf import settings
+from activity.model_constants import (UNKNOWN_STATE,
+                                      SIGN_UP_STATE,
+                                      LOAN_PRODUCT_SUBMIT_STATE,
+                                      PAN_SUBMIT_STATE,
+                                      PROFESSIONAL_SUBMIT_STATE,
+                                      FINANCE_SUBMIT_EMAIL_UNVERIFIED_STATE,
+                                      EDUCATION_SUBMIT_STATE,
+                                      FINANCE_SUBMIT_EMAIL_VERIFIED_STATE,
+                                      ELIGIBILITY_SUBMIT_STATE,
+                                      AADHAAR_SUBMIT_STATE,
+                                      AADHAAR_DETAIL_SUBMIT_STATE,
+                                      BANK_DETAIL_SUBMIT_STATE,
+                                      PERSONAL_CONTACT_SUBMIT_STATE,
+                                      DOCUMENT_SUBMIT_EMAIL_UNVERIFIED_STATE,
+                                      DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE,
+                                      KYC_SUBMIT_STATE,
+                                      ELIGIBILITY_REJECTED_KYC_SUBMIT_STATE,
+                                      ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE,
+                                      ELIGIBILITY_APPROVED_KYC_REJECTED_STATE,
+                                      ELIGIBILITY_APPROVED_KYC_APPROVED_STATE,
+                                      LOAN_SPECIFICATION_REVIEWED_STATE,
+                                      LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE,
+                                      AGGREMENT_SIGNED_LOAN_APPLICATION_PROCCESSING_STATE,
+                                      LOAN_APPLICATION_PROCCESSED_STATE,
+                                      LOAN_APPLICATION_ERRORED_STATE,)
 
-ELIGIBILITY_TITLE = "Eligibility & Credit Limit Check"
+ELIGIBILITY_TITLE = "Eligibility Check"
 KYC_TITLE = "KYC & Document Upload"
 
 LOAN_CONSTANTS = {
@@ -36,50 +61,70 @@ LOAN_CONSTANTS = {
 }
 
 LOAN_PRODUCT_STATES = [
-    'unknown',
-    'sign_up',
-    'eligibility_result_rejected',
+    UNKNOWN_STATE,
+    SIGN_UP_STATE,
 ]
 
-USER_STATES_WITHOUT_ELIGIBILITY_AMOUNT = [
-    'loan_product_submit',
-    'pan_submit',
-    'professional_submit',
-    'finance_submit_email_unverified',
-    'education_submit',
-    'finance_submit_email_verified',
-    'eligibility_submit',
-    'eligibility_result_proccessing',
+USER_STATES_PRE_LOAN_SPECIFICATION = [
+    LOAN_PRODUCT_SUBMIT_STATE,
+    PAN_SUBMIT_STATE,
+    PROFESSIONAL_SUBMIT_STATE,
+    FINANCE_SUBMIT_EMAIL_UNVERIFIED_STATE,
+    EDUCATION_SUBMIT_STATE,
+    FINANCE_SUBMIT_EMAIL_VERIFIED_STATE,
+    ELIGIBILITY_SUBMIT_STATE,
+    AADHAAR_SUBMIT_STATE,
+    AADHAAR_DETAIL_SUBMIT_STATE,
+    BANK_DETAIL_SUBMIT_STATE,
+    PERSONAL_CONTACT_SUBMIT_STATE,
+    DOCUMENT_SUBMIT_EMAIL_UNVERIFIED_STATE,
+    DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE,
+    KYC_SUBMIT_STATE,
+    ELIGIBILITY_REJECTED_KYC_SUBMIT_STATE,
+    ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE,
+    ELIGIBILITY_APPROVED_KYC_REJECTED_STATE,
+    ELIGIBILITY_APPROVED_KYC_APPROVED_STATE,
 ]
 
-USER_STATES_WITH_ELIGIBILITY_AMOUNT = [
-    'eligibility_rejected_loan_product_submit',
-    'eligibility_result_approved',
-    'aadhaar_submit',
-    'aadhaar_detail_submit',
-    'personal_contact_submit',
-    'document_submit_email_unverified',
-    'document_submit_email_verified',
-    'kyc_submit',
-    'kyc_result_approved',
-    'kyc_result_rejected',
-    'bank_detail_submit',
-    'loan_amount_submit',
-    'loan_application_proccessing',
-    'loan_application_errored',
-    'loan_application_proccessed',
-]
+# USER_STATES_WITHOUT_ELIGIBILITY_AMOUNT = [
+#     'loan_product_submit',
+#     'pan_submit',
+#     'professional_submit',
+#     'finance_submit_email_unverified',
+#     'education_submit',
+#     'finance_submit_email_verified',
+#     'eligibility_submit',
+#     'eligibility_result_proccessing',
+# ]
 
-BORROWER_STATES = [
-    'bank_detail_submit',
-    'loan_amount_submit',
-    'loan_application_proccessing',
-    'loan_application_errored',
-    'loan_application_proccessed',
-]
+# USER_STATES_WITH_ELIGIBILITY_AMOUNT = [
+#     'eligibility_rejected_loan_product_submit',
+#     'eligibility_result_approved',
+#     'aadhaar_submit',
+#     'aadhaar_detail_submit',
+#     'personal_contact_submit',
+#     'document_submit_email_unverified',
+#     'document_submit_email_verified',
+#     'kyc_submit',
+#     'kyc_result_approved',
+#     'kyc_result_rejected',
+#     'bank_detail_submit',
+#     'loan_amount_submit',
+#     'loan_application_proccessing',
+#     'loan_application_errored',
+#     'loan_application_proccessed',
+# ]
+
+# BORROWER_STATES = [
+#     'bank_detail_submit',
+#     'loan_amount_submit',
+#     'loan_application_proccessing',
+#     'loan_application_errored',
+#     'loan_application_proccessed',
+# ]
 
 USER_STATE_MESSAGES = {
-    'unknown': {
+    UNKNOWN_STATE: {
         'eligibility': {
             'message': 'Please start your application by completing this section',
             'completion_percentage': 0,
@@ -89,89 +134,79 @@ USER_STATE_MESSAGES = {
             'completion_percentage': 0,
         },
     },
-    'sign_up': {
+    SIGN_UP_STATE: {
         'eligibility': {
             'message': 'Please start your application by completing this section',
             'completion_percentage': 0,
         },
         'kyc': {
-            'message': "Please complete the 'Eligibility & Credit Limit Check' section prior to this section",
+            'message': "Please complete the '" + ELIGIBILITY_TITLE + "' section prior to this section",
             'completion_percentage': 0,
         },
     },
-    'loan_product_submit': {
+    LOAN_PRODUCT_SUBMIT_STATE: {
         'eligibility': {
             'message': 'Please provide your Eligibility Information.',
             'completion_percentage': 0,
         },
         'kyc': {
-            'message': "Please complete the 'Eligibility & Credit Limit Check' section prior to this section",
+            'message': "Please complete the '" + ELIGIBILITY_TITLE + "' section prior to this section",
             'completion_percentage': 0,
         },
     },
-    'pan_submit': {
+    PAN_SUBMIT_STATE: {
         'eligibility': {
             'message': 'Please provide your employment details to continue',
             'completion_percentage': 20,
         },
         'kyc': {
-            'message': "Please complete the 'Eligibility & Credit Limit Check' section prior to this section",
+            'message': "Please complete the '" + ELIGIBILITY_TITLE + "' section prior to this section",
             'completion_percentage': 0,
         },
     },
-    'professional_submit': {
+    PROFESSIONAL_SUBMIT_STATE: {
         'eligibility': {
             'message': 'Please provide your educational details to continue',
             'completion_percentage': 50,
         },
         'kyc': {
-            'message': "Please complete the 'Eligibility & Credit Limit Check' section prior to this section",
+            'message': "Please complete the '" + ELIGIBILITY_TITLE + "' section prior to this section",
             'completion_percentage': 0,
         },
     },
-    'education_submit': {
+    EDUCATION_SUBMIT_STATE: {
         'eligibility': {
             'message': 'Please complete the last section to finish your eligibility check',
             'completion_percentage': 70,
         },
         'kyc': {
-            'message': "Please complete the 'Eligibility & Credit Limit Check' section prior to this section",
+            'message': "Please complete the '" + ELIGIBILITY_TITLE + "' section prior to this section",
             'completion_percentage': 0,
         },
     },
-    'finance_submit_email_unverified': {
+    FINANCE_SUBMIT_EMAIL_UNVERIFIED_STATE: {
         'eligibility': {
             'message': "Please verify your 'Company Email' to continue",
             'completion_percentage': 90,
         },
         'kyc': {
-            'message': "Please complete the 'Eligibility & Credit Limit Check' section prior to this section",
+            'message': "Please complete the '" + ELIGIBILITY_TITLE + "' section prior to this section",
             'completion_percentage': 0,
         },
     },
-    'finance_submit_email_verified': {
+    FINANCE_SUBMIT_EMAIL_VERIFIED_STATE: {
         'eligibility': {
             'message': 'Please do a final review of the information to proceed',
             'completion_percentage': 95,
         },
         'kyc': {
-            'message': "Please complete the 'Eligibility & Credit Limit Check' section prior to this section",
+            'message': "Please complete the '" + ELIGIBILITY_TITLE + "' section prior to this section",
             'completion_percentage': 0,
         },
     },
-    'eligibility_submit': {
+    ELIGIBILITY_SUBMIT_STATE: {
         'eligibility': {
-            'message': 'Please wait while we process your application',
-            'completion_percentage': 100,
-        },
-        'kyc': {
-            'message': 'Please wait for approval/reject decision in the previous section',
-            'completion_percentage': 0,
-        },
-    },
-    'eligibility_result_approved': {
-        'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats, please proceed to the next section',
+            'message': "'" + ELIGIBILITY_TITLE + "' section Completed, Please proceed to '" + KYC_TITLE + "' section",
             'completion_percentage': 100,
         },
         'kyc': {
@@ -179,29 +214,39 @@ USER_STATE_MESSAGES = {
             'completion_percentage': 0,
         },
     },
-    'eligibility_result_rejected': {
+    # 'eligibility_result_approved': {
+    #     'eligibility': {
+    #         'message': 'You have been approved for credit limit of Rs {amount}. Congrats, please proceed to the next section',
+    #         'completion_percentage': 100,
+    #     },
+    #     'kyc': {
+    #         'message': 'Please complete your application by filling this section',
+    #         'completion_percentage': 0,
+    #     },
+    # },
+    # 'eligibility_result_rejected': {
+    #     'eligibility': {
+    #         'message': 'Unfortunately, you are not eligible. Please reapply after sometime or contact us.',
+    #         'completion_percentage': 100,
+    #     },
+    #     'kyc': {
+    #         'message': 'Unfortunately, you are not eligible',
+    #         'completion_percentage': 0,
+    #     },
+    # },
+    # 'eligibility_result_rejected': {
+    #     'eligibility': {
+    #         'message': 'Unfortunately, you are not eligible. Please reapply after sometime or contact us.',
+    #         'completion_percentage': 100,
+    #     },
+    #     'kyc': {
+    #         'message': 'Unfortunately, you are not eligible',
+    #         'completion_percentage': 0,
+    #     },
+    # },
+    AADHAAR_SUBMIT_STATE: {
         'eligibility': {
-            'message': 'Unfortunately, you are not eligible. Please reapply after sometime or contact us.',
-            'completion_percentage': 100,
-        },
-        'kyc': {
-            'message': 'Unfortunately, you are not eligible',
-            'completion_percentage': 0,
-        },
-    },
-    'eligibility_result_rejected': {
-        'eligibility': {
-            'message': 'Unfortunately, you are not eligible. Please reapply after sometime or contact us.',
-            'completion_percentage': 100,
-        },
-        'kyc': {
-            'message': 'Unfortunately, you are not eligible',
-            'completion_percentage': 0,
-        },
-    },
-    'aadhaar_submit': {
-        'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats, please complete the next section',
+            'message': "'" + ELIGIBILITY_TITLE + "' section Completed, Please complete the '" + KYC_TITLE + "' section",
             'completion_percentage': 100,
         },
         'kyc': {
@@ -209,29 +254,39 @@ USER_STATE_MESSAGES = {
             'completion_percentage': 20,
         },
     },
-    'aadhaar_detail_submit': {
+    AADHAAR_DETAIL_SUBMIT_STATE: {
         'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats, please complete the next section',
+            'message': "'" + ELIGIBILITY_TITLE + "' section Completed, Please complete the '" + KYC_TITLE + "' section",
+            'completion_percentage': 100,
+        },
+        'kyc': {
+            'message': 'Please provide your banking details to continue',
+            'completion_percentage': 40,
+        },
+    },
+    BANK_DETAIL_SUBMIT_STATE: {
+        'eligibility': {
+            'message': "'" + ELIGIBILITY_TITLE + "' section Completed, Please complete the '" + KYC_TITLE + "' section",
             'completion_percentage': 100,
         },
         'kyc': {
             'message': 'Please provide your personal contact details to continue',
-            'completion_percentage': 40,
+            'completion_percentage': 60,
         },
     },
-    'personal_contact_submit': {
+    PERSONAL_CONTACT_SUBMIT_STATE: {
         'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats, please complete the next section',
+            'message': "'" + ELIGIBILITY_TITLE + "' section Completed, Please complete the '" + KYC_TITLE + "' section",
             'completion_percentage': 100,
         },
         'kyc': {
             'message': 'We need some basic documents to finalize your application. Please upload to continue',
-            'completion_percentage': 60,
+            'completion_percentage': 70,
         },
     },
-    'document_submit_email_unverified': {
+    DOCUMENT_SUBMIT_EMAIL_UNVERIFIED_STATE: {
         'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats, please complete the next section',
+            'message': "'" + ELIGIBILITY_TITLE + "' section Completed, Please complete the '" + KYC_TITLE + "' section",
             'completion_percentage': 100,
         },
         'kyc': {
@@ -239,9 +294,9 @@ USER_STATE_MESSAGES = {
             'completion_percentage': 90,
         },
     },
-    'document_submit_email_verified': {
+    DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE: {
         'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats, please complete the next section',
+            'message': "'" + ELIGIBILITY_TITLE + "' section Completed, Please complete the '" + KYC_TITLE + "' section",
             'completion_percentage': 100,
         },
         'kyc': {
@@ -249,9 +304,9 @@ USER_STATE_MESSAGES = {
             'completion_percentage': 95,
         },
     },
-    'kyc_submit': {
+    KYC_SUBMIT_STATE: {
         'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
+            'message': "'" + ELIGIBILITY_TITLE + "' section Completed",
             'completion_percentage': 100,
         },
         'kyc': {
@@ -259,19 +314,29 @@ USER_STATE_MESSAGES = {
             'completion_percentage': 100,
         },
     },
-    'kyc_result_approved': {
+    ELIGIBILITY_REJECTED_KYC_SUBMIT_STATE: {
         'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
+            'message': 'Unfortunately, you are not eligible. Please reapply after sometime or contact us.',
             'completion_percentage': 100,
         },
         'kyc': {
-            'message': "Bingo, Your KYC verification is done! Please press the 'Get Cash' button at the bottom of the screen to start availing credit",
+            'message': 'All done! Please wait while we verify all details and get back.',
             'completion_percentage': 100,
         },
     },
-    'kyc_result_rejected': {
+    ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE: {
         'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
+            'message': "'" + ELIGIBILITY_TITLE + "' section Completed",
+            'completion_percentage': 100,
+        },
+        'kyc': {
+            'message': 'All done! Please wait while we verify all details and get back.',
+            'completion_percentage': 100,
+        },
+    },
+    ELIGIBILITY_APPROVED_KYC_REJECTED_STATE: {
+        'eligibility': {
+            'message': "'" + ELIGIBILITY_TITLE + "' section Completed",
             'completion_percentage': 100,
         },
         'kyc': {
@@ -279,54 +344,54 @@ USER_STATE_MESSAGES = {
             'completion_percentage': 100,
         },
     },
-    'bank_detail_submit': {
+    ELIGIBILITY_APPROVED_KYC_APPROVED_STATE: {
         'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
+            'message': "'" + ELIGIBILITY_TITLE + "' section Completed",
             'completion_percentage': 100,
         },
         'kyc': {
-            'message': 'Credit Information will be notified to you, soon!',
+            'message': "Bingo, Your KYC verification is done! Please press the 'Proceed' button at the bottom of the screen to start availing credit",
             'completion_percentage': 100,
         },
     },
-    'loan_amount_submit': {
-        'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
-            'completion_percentage': 100,
-        },
-        'kyc': {
-            'message': 'Credit Information will be notified to you, soon!',
-            'completion_percentage': 100,
-        },
-    },
-    'loan_application_proccessing': {
-        'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
-            'completion_percentage': 100,
-        },
-        'kyc': {
-            'message': 'Credit Information will be notified to you, soon!',
-            'completion_percentage': 100,
-        },
-    },
-    'loan_application_proccessed': {
-        'eligibility': {
-            'message': 'Credit Information will be notified to you, soon!',
-            'completion_percentage': 100,
-        },
-        'kyc': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
-            'completion_percentage': 100,
-        },
-    },
-    'loan_application_errored': {
-        'eligibility': {
-            'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
-            'completion_percentage': 100,
-        },
-        'kyc': {
-            'message': 'Credit Information will be notified to you, soon!',
-            'completion_percentage': 100,
-        },
-    },
+    # 'loan_amount_submit': {
+    #     'eligibility': {
+    #         'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
+    #         'completion_percentage': 100,
+    #     },
+    #     'kyc': {
+    #         'message': 'Credit Information will be notified to you, soon!',
+    #         'completion_percentage': 100,
+    #     },
+    # },
+    # 'loan_application_proccessing': {
+    #     'eligibility': {
+    #         'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
+    #         'completion_percentage': 100,
+    #     },
+    #     'kyc': {
+    #         'message': 'Credit Information will be notified to you, soon!',
+    #         'completion_percentage': 100,
+    #     },
+    # },
+    # 'loan_application_proccessed': {
+    #     'eligibility': {
+    #         'message': 'Credit Information will be notified to you, soon!',
+    #         'completion_percentage': 100,
+    #     },
+    #     'kyc': {
+    #         'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
+    #         'completion_percentage': 100,
+    #     },
+    # },
+    # 'loan_application_errored': {
+    #     'eligibility': {
+    #         'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
+    #         'completion_percentage': 100,
+    #     },
+    #     'kyc': {
+    #         'message': 'Credit Information will be notified to you, soon!',
+    #         'completion_percentage': 100,
+    #     },
+    # },
 }
