@@ -9,7 +9,7 @@ from participant import models
 from common.v1.decorators import session_authorize, meta_data_response, catch_exception
 from analytics.v1.services.credit_service import CustomerCreditLimit
 from activity.models import register_customer_state
-from activity.model_constants import ELIGIBILITY_RESULT_REJECTED
+from activity.model_constants import ELIGIBILITY_SUBMIT_STATE
 
 import logging
 LOGGER = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ class BorrowerCreate(APIView):
 
             if not data['eligible_for_loan']:
                 register_customer_state(
-                    ELIGIBILITY_RESULT_REJECTED, auth_data['customer_id'])
+                    ELIGIBILITY_SUBMIT_STATE, auth_data['customer_id'])
                 return Response(data, status=status.HTTP_200_OK)
 
             serializer.validate_foreign_keys()

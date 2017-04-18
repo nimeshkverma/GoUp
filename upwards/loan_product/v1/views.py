@@ -8,7 +8,7 @@ from loan_product import models
 from services import loan_specifications_service
 from common.v1.decorators import session_authorize, meta_data_response, catch_exception
 from activity.models import register_customer_state
-from activity.model_constants import ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT_STATE, LOAN_SPECIFICATION_REVIEW_STATE
+from activity.model_constants import LOAN_SPECIFICATION_REVIEWED_STATE
 
 import logging
 LOGGER = logging.getLogger(__name__)
@@ -53,8 +53,9 @@ class LoanProductDetail(APIView):
             serializers.LoanProductSerializer().validate_foreign_keys(request.data)
             loan_product_object_updated = serializers.LoanProductSerializer().update(
                 loan_product_object, request.data)
-            register_customer_state(
-                ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT_STATE, auth_data['customer_id'])
+            # register_customer_state(
+            # ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT_STATE,
+            # auth_data['customer_id'])
             return Response(serializers.LoanProductSerializer(loan_product_object_updated).data, status.HTTP_200_OK)
         return Response({}, status=status.HTTP_401_UNAUTHORIZED)
 

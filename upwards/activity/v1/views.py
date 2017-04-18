@@ -13,12 +13,15 @@ from common.v1.exceptions import NotAcceptableError
 
 from activity.models import register_customer_state
 from activity.model_constants import (ELIGIBILITY_SUBMIT_STATE,
-                                      ELIGIBILITY_RESULT_REJECTED_STATE,
                                       DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE,
-                                      KYC_SUBMIT_STATE,
                                       DOCUMENT_SUBMIT_EMAIL_UNVERIFIED_STATE,
-                                      KYC_RESULT_REJECTED_STATE,
-                                      KYC_RESULT_APPROVED_STATE,)
+                                      KYC_SUBMIT_STATE,
+                                      ELIGIBILITY_APPROVED_KYC_REJECTED_STATE,
+                                      ELIGIBILITY_APPROVED_KYC_APPROVED_STATE,
+                                      AGGREMENT_SIGNED_LOAN_APPLICATION_PROCCESSING_STATE,
+                                      LOAN_APPLICATION_PROCCESSED_STATE,
+                                      LOAN_APPLICATION_ERRORED_STATE,
+                                      ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE)
 
 import logging
 LOGGER = logging.getLogger(__name__)
@@ -26,8 +29,10 @@ LOGGER = logging.getLogger(__name__)
 
 class CustomerStateChange(APIView):
 
-    allowed_states = [ELIGIBILITY_SUBMIT_STATE, ELIGIBILITY_RESULT_REJECTED_STATE, KYC_RESULT_APPROVED_STATE,
-                      DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE, KYC_SUBMIT_STATE, KYC_RESULT_REJECTED_STATE]
+    allowed_states = [ELIGIBILITY_SUBMIT_STATE, DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE, KYC_SUBMIT_STATE,
+                      ELIGIBILITY_APPROVED_KYC_REJECTED_STATE, ELIGIBILITY_APPROVED_KYC_APPROVED_STATE,
+                      AGGREMENT_SIGNED_LOAN_APPLICATION_PROCCESSING_STATE, LOAN_APPLICATION_PROCCESSED_STATE,
+                      LOAN_APPLICATION_ERRORED_STATE, ]
 
     def is_personal_email_verified(self, customer_id):
         from customer.models import Customer
@@ -74,4 +79,23 @@ class CustomerStateChange(APIView):
             serializer = serializers.CustomerStateSerializer(
                 customer_state_object)
             return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({}, status.HTTP_401_UNAUTHORIZED)
+
+
+class KYCReviewSubmit(APIView):
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @session_authorize()
+    def post(self, request, auth_data):
+        if auth_data.get('authorized'):
+            serializer = serializers.KYCReviewSubmitSerializer(
+                data=request.data)
+            if serializer.is_valid():
+                register_customer_state(
+                    KYC_SUBMIT_STATE, auth_data['customer_id'])
+                register_customer_state(
+                    ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE, auth_data['customer_id'])
+                return Response(serializer.kyc_review_submission(), status=status.HTTP_200_OK)
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         return Response({}, status.HTTP_401_UNAUTHORIZED)

@@ -7,8 +7,8 @@ from customer.v1.service.homepage_config import LOAN_CONSTANTS
 from common.v1.utils.finance_utils import LoanCalculator
 from activity.models import register_customer_state
 from activity.model_constants import (ELIGIBILITY_SUBMIT_STATE,
-                                      ELIGIBILITY_RESULT_REJECTED_STATE,
-                                      ELIGIBILITY_RESULT_APPROVED_STATE)
+                                      ELIGIBILITY_REJECTED_KYC_SUBMIT_STATE,
+                                      ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE,)
 
 
 class CustomerEligibility(object):
@@ -69,7 +69,7 @@ class CustomerEligibility(object):
 
     def determine_eligibility(self):
         eligibility_data = {
-            'customer_present_state': ELIGIBILITY_RESULT_REJECTED_STATE,
+            'customer_present_state': ELIGIBILITY_REJECTED_KYC_SUBMIT_STATE,
             'tune_loan_product': False,
             'customer_loan_constants': {
                 'emi': self.loan_emi,
@@ -79,14 +79,14 @@ class CustomerEligibility(object):
         }
         if self.customer_credit_limit >= self.loan_emi:
             register_customer_state(
-                ELIGIBILITY_RESULT_APPROVED_STATE, self.customer_id)
+                ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE, self.customer_id)
             eligibility_data[
-                'customer_present_state'] = ELIGIBILITY_RESULT_APPROVED_STATE
+                'customer_present_state'] = ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE
         else:
             register_customer_state(
-                ELIGIBILITY_RESULT_REJECTED_STATE, self.customer_id)
+                ELIGIBILITY_REJECTED_KYC_SUBMIT_STATE, self.customer_id)
             eligibility_data[
-                'customer_present_state'] = ELIGIBILITY_RESULT_REJECTED_STATE
+                'customer_present_state'] = ELIGIBILITY_REJECTED_KYC_SUBMIT_STATE
             eligibility_data[
                 'customer_loan_constants'] = self.__get_tuned_loan_constants()
             eligibility_data['tune_loan_product'] = True if eligibility_data['customer_loan_constants'][

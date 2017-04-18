@@ -337,6 +337,7 @@ ELIGIBILITY_LIMIT = {
     'lower': 7500,
 }
 
-CREDIT_ELIGIBILITY_FACTOR = 2.5
+CREDIT_ELIGIBILITY_FACTOR = 5
+LOAN_INTEREST_RATE = 0.03
 
 VAHAN_API = "VAHAN_API_BASE_URL?reg1={reg1}&reg2={reg2}&reg3={reg3}&reg4={reg4}&vertical={vertical}"

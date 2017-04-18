@@ -1,9 +1,9 @@
 import datetime
-from eligibility.models import Education, Profession
-from customer.models import BankDetails
+from eligibility.models import Education, Profession, Finance, Vahan
+from customer.models import BankDetails, Customer
 from pan.models import Pan
 from aadhaar.models import Aadhaar
-from participant.models import Borrower
+from loan_product.models import LoanProduct
 
 
 class LoanAgreement(object):
@@ -31,26 +31,43 @@ class LoanAgreement(object):
         aadhaar_data['mothers_full_name'] = self.__get_full_name(
             aadhaar_object.mother_first_name, aadhaar_object.mother_first_name).title()
         aadhaar_data[
-            'address_line_1'] = aadhaar_object.permanent_address_line1.title() if aadhaar_object.permanent_address_line1 else ''
+            'permanent_address_line_1'] = aadhaar_object.permanent_address_line1.title() if aadhaar_object.permanent_address_line1 else ''
         aadhaar_data[
-            'address_line_2'] = aadhaar_object.permanent_address_line2 .title()if aadhaar_object.permanent_address_line2 else ''
+            'permanent_address_line_2'] = aadhaar_object.permanent_address_line2 .title()if aadhaar_object.permanent_address_line2 else ''
         aadhaar_data[
-            'city'] = aadhaar_object.permanent_city.title() if aadhaar_object.permanent_city else ''
+            'permanent_city'] = aadhaar_object.permanent_city.title() if aadhaar_object.permanent_city else ''
         aadhaar_data[
-            'state'] = aadhaar_object.permanent_state.title() if aadhaar_object.permanent_state else ''
+            'permanent_state'] = aadhaar_object.permanent_state.title() if aadhaar_object.permanent_state else ''
         aadhaar_data[
-            'pincode'] = aadhaar_object.permanent_pincode if aadhaar_object.permanent_pincode else ''
+            'permanent_pincode'] = aadhaar_object.permanent_pincode if aadhaar_object.permanent_pincode else ''
         aadhaar_data[
             'aadhaar_mob_no'] = str(aadhaar_object.mobile_no) if aadhaar_object.mobile_no else ''
         aadhaar_data['age'] = self.__age(aadhaar_object.dob)
         return aadhaar_data
+
+    def __get_customer_data(self):
+        customer_data = {}
+        customer_object = Customer.objects.get(customer_id=self.customer_id)
+        customer_data[
+            'current_address_line_1'] = customer_object.current_address_line1.title() if customer_object.current_address_line1 else ''
+        customer_data[
+            'current_address_line_2'] = customer_object.current_address_line2 .title()if customer_object.current_address_line2 else ''
+        customer_data[
+            'current_city'] = customer_object.current_city.title() if customer_object.current_city else ''
+        customer_data[
+            'current_state'] = customer_object.current_state.title() if customer_object.current_state else ''
+        customer_data[
+            'current_pincode'] = customer_object.current_pincode if customer_object.current_pincode else ''
+        return customer_data
 
     def __eligibility_data(self):
         eligibility_data = {}
         education_object = Education.objects.get(customer_id=self.customer_id)
         profession_object = Profession.objects.get(
             customer_id=self.customer_id)
-        borrower_object = Borrower.objects.get(customer_id=self.customer_id)
+        finance_object = Finance.objects.get(customer_id=self.customer_id)
+        loan_product_object = LoanProduct.objects.filter(
+            customer_id=self.customer_id)[0]
         eligibility_data[
             'qualification'] = education_object.qualification.title() if education_object.qualification else ''
         eligibility_data[
@@ -62,7 +79,29 @@ class LoanAgreement(object):
         eligibility_data['salary'] = str(
             profession_object.salary) if profession_object.salary else ''
         eligibility_data[
-            'eligibility_amount'] = str(borrower_object.credit_limit) if borrower_object.credit_limit else ''
+            'nature_of_employment'] = profession_object.nature_of_work.title() if profession_object.nature_of_work else ''
+        eligibility_data['maritial_status'] = finance_object.marital_status.title(
+        ) if finance_object.marital_status.title() else ''
+        eligibility_data[
+            'number_of_dependents'] = finance_object.dependents if finance_object.dependents else ''
+        eligibility_data[
+            'vehicle_ownership'] = finance_object.any_owned_vehicles if finance_object.any_owned_vehicles else ''
+        vehicle_registration_number = 'N.A'
+        if finance_object.any_owned_vehicles:
+            vahan_objects = Vahan.objects.filter(customer_id=self.customer_id)
+            if vahan_objects:
+                vehicle_registration_number = vahan_objects[0].registration_no
+        eligibility_data[
+            'vehicle_registration_number'] = vehicle_registration_number
+        eligibility_data[
+            'loan_amount'] = str(loan_product_object.loan_amount) if loan_product_object.loan_amount else ''
+        eligibility_data[
+            'loan_tenure'] = str(loan_product_object.loan_tenure) if loan_product_object.loan_tenure else ''
+        eligibility_data[
+            'loan_emi'] = str(loan_product_object.loan_emi) if loan_product_object.loan_emi else ''
+        eligibility_data[
+            'rate_of_interest'] = str(loan_product_object.loan_interest_rate) if loan_product_object.loan_interest_rate else ''
+        eligibility_data['loan_processing_fee'] = 1
 
         return eligibility_data
 
@@ -94,6 +133,7 @@ class LoanAgreement(object):
 
     def __data(self):
         data = self.__get_aadhaar_data()
+        data.update(self.__get_customer_data())
         data.update(self.__eligibility_data())
         data.update(self.__get_bank_data())
         data.update(self.__get_other_data())

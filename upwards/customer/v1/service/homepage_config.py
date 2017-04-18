@@ -1,3 +1,5 @@
+from django.conf import settings
+
 ELIGIBILITY_TITLE = "Eligibility & Credit Limit Check"
 KYC_TITLE = "KYC & Document Upload"
 
@@ -8,7 +10,7 @@ LOAN_CONSTANTS = {
     'loan_tenure_minimum': 3,
     'loan_increment_value': 20000,
     'number_of_increments': 5,
-    'rate_of_interest': 0.03,
+    'rate_of_interest': settings.LOAN_INTEREST_RATE,
     'loan_tenure': {
         '0-10000': {
             'maximum_tenure': 6,

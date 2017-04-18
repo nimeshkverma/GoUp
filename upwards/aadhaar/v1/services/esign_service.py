@@ -12,7 +12,7 @@ from django.template.loader import get_template
 from documents.models import UPLOADED
 from documents.v1.serializers import DocumentsSerializer
 from activity.models import register_customer_state
-from activity.model_constants import LOAN_SUBMIT_AGGREMENT_SIGNED_STATE, LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE
+from activity.model_constants import AGGREMENT_SIGNED_LOAN_APPLICATION_PROCCESSING_STATE, LOAN_SUBMIT_AGGREMENT_UNSIGNED
 from esign_constants import (SIGN_DOCUMENT_COMMANDS, UNSIGNED_PDF_PATH, UNSIGNED_PDF_NAME,
                              PDF_DIRECTORY, SIGNED_PDF_PATH, SIGNED_PDF_PAYLOAD_PATH, PDF_PAYLOAD_DIRECTORY,)
 
@@ -94,10 +94,10 @@ class ESign(object):
             response['loan_agreement_url'] = self.__s3_loan_agreement_url(
                 customer_id, True)
             register_customer_state(
-                LOAN_SUBMIT_AGGREMENT_SIGNED_STATE, customer_id)
+                AGGREMENT_SIGNED_LOAN_APPLICATION_PROCCESSING_STATE, customer_id)
         else:
             register_customer_state(
-                LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE, customer_id)
+                LOAN_SUBMIT_AGGREMENT_UNSIGNED, customer_id)
         subprocess.call(SIGN_DOCUMENT_COMMANDS['delete_directory'].format(
             customer_id=customer_id), shell=True)
         return response

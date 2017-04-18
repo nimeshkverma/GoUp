@@ -9,7 +9,6 @@ from eligibility import models
 from common.v1.decorators import session_authorize, meta_data_response, catch_exception
 
 from activity.models import register_customer_state
-from activity.model_constants import ELIGIBILITY_SUBMIT_STATE
 
 import logging
 LOGGER = logging.getLogger(__name__)
@@ -243,20 +242,3 @@ class VahanDetail(APIView):
             else:
                 return Response({}, status=status.HTTP_404_NOT_FOUND)
         return Response({}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-class EligibilityReviewSubmit(APIView):
-
-    # @catch_exception(LOGGER)
-    @meta_data_response()
-    @session_authorize()
-    def post(self, request, auth_data):
-        if auth_data.get('authorized'):
-            serializer = serializers.EligibilityReviewSubmitSerializer(
-                data=request.data)
-            if serializer.is_valid():
-                register_customer_state(
-                    ELIGIBILITY_SUBMIT_STATE, auth_data['customer_id'])
-                return Response(serializer.eligibility_review_submission(), status=status.HTTP_200_OK)
-            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({}, status.HTTP_401_UNAUTHORIZED)
