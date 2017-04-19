@@ -5,6 +5,8 @@ from . import views
 
 urlpatterns = [
     url(r'^common/config/$', views.Config.as_view(), name='config'),
+    url(r'^common/dropdown_data/$',
+        views.DropdownData.as_view(), name='dropdown_data'),
     url(r'^common/college/$', views.CollegeList.as_view()),
     url(r'^common/college/(?P<pk>[0-9]+)/$', views.CollegeDetail.as_view()),
     url(r'^common/company/$', views.CompanyList.as_view()),

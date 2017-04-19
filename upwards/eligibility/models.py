@@ -96,8 +96,8 @@ NATURE_OF_WORK_CHOICES = (
 class Profession(ActiveModel):
     customer = models.OneToOneField(
         'customer.Customer', on_delete=models.CASCADE)
-    company = models.ForeignKey(
-        'common.Company', on_delete=models.CASCADE)
+    company = models.CharField(
+        max_length=256, blank=False, null=False)
     organisation_type = models.ForeignKey(
         'common.OrganisationType', on_delete=models.CASCADE)
     salary_payment_mode = models.ForeignKey(
@@ -150,8 +150,8 @@ post_save.connect(
 class Education(ActiveModel):
     customer = models.OneToOneField(
         'customer.Customer', on_delete=models.CASCADE)
-    college = models.ForeignKey(
-        'common.College', on_delete=models.CASCADE)
+    college = models.CharField(
+        max_length=256, blank=False, null=False)
     qualification = models.CharField(max_length=25, blank=False, null=False)
     completion_year = models.IntegerField(
         choices=YEAR_CHOICES, blank=False, null=False)
