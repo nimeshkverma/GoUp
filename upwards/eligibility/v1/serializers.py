@@ -31,7 +31,6 @@ class FinanceSerializer(serializers.ModelSerializer):
 
 class ProfessionSerializer(serializers.ModelSerializer):
     customer_id = serializers.IntegerField()
-    company_id = serializers.IntegerField()
     organisation_type_id = serializers.IntegerField()
     salary_payment_mode_id = serializers.IntegerField()
     profession_type_id = serializers.IntegerField()
@@ -59,13 +58,12 @@ class ProfessionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Profession
-        exclude = ('customer', 'company', 'organisation_type', 'profession_type',
+        exclude = ('customer', 'organisation_type', 'profession_type',
                    'salary_payment_mode', 'created_at', 'updated_at', 'is_active', 'id')
 
 
 class EducationSerializer(serializers.ModelSerializer):
     customer_id = serializers.IntegerField()
-    college_id = serializers.IntegerField()
 
     def validate_foreign_keys(self, data=None):
         data = data if data else self.validated_data
@@ -84,7 +82,7 @@ class EducationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Education
-        exclude = ('customer', 'college', 'created_at',
+        exclude = ('customer', 'created_at',
                    'updated_at', 'is_active', 'id')
 
 
