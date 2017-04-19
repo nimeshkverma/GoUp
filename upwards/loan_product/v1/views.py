@@ -53,9 +53,6 @@ class LoanProductDetail(APIView):
             serializers.LoanProductSerializer().validate_foreign_keys(request.data)
             loan_product_object_updated = serializers.LoanProductSerializer().update(
                 loan_product_object, request.data)
-            # register_customer_state(
-            # ELIGIBILITY_REJECTED_LOAN_PRODUCT_SUBMIT_STATE,
-            # auth_data['customer_id'])
             return Response(serializers.LoanProductSerializer(loan_product_object_updated).data, status.HTTP_200_OK)
         return Response({}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -79,11 +76,11 @@ class LoanSpecifications(APIView):
     def post(self, request, auth_data):
         if auth_data.get('authorized'):
             register_customer_state(
-                LOAN_SPECIFICATION_REVIEW_STATE, auth_data['customer_id'])
+                LOAN_SPECIFICATION_REVIEWED_STATE, auth_data['customer_id'])
             return Response({}, status=status.HTTP_200_OK)
         return Response({}, status.HTTP_401_UNAUTHORIZED)
 
-    # @catch_exception(LOGGER)
+    @catch_exception(LOGGER)
     @meta_data_response()
     @session_authorize()
     def get(self, request, auth_data, *args, **kwargs):
