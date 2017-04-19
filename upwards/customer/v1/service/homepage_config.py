@@ -320,7 +320,7 @@ USER_STATE_MESSAGES = {
             'completion_percentage': 100,
         },
         'kyc': {
-            'message': 'All done! Please wait while we verify all details and get back.',
+            'message': 'Unfortunately, you are not eligible. Please reapply after sometime or contact us.',
             'completion_percentage': 100,
         },
     },
@@ -336,7 +336,7 @@ USER_STATE_MESSAGES = {
     },
     ELIGIBILITY_APPROVED_KYC_REJECTED_STATE: {
         'eligibility': {
-            'message': "'" + ELIGIBILITY_TITLE + "' section Completed",
+            'message': 'Unfortunately, we were not able to verify your KYC details. Please reapply later or contact us.',
             'completion_percentage': 100,
         },
         'kyc': {
@@ -350,7 +350,7 @@ USER_STATE_MESSAGES = {
             'completion_percentage': 100,
         },
         'kyc': {
-            'message': "Bingo, Your KYC verification is done! Please press the 'Proceed' button at the bottom of the screen to start availing credit",
+            'message': "Bingo, Your KYC verification is done! Please press the 'Proceed' button at the bottom of the screen.",
             'completion_percentage': 100,
         },
     },

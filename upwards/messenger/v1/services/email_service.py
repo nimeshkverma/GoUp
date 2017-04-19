@@ -6,8 +6,11 @@ from django.template.loader import get_template
 from django.conf import settings
 from customer.models import Customer
 from eligibility.models import Profession
-from activity.models import register_customer_state
-from activity.model_constants import FINANCE_SUBMIT_EMAIL_VERIFIED_STATE, DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE
+from activity.models import CustomerState, register_customer_state
+from activity.model_constants import (FINANCE_SUBMIT_EMAIL_VERIFIED_STATE,
+                                      FINANCE_SUBMIT_EMAIL_UNVERIFIED_STATE,
+                                      DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE,
+                                      DOCUMENT_SUBMIT_EMAIL_UNVERIFIED_STATE)
 
 
 def send_verification_mail(email_verify_data):
@@ -22,26 +25,24 @@ def send_verification_mail(email_verify_data):
     msg.send(True)
 
 
-email_model_fields = {
-    'customer_alternate_email': {
-        'model': Customer,
-        'email_verified_field': 'is_alternate_email_id_verified',
-        'user_state': DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE,
-    },
-    'customer_profession_email': {
-        'model': Profession,
-        'email_verified_field': 'is_email_verified',
-        'user_state': FINANCE_SUBMIT_EMAIL_VERIFIED_STATE,
-    }
-}
-
-
 def update_email_models(email_object):
-    if email_object.email_type in email_model_fields.keys():
-        email_model = email_model_fields[email_object.email_type]['model']
-        email_verified_field = email_model_fields[
-            email_object.email_type]['email_verified_field']
-        email_model.objects.filter(customer_id=email_object.customer.customer_id).update(
-            **{email_verified_field: email_object.is_verified})
-        register_customer_state(email_model_fields[email_object.email_type][
-            'user_state'], email_object.customer_id)
+    def profession_email_verify_state(email_object):
+        print Profession.objects.filter(customer_id=email_object.customer_id)
+        Profession.objects.filter(customer_id=email_object.customer_id).update(
+            **{'is_email_verified': email_object.is_verified})
+        if CustomerState.objects.get(customer_id=email_object.customer_id).present_state == FINANCE_SUBMIT_EMAIL_UNVERIFIED_STATE:
+            print "jj"
+            register_customer_state(
+                FINANCE_SUBMIT_EMAIL_VERIFIED_STATE, email_object.customer_id)
+
+    def alternate_email_verify_state(email_object):
+        Customer.objects.filter(customer_id=email_object.customer_id).update(
+            **{'is_alternate_email_id_verified': email_object.is_verified})
+        if CustomerState.objects.get(customer_id=email_object.customer_id).present_state == DOCUMENT_SUBMIT_EMAIL_UNVERIFIED_STATE:
+            register_customer_state(
+                DOCUMENT_SUBMIT_EMAIL_VERIFIED_STATE, email_object.customer_id)
+
+    if email_object.email_type == 'customer_alternate_email':
+        alternate_email_verify_state(email_object)
+    if email_object.email_type == 'customer_profession_email':
+        profession_email_verify_state(email_object)

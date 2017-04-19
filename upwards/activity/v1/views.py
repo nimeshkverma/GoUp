@@ -94,8 +94,15 @@ class KYCReviewSubmit(APIView):
             if serializer.is_valid():
                 register_customer_state(
                     KYC_SUBMIT_STATE, auth_data['customer_id'])
-                register_customer_state(
-                    ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE, auth_data['customer_id'])
+                from activity.model_constants import ELIGIBILITY_APPROVED_KYC_REJECTED_STATE, ELIGIBILITY_APPROVED_KYC_APPROVED_STATE, ELIGIBILITY_REJECTED_KYC_SUBMIT_STATE
+                if request.query_params.get('state') in [ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE, ELIGIBILITY_REJECTED_KYC_SUBMIT_STATE]:
+                    register_customer_state(request.query_params.get(
+                        'state'), auth_data['customer_id'])
+                if request.query_params.get('state') in [ELIGIBILITY_APPROVED_KYC_REJECTED_STATE, ELIGIBILITY_APPROVED_KYC_APPROVED_STATE]:
+                    register_customer_state(
+                        ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE, auth_data['customer_id'])
+                    register_customer_state(request.query_params.get(
+                        'state'), auth_data['customer_id'])
                 return Response(serializer.kyc_review_submission(), status=status.HTTP_200_OK)
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         return Response({}, status.HTTP_401_UNAUTHORIZED)
