@@ -17,6 +17,12 @@ class Config(APIView):
         return response.MetaDataResponse(config.Config().data, status=status.HTTP_200_OK)
 
 
+class DropdownData(APIView):
+
+    def get(self, request):
+        return response.MetaDataResponse(config.DropdownData().data, status=status.HTTP_200_OK)
+
+
 class CollegeList(mixins.ListModelMixin,
                   mixins.CreateModelMixin,
                   generics.GenericAPIView):

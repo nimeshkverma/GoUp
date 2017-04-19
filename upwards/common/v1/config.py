@@ -1,6 +1,12 @@
 from django.conf import settings
-from common.models import OrganisationType, SalaryPaymentMode, ProfessionType
-from . serializers import SalaryPaymentModeSerializer, OrganisationTypeSerializer, ProfessionTypeSerializer
+from activity.model_constants import CUSTOMER_STATE_ORDER_LIST
+from eligibility.models import MARITAL_STATUS_CHOICES, VEHICLE_TYPE_CHOICES, NATURE_OF_WORK_CHOICES
+from aadhaar.models import AADHAAR_DATA_SOURCE_CHOICES
+from documents.models import DOCUMENT_STATUS_CHOICES
+from messenger.models import MESSAGE_TYPE_CHOICES
+from social.models import PLATFORM_CHOICES, SOURCE_CHOICES
+from common.models import OrganisationType, SalaryPaymentMode, ProfessionType, College, Company, GENDER_CHOICES
+from . serializers import SalaryPaymentModeSerializer, OrganisationTypeSerializer, ProfessionTypeSerializer, CompanySerializer, CollegeSerializer
 from customer.v1.service.homepage_config import LOAN_CONSTANTS
 from participant.models import BorrowerType
 from participant.v1.serializers import BorrowerTypeSerializer
@@ -9,18 +15,6 @@ from participant.v1.serializers import BorrowerTypeSerializer
 
 
 class Config(object):
-    user_state = ['unknown', 'sign_up', 'pan_submit', 'professional_submit', 'education_submit',
-                  'finance_submit_email_verified', 'finance_submit_email_unverified', 'eligibility_submit',
-                  'eligibility_result_approved', 'eligibility_result_rejected', 'aadhaar_submit',
-                  'aadhaar_detail_submit', 'personal_contact_submit', 'document_submit_email_verified',
-                  'document_submit_email_unverified', 'kyc_submit', 'kyc_result_approved',
-                  'kyc_result_rejected', 'bank_detail_submit', 'loan_amount_submit',
-                  'loan_application_proccessing', 'loan_application_proccessed', 'loan_application_errored']
-
-    email_type = {
-        'personal': 'customer_alternate_email',
-        'professional': 'customer_profession_email'
-    }
 
     def __init__(self):
         self.data = self.__get_data()
@@ -37,6 +31,33 @@ class Config(object):
     def __get_post_otp_message(self):
         return settings.POST_OTP_MESSAGE
 
+    def __get_customer_default_profile_pic(self):
+        return settings.CUSTOMER_DEFAULT_PROFILE_PIC
+
+    def __get_data(self):
+        config_data = {
+            'user_state': CUSTOMER_STATE_ORDER_LIST,
+            'base_url': self.__get_base_url(),
+            'versions': self.__get_versions(),
+            'versioned_base_url': self.__get_versioned_base_url(),
+            'post_otp_message': self.__get_post_otp_message(),
+            'customer_default_profile_pic': self.__get_customer_default_profile_pic(),
+            'loan_constants': LOAN_CONSTANTS,
+        }
+        return config_data
+
+
+class DropdownData(object):
+
+    def list_tuple_to_list(self, tuple_list, index):
+        output_list = []
+        for tuple_data in tuple_list:
+            output_list.append(tuple_data[0])
+        return output_list
+
+    def __init__(self):
+        self.data = self.__get_data()
+
     def __get_profession_type(self):
         profession_type_objects = ProfessionType.objects.all()
         return ProfessionTypeSerializer(profession_type_objects, many=True).data
@@ -49,31 +70,34 @@ class Config(object):
         organisation_type_objects = OrganisationType.objects.all()
         return OrganisationTypeSerializer(organisation_type_objects, many=True).data
 
-    def __get_customer_default_profile_pic(self):
-        return settings.CUSTOMER_DEFAULT_PROFILE_PIC
+    def __get_company_list(self):
+        company_objects = Company.objects.all()
+        return CompanySerializer(company_objects, many=True).data
+
+    def __get_college_list(self):
+        college_objects = College.objects.all()
+        return CollegeSerializer(college_objects, many=True).data
 
     def __get_borrower_type(self):
         borrower_type_objects = BorrowerType.objects.all()
         return BorrowerTypeSerializer(borrower_type_objects, many=True).data
 
-    # def __get_loan_type(self):
-    #     loan_type_objects = LoanType.objects.all()
-    #     return LoanTypeSerializer(loan_type_objects, many=True).data
-
     def __get_data(self):
-        config_data = {
-            'user_state': self.user_state,
-            'base_url': self.__get_base_url(),
-            'versions': self.__get_versions(),
-            'versioned_base_url': self.__get_versioned_base_url(),
-            'post_otp_message': self.__get_post_otp_message(),
-            'email_type': self.email_type,
+        dropdown_data = {
             'salary_payment_mode': self.__get_salary_payment_mode(),
             'organisation_type': self.__get_organisation_type(),
             'profession_type': self.__get_profession_type(),
-            'customer_default_profile_pic': self.__get_customer_default_profile_pic(),
-            'loan_constants': LOAN_CONSTANTS,
             'borrower_type': self.__get_borrower_type(),
-            # 'loan_type': self.__get_loan_type(),
+            'company': self.__get_company_list(),
+            'college': self.__get_college_list(),
+            'maritial_status': self.list_tuple_to_list(MARITAL_STATUS_CHOICES, 0),
+            'vehicle_type': self.list_tuple_to_list(VEHICLE_TYPE_CHOICES, 0),
+            'nature_of_work': self.list_tuple_to_list(NATURE_OF_WORK_CHOICES, 0),
+            'aadhaar_data_source': self.list_tuple_to_list(AADHAAR_DATA_SOURCE_CHOICES, 0),
+            'gender': self.list_tuple_to_list(GENDER_CHOICES, 0),
+            'document_status': self.list_tuple_to_list(DOCUMENT_STATUS_CHOICES, 0),
+            'email_type': self.list_tuple_to_list(MESSAGE_TYPE_CHOICES, 0),
+            'social_login_source': self.list_tuple_to_list(SOURCE_CHOICES, 0),
+            'social_login_platform': self.list_tuple_to_list(PLATFORM_CHOICES, 0),
         }
-        return config_data
+        return dropdown_data
