@@ -27,13 +27,6 @@ class BorrowerSerializer(serializers.ModelSerializer):
         exclude = ('customer', 'created_at', 'updated_at', 'id')
 
 
-class BorrowerTypeSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.BorrowerType
-        exclude = ('created_at', 'updated_at')
-
-
 class LenderSerializer(serializers.ModelSerializer):
 
     class Meta:

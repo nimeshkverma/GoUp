@@ -8,10 +8,6 @@ from social.models import PLATFORM_CHOICES, SOURCE_CHOICES
 from common.models import OrganisationType, SalaryPaymentMode, ProfessionType, College, Company, GENDER_CHOICES
 from . serializers import SalaryPaymentModeSerializer, OrganisationTypeSerializer, ProfessionTypeSerializer, CompanySerializer, CollegeSerializer
 from customer.v1.service.homepage_config import LOAN_CONSTANTS
-from participant.models import BorrowerType
-from participant.v1.serializers import BorrowerTypeSerializer
-# from loan.models import LoanType
-# from loan.v1.serializers import LoanTypeSerializer
 
 
 class Config(object):
@@ -78,16 +74,11 @@ class DropdownData(object):
         college_objects = College.objects.all()
         return CollegeSerializer(college_objects, many=True).data
 
-    def __get_borrower_type(self):
-        borrower_type_objects = BorrowerType.objects.all()
-        return BorrowerTypeSerializer(borrower_type_objects, many=True).data
-
     def __get_data(self):
         dropdown_data = {
             'salary_payment_mode': self.__get_salary_payment_mode(),
             'organisation_type': self.__get_organisation_type(),
             'profession_type': self.__get_profession_type(),
-            'borrower_type': self.__get_borrower_type(),
             'company': self.__get_company_list(),
             'college': self.__get_college_list(),
             'maritial_status': self.list_tuple_to_list(MARITAL_STATUS_CHOICES, 0),

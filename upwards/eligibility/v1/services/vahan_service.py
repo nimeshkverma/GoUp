@@ -1,7 +1,7 @@
 import json
 import requests
 from django.conf import settings
-from vahan_constants import VAHAN_API_MODEL_MAPPING, VAHAN_API_MODEL_RTO_MAPPING
+from eligibility_service_constants import VAHAN_API_MODEL_MAPPING, VAHAN_API_MODEL_RTO_MAPPING
 
 
 class Vahan(object):

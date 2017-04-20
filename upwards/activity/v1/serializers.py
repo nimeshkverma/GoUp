@@ -5,6 +5,8 @@ from activity import models
 from common.v1.utils.model_utils import check_pk_existence
 from common.v1.exceptions import NotAcceptableError
 from customer.models import Customer
+from eligibility.v1.services.pre_loan_proccesing_service import CustomerPreLoanProccesing
+from activity.models import register_customer_state
 
 
 class CustomerStateSerializer(serializers.ModelSerializer):
@@ -31,4 +33,8 @@ class KYCReviewSubmitSerializer(serializers.Serializer):
     customer_id = serializers.IntegerField()
 
     def kyc_review_submission(self):
-        return {}
+        pre_loan_proccesing_object = CustomerPreLoanProccesing(
+            self.validated_data.get('customer_id'))
+        register_customer_state(
+            pre_loan_proccesing_object.customer_state, pre_loan_proccesing_object.customer_id)
+        return {'customer_state': pre_loan_proccesing_object.customer_state}

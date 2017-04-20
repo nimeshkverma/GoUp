@@ -18,14 +18,13 @@ LENDER_TYPE_CHOICES = (
 class Borrower(InActiveModel):
     customer = models.OneToOneField(
         'customer.Customer', on_delete=models.CASCADE)
-    borrower_type = models.ForeignKey(
-        'BorrowerType', on_delete=models.CASCADE, blank=True, null=True)
+    max_current_loans_allowed = models.IntegerField(default=1)
     credit_limit = models.IntegerField()
     number_of_active_loans = models.IntegerField(default=0)
     number_of_repaid_loans = models.IntegerField(default=0)
     total_current_debt = models.IntegerField(default=0)
     eligible_for_loan = models.BooleanField(
-        default=False)
+        default=True)
     objects = models.Manager()
     active_objects = ActiveObjectManager()
 
@@ -43,20 +42,6 @@ class Borrower(InActiveModel):
 
 post_save.connect(
     Borrower.register_eligibility_result_approved_customer_state, sender=Borrower)
-
-
-class BorrowerType(ActiveModel):
-    type_name = models.CharField(
-        max_length=100, unique=True)
-    max_current_loans_allowed = models.IntegerField(default=1)
-    objects = models.Manager()
-    active_objects = ActiveObjectManager()
-
-    class Meta(object):
-        db_table = "borrower_type"
-
-    def __unicode__(self):
-        return "%s__%s__%s" % (str(self.id), str(self.type_name), str(self.max_current_loans_allowed))
 
 
 class Lender(ActiveModel):
