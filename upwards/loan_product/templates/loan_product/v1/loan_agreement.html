@@ -1,6 +1,6 @@
 <p style="text-align: left;"><strong><img src="https://s3-us-west-2.amazonaws.com/upwardsimages/upwards_logo.png" alt="Upwards Logo" width="107" height="29" />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="https://s3-us-west-2.amazonaws.com/upwardsimages/loan_agreement.jpg" alt="Loan Agreement" width="65" height="25" />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="https://s3-us-west-2.amazonaws.com/upwardsimages/swatika_logo.jpg" alt="Swastika Logo" width="135" height="19" /><br /></strong><strong>________________________________________________________________________</strong></p>
 <ol>
-<li><span style="font-size: 10pt;"><strong>Loan ID: ____________</strong></span></li></br>
+<li><span style="font-size: 10pt;"><strong>Loan ID: {{loan_id}}</strong></span></li></br>
 <li><span style="font-size: 10pt;"><strong>Sanction Date: ____________</strong></span></li></br>
 <li><span style="font-size: 10pt;"><strong>Name of the Borrower: {{borrower_full_name}} </strong></span></li></br>
 <li><span style="font-size: 10pt;"><strong>Mobile Number (AADHAAR Linked): {{aadhaar_mob_no}} </strong></span></li></br>
@@ -61,7 +61,7 @@
 <p style="text-align: left;"><span style="font-size: 10pt;"><strong>Date: {{present_date}} </strong></span></p>
 <p style="text-align: left;"><span style="font-size: 10pt;"><strong>To</strong></span></p>
 <p style="text-align: left;"></p> {{borrower_full_name}} 
-<p style="text-align: left;"></p> {{borrower_address}} 
+<p style="text-align: left;"></p> {{current_address_line_1}}, {{current_address_line_2}}, {{current_city}}, {{current_state}}, {{current_pincode}} 
 
 <p><span style="font-size: 10pt;"><strong>Sub.: Loan sanction Letter</strong></span></p>
 <p><strong><span style="font-size: 10pt;">Dear Sir,</span></strong></p>
@@ -72,7 +72,7 @@
 <li><strong><span style="font-size: 10pt;">Margin(if any): None</span></strong></li>
 <li><strong><span style="font-size: 10pt;">Moratorium Period (if any): None</span></strong></li>
 <li><strong><span style="font-size: 10pt;">Loan Tenure: {{loan_tenure}} Months/Mode of Repayment: EMI </span></strong></li>
-<li><strong><span style="font-size: 10pt;">Rate Of Interest: {{rate_of_interest}} % Per month, Method Of Calculation: Flat </span></strong></li>
+<li><strong><span style="font-size: 10pt;">Rate Of Interest: {{interest_rate}} % Per month, Method Of Calculation: Flat </span></strong></li>
 <li><strong><span style="font-size: 10pt;">EMI (in Rs): {{loan_emi}}, Method Of Calculation: Flat </span></strong></li>
 <li><strong><span style="font-size: 10pt;">Processing Fee (In Rs): {{loan_processing_fee}}</span></strong></li>
 <li><strong><span style="font-size: 10pt;">Pledge Charges (if any): None</span></strong></li>
@@ -108,11 +108,11 @@
 <p><span style="font-size: 10pt;">This Loan Agreement is executed as on  {{present_date}} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;at the place {{city}} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;hereto between Mr./ Ms. {{borrower_full_name}}</span><span style="font-size: 10pt;">&nbsp;</span></p>
 <p><span style="font-size: 10pt;">S/o,D/o. {{fathers_full_name}} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Age: {{age}} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Yrs,</span></p>
 <p><span style="font-size: 10pt;">Address</span></p>
-<p>&nbsp; {{address_line_1}} </p>
-<p>&nbsp; {{address_line_2}} </p>
-<p>&nbsp; {{city}} </p>
-<p>&nbsp; {{state}} </p>
-<p>&nbsp; {{pincode}} </p>
+<p>&nbsp; {{current_address_line_1}} </p>
+<p>&nbsp; {{current_address_line_2}} </p>
+<p>&nbsp; {{current_city}} </p>
+<p>&nbsp; {{current_state}} </p>
+<p>&nbsp; {{current_pincode}} </p>
 <p><span style="font-size: 10pt;">of the <strong>First Part</strong>, hereinafter called the &ldquo;Borrower (s)&rdquo; AND <strong>Swastika Fin-Mart Private Limited</strong> [CIN : U65923MP2009PTC022801], a NBFC within the meaning of the Companies Act, 1956 and having its registered office at 48, Jaora Compound, MYH Road, Indore, M.P.- 452001, of the <strong>Second Part</strong>, hereinafter called &ldquo;LENDER&rdquo; and / or &ldquo;SFMPL&rdquo;</span></p>
 <p><span style="font-size: 10pt;">The expression &lsquo;Part&rsquo; unless repugnant to the context, is deemed to include legal heirs, executors, administrators and assigns</span></p>
 <p><span style="font-size: 10pt;">WHEREAS at the request of the Borrower (s), the SFMPL has agreed to grant a loan not exceeding the amount mentioned in the Annexure to this loan agreement to the Borrower (s) for a period as mentioned in the Annexure on terms and conditions hereinafter contained.</span></p>
@@ -172,7 +172,7 @@
 <li><strong><span style="font-size: 10pt;">Loan Tenure: {{loan_tenure}} Months/Mode of Repayment: EMI </span></strong></li>
 <li><strong><span style="font-size: 10pt;">Security: PDC/UDC and ECS or NACH Mandate</span></strong></li>
 <li><strong><span style="font-size: 10pt;">Repayment Terms: {{loan_tenure}} EMIs of Rs {{loan_emi}} each (Term Loan)</span></strong></li>
-<li><strong><span style="font-size: 10pt;">Rate Of Interest: {{rate_of_interest}} % Per month, Method Of Calculation: Flat </span></strong></li>
+<li><strong><span style="font-size: 10pt;">Rate Of Interest: {{interest_rate}} % Per month, Method Of Calculation: Flat </span></strong></li>
 <li><strong><span style="font-size: 10pt;">Processing Fee (In Rs): {{loan_processing_fee}}</span></strong></li>
 <li><strong><span style="font-size: 10pt;">Stamping & Legal Charges (In Rs): Included In Processing Fees</span></strong></li>
 <li><strong><span style="font-size: 10pt;">Cheque Return Charges: Rs 500/- per instance</span></strong></li>

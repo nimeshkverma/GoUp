@@ -1,6 +1,5 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
-from django.views.generic import View
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -141,20 +140,3 @@ class AadhaarESign(APIView):
                 return Response(serializer.sign_data(), status.HTTP_200_OK)
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         return Response({}, status.HTTP_401_UNAUTHORIZED)
-
-
-class LoanAgreement(View):
-    loan_agreement_template = 'aadhaar/v1/loan_agreement.html'
-    unauthorized_template = 'aadhaar/v1/unauthorized.html'
-
-    @catch_exception(LOGGER)
-    def get(self, request, pk):
-        serializer = serializers.LoanAgreementSerializer(
-            data={'customer_id': pk})
-        if serializer.is_valid():
-            if serializer.validate_foreign_keys():
-                return render(request, self.loan_agreement_template, serializer.get_loan_data())
-            else:
-                return render(request, self.unauthorized_template)
-
-        return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

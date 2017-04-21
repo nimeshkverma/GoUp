@@ -7,7 +7,6 @@ from common.v1.exceptions import NotAcceptableError
 from customer.models import Customer
 from services.ekyc_service import EKYC
 from services.esign_service import ESign
-from services.loan_agreement_service import LoanAgreement
 
 
 CURRENT_ADDRESS_DICT = {
@@ -122,23 +121,3 @@ class AadhaarESignSerializer(serializers.Serializer):
         data = esign.generate_and_sign_aggrement(self.validated_data.get(
             'otp'), self.validated_data.get('customer_id'))
         return data
-
-
-class LoanAgreementSerializer(serializers.Serializer):
-    customer_id = serializers.IntegerField()
-
-    def validate_foreign_keys(self, data=None):
-        valid_data = False
-        data = data if data else self.validated_data
-        model_pk_list = [
-            {"model": Customer, "pk": data.get(
-                'customer_id', -1), "pk_name": "customer_id"},
-        ]
-        for model_pk in model_pk_list:
-            if model_pk["pk_name"] in data.keys():
-                if check_pk_existence(model_pk['model'], model_pk['pk']):
-                    valid_data = True
-        return valid_data
-
-    def get_loan_data(self):
-        return LoanAgreement(self.validated_data.get('customer_id')).data
