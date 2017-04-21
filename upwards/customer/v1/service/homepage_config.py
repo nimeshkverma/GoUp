@@ -354,6 +354,17 @@ USER_STATE_MESSAGES = {
             'completion_percentage': 100,
         },
     },
+    LOAN_SPECIFICATION_REVIEWED_STATE: {
+        'eligibility': {
+            'message': "Please Procceed for Esigning the Loan Agreement.",
+            'completion_percentage': 100,
+        },
+        'kyc': {
+            'message': "Please Procceed for Esigning the Loan Agreement.",
+            'completion_percentage': 100,
+        },
+
+    }
     # 'loan_amount_submit': {
     #     'eligibility': {
     #         'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
