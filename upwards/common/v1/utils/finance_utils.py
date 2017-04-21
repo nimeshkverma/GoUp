@@ -25,8 +25,8 @@ class LoanCalculator(object):
         denominator = (1.0 - (1 + self.interest_rate) ** (-1 * tenure))
         return numerator / denominator if (numerator and denominator) else 0
 
-    def loan_emi_ceiled(self, installment_number):
-        return ceil(self.loan_emi(installment_number))
+    def loan_emi_ceiled(self, tenure):
+        return ceil(self.loan_emi(tenure))
 
     def principal_outstanding(self, installment_number):
         return self.principal * ((1 + self.interest_rate)**installment_number) - (((1 + self.interest_rate)**installment_number) - 1) * self.loan_emi(self.tenure) / self.interest_rate
@@ -67,6 +67,7 @@ class LoanCalculator(object):
         for installment_number in xrange(1, self.tenure + 1):
             installment_date = self.safe_next_month_date(installment_date)
             installment_data = {
+                'serial_no': installment_number,
                 'emi': self.emi,
                 'principal_outstanding': self.principal_outstanding_ceiled(installment_number - 1),
                 'principal_paid': self.principal_paid_ceiled(installment_number - 1),

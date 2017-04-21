@@ -3,7 +3,7 @@ from eligibility.models import Education, Profession, Finance, Vahan
 from customer.models import BankDetails, Customer
 from pan.models import Pan
 from aadhaar.models import Aadhaar
-from loan_product.models import LoanProduct
+from loan_product.models import LoanProduct, Loan
 
 
 class LoanAgreement(object):
@@ -66,12 +66,10 @@ class LoanAgreement(object):
         profession_object = Profession.objects.get(
             customer_id=self.customer_id)
         finance_object = Finance.objects.get(customer_id=self.customer_id)
-        loan_product_object = LoanProduct.objects.filter(
-            customer_id=self.customer_id)[0]
         eligibility_data[
             'qualification'] = education_object.qualification.title() if education_object.qualification else ''
         eligibility_data[
-            'company'] = profession_object.company.name.title() if profession_object.company.name else ''
+            'company'] = profession_object.company.title() if profession_object.company else ''
         eligibility_data[
             'company_type'] = profession_object.organisation_type.name.title() if profession_object.organisation_type.name else ''
         eligibility_data[
@@ -87,23 +85,38 @@ class LoanAgreement(object):
         eligibility_data[
             'vehicle_ownership'] = finance_object.any_owned_vehicles if finance_object.any_owned_vehicles else ''
         vehicle_registration_number = 'N.A'
+        vehicle_ownership = 'No'
         if finance_object.any_owned_vehicles:
             vahan_objects = Vahan.objects.filter(customer_id=self.customer_id)
             if vahan_objects:
                 vehicle_registration_number = vahan_objects[0].registration_no
+                vehicle_ownership = 'Yes' if vahan_objects[
+                    0].any_owned_vehicles else 'No'
+
         eligibility_data[
             'vehicle_registration_number'] = vehicle_registration_number
         eligibility_data[
-            'loan_amount'] = str(loan_product_object.loan_amount) if loan_product_object.loan_amount else ''
-        eligibility_data[
-            'loan_tenure'] = str(loan_product_object.loan_tenure) if loan_product_object.loan_tenure else ''
-        eligibility_data[
-            'loan_emi'] = str(loan_product_object.loan_emi) if loan_product_object.loan_emi else ''
-        eligibility_data[
-            'rate_of_interest'] = str(loan_product_object.loan_interest_rate) if loan_product_object.loan_interest_rate else ''
-        eligibility_data['loan_processing_fee'] = 1
-
+            'vehicle_ownership'] = vehicle_ownership
         return eligibility_data
+
+    def __loan_data(self):
+        loan_data = {}
+        loan_product_object = LoanProduct.objects.filter(
+            customer_id=self.customer_id)[0]
+        loan_object = Loan.objects.filter(
+            customer_id=self.customer_id)[0]
+        loan_data[
+            'loan_amount'] = str(loan_product_object.loan_amount) if loan_product_object.loan_amount else ''
+        loan_data[
+            'loan_tenure'] = str(loan_product_object.loan_tenure) if loan_product_object.loan_tenure else ''
+        loan_data[
+            'loan_emi'] = str(loan_product_object.loan_emi) if loan_product_object.loan_emi else ''
+        loan_data[
+            'interest_rate'] = str(loan_object.interest_rate_per_tenure) if loan_object.interest_rate_per_tenure else ''
+        loan_data[
+            'loan_processing_fee'] = str(loan_object.processing_fee) if loan_object.processing_fee else ''
+        loan_data['loan_id'] = str(loan_object.id) if loan_object.id else ''
+        return loan_data
 
     def __get_other_data(self):
         data = {}
@@ -112,17 +125,15 @@ class LoanAgreement(object):
         data['pan'] = pan_object.pan if pan_object.pan else ''
         data['email_id'] = pan_object.customer.alternate_email_id if pan_object.customer.alternate_email_id else ''
         data['alternate_mob_no'] = pan_object.customer.alternate_mob_no if pan_object.customer.alternate_mob_no else ''
+        data['present_date'] = datetime.date.today()
         return data
 
     def __get_bank_data(self):
-        data = {
-            'bank': " ____________________<to be filled later based on user provided information>",
-            'ifsc': " ______________________<to be filled later based on user provided information>"
-        }
-        # bank_object = BankDetails.objects.get(customer_id=self.customer_id)
-        # data['bank'] = bank_object.bank_name.title(
-        # ) if bank_object.bank_name else ''
-        # data['ifsc'] = bank_object.ifsc if bank_object.ifsc else ''
+        data = {}
+        bank_object = BankDetails.objects.get(customer_id=self.customer_id)
+        data['bank'] = bank_object.bank_name.title(
+        ) if bank_object.bank_name else ''
+        data['ifsc'] = bank_object.ifsc if bank_object.ifsc else ''
         return data
 
     def __age(self, when, on=None):
@@ -137,4 +148,5 @@ class LoanAgreement(object):
         data.update(self.__eligibility_data())
         data.update(self.__get_bank_data())
         data.update(self.__get_other_data())
+        data.update(self.__loan_data())
         return data

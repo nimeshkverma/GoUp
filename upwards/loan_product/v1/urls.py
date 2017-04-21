@@ -9,6 +9,8 @@ urlpatterns = [
         views.LoanProductDetail.as_view(), name='LoanProductDetail'),
     url(r'^customer/(?P<pk>[0-9]+)/loan_specifications/$',
         views.LoanSpecifications.as_view(), name='LoanSpecifications'),
+    url(r'^customer/(?P<pk>[0-9]+)/loan_agreement/$',
+        views.LoanAgreement.as_view(), name='LoanAgreement'),
 
 
 ]
