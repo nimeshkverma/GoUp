@@ -114,6 +114,8 @@ class LoanAgreement(object):
         loan_data[
             'interest_rate'] = float(loan_object.interest_rate_per_tenure) * 100 if loan_object.interest_rate_per_tenure else ''
         loan_data[
+            'penalty_rate'] = float(loan_object.penalty_rate_per_tenure) * 100 if loan_object.penalty_rate_per_tenure else ''
+        loan_data[
             'loan_processing_fee'] = str(loan_object.processing_fee) if loan_object.processing_fee else ''
         loan_data['loan_id'] = str(loan_object.id) if loan_object.id else ''
         return loan_data
