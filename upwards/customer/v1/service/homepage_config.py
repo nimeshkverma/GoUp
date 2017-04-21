@@ -86,42 +86,14 @@ USER_STATES_PRE_LOAN_SPECIFICATION = [
     ELIGIBILITY_APPROVED_KYC_APPROVED_STATE,
 ]
 
-# USER_STATES_WITHOUT_ELIGIBILITY_AMOUNT = [
-#     'loan_product_submit',
-#     'pan_submit',
-#     'professional_submit',
-#     'finance_submit_email_unverified',
-#     'education_submit',
-#     'finance_submit_email_verified',
-#     'eligibility_submit',
-#     'eligibility_result_proccessing',
-# ]
+USER_STATES_POST_LOAN_SPECIFICATION_PRE_LOAN_AMOUNT_TRANSFERED = [
+    LOAN_SPECIFICATION_REVIEWED_STATE,
+    LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE,
+    AGGREMENT_SIGNED_LOAN_APPLICATION_PROCCESSING_STATE,
+    LOAN_APPLICATION_PROCCESSED_STATE,
+    LOAN_APPLICATION_ERRORED_STATE,
 
-# USER_STATES_WITH_ELIGIBILITY_AMOUNT = [
-#     'eligibility_rejected_loan_product_submit',
-#     'eligibility_result_approved',
-#     'aadhaar_submit',
-#     'aadhaar_detail_submit',
-#     'personal_contact_submit',
-#     'document_submit_email_unverified',
-#     'document_submit_email_verified',
-#     'kyc_submit',
-#     'kyc_result_approved',
-#     'kyc_result_rejected',
-#     'bank_detail_submit',
-#     'loan_amount_submit',
-#     'loan_application_proccessing',
-#     'loan_application_errored',
-#     'loan_application_proccessed',
-# ]
-
-# BORROWER_STATES = [
-#     'bank_detail_submit',
-#     'loan_amount_submit',
-#     'loan_application_proccessing',
-#     'loan_application_errored',
-#     'loan_application_proccessed',
-# ]
+]
 
 USER_STATE_MESSAGES = {
     UNKNOWN_STATE: {
@@ -214,36 +186,6 @@ USER_STATE_MESSAGES = {
             'completion_percentage': 0,
         },
     },
-    # 'eligibility_result_approved': {
-    #     'eligibility': {
-    #         'message': 'You have been approved for credit limit of Rs {amount}. Congrats, please proceed to the next section',
-    #         'completion_percentage': 100,
-    #     },
-    #     'kyc': {
-    #         'message': 'Please complete your application by filling this section',
-    #         'completion_percentage': 0,
-    #     },
-    # },
-    # 'eligibility_result_rejected': {
-    #     'eligibility': {
-    #         'message': 'Unfortunately, you are not eligible. Please reapply after sometime or contact us.',
-    #         'completion_percentage': 100,
-    #     },
-    #     'kyc': {
-    #         'message': 'Unfortunately, you are not eligible',
-    #         'completion_percentage': 0,
-    #     },
-    # },
-    # 'eligibility_result_rejected': {
-    #     'eligibility': {
-    #         'message': 'Unfortunately, you are not eligible. Please reapply after sometime or contact us.',
-    #         'completion_percentage': 100,
-    #     },
-    #     'kyc': {
-    #         'message': 'Unfortunately, you are not eligible',
-    #         'completion_percentage': 0,
-    #     },
-    # },
     AADHAAR_SUBMIT_STATE: {
         'eligibility': {
             'message': "'" + ELIGIBILITY_TITLE + "' section Completed, Please complete the '" + KYC_TITLE + "' section",
@@ -355,54 +297,18 @@ USER_STATE_MESSAGES = {
         },
     },
     LOAN_SPECIFICATION_REVIEWED_STATE: {
-        'eligibility': {
-            'message': "Please Procceed for Esigning the Loan Agreement.",
-            'completion_percentage': 100,
-        },
-        'kyc': {
-            'message': "Please Procceed for Esigning the Loan Agreement.",
-            'completion_percentage': 100,
-        },
-
-    }
-    # 'loan_amount_submit': {
-    #     'eligibility': {
-    #         'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
-    #         'completion_percentage': 100,
-    #     },
-    #     'kyc': {
-    #         'message': 'Credit Information will be notified to you, soon!',
-    #         'completion_percentage': 100,
-    #     },
-    # },
-    # 'loan_application_proccessing': {
-    #     'eligibility': {
-    #         'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
-    #         'completion_percentage': 100,
-    #     },
-    #     'kyc': {
-    #         'message': 'Credit Information will be notified to you, soon!',
-    #         'completion_percentage': 100,
-    #     },
-    # },
-    # 'loan_application_proccessed': {
-    #     'eligibility': {
-    #         'message': 'Credit Information will be notified to you, soon!',
-    #         'completion_percentage': 100,
-    #     },
-    #     'kyc': {
-    #         'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
-    #         'completion_percentage': 100,
-    #     },
-    # },
-    # 'loan_application_errored': {
-    #     'eligibility': {
-    #         'message': 'You have been approved for credit limit of Rs {amount}. Congrats!',
-    #         'completion_percentage': 100,
-    #     },
-    #     'kyc': {
-    #         'message': 'Credit Information will be notified to you, soon!',
-    #         'completion_percentage': 100,
-    #     },
-    # },
+        'message': "Please Procceed for Esigning the Loan Agreement.",
+    },
+    LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE: {
+        'message': 'Please take a printout of the Loan Agreement emailed to you, Sign it at the specified loactions and send it us.'
+    },
+    AGGREMENT_SIGNED_LOAN_APPLICATION_PROCCESSING_STATE: {
+        'message': 'Please wait while we disburse your loan amount'
+    },
+    LOAN_APPLICATION_PROCCESSED_STATE: {
+        'message': 'Your loan amount has been disbursed and will reflect in your account in sometime'
+    },
+    LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE: {
+        'message': 'Some error occured while disbursing your loan'
+    },
 }
