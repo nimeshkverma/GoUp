@@ -112,7 +112,7 @@ class LoanAgreement(object):
         loan_data[
             'loan_emi'] = str(loan_product_object.loan_emi) if loan_product_object.loan_emi else ''
         loan_data[
-            'interest_rate'] = str(loan_object.interest_rate_per_tenure) if loan_object.interest_rate_per_tenure else ''
+            'interest_rate'] = float(loan_object.interest_rate_per_tenure) * 100 if loan_object.interest_rate_per_tenure else ''
         loan_data[
             'loan_processing_fee'] = str(loan_object.processing_fee) if loan_object.processing_fee else ''
         loan_data['loan_id'] = str(loan_object.id) if loan_object.id else ''
