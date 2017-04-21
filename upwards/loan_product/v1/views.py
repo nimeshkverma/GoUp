@@ -94,7 +94,7 @@ class LoanAgreement(View):
     loan_agreement_template = 'loan_product/v1/loan_agreement.html'
     unauthorized_template = 'loan_product/v1/unauthorized.html'
 
-    # @catch_exception(LOGGER)
+    @catch_exception(LOGGER)
     def get(self, request, pk):
         serializer = serializers.LoanAgreementSerializer(
             data={'customer_id': pk})
@@ -105,3 +105,22 @@ class LoanAgreement(View):
                 return render(request, self.unauthorized_template)
 
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoanDispersalDetails(APIView):
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @session_authorize()
+    def post(self, request, auth_data):
+        if auth_data.get('authorized'):
+            dummy = {
+                'loan_id': 10,
+                'transaction_id': 22,
+                'loan_amount': 10000,
+                'processing_fees': 500,
+                'amount_transferred': 9500,
+                'transfer_date': '2017-01-01'
+            }
+            return Response(dummy, status=status.HTTP_200_OK)
+        return Response({}, status.HTTP_401_UNAUTHORIZED)

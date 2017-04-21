@@ -79,4 +79,4 @@ class Loan(ActiveModel):
         db_table = "loan"
 
     def __unicode__(self):
-        return "%s__%s__%s__%s" % (str(self.customer_id), str(self.loan_type), str(self.loan_amount_applied), str(self.application_datetime))
+        return "%s__%s__%s__%s" % (str(self.customer_id), str(self.status), str(self.loan_amount_applied), str(self.application_datetime))

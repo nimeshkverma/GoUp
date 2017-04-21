@@ -2,7 +2,8 @@ from social.models import SocialProfile
 from activity.models import CustomerState
 from loan_product.models import LoanProduct
 from homepage_config import (
-    ELIGIBILITY_TITLE, KYC_TITLE, LOAN_CONSTANTS, LOAN_PRODUCT_STATES, USER_STATES_PRE_LOAN_SPECIFICATION, USER_STATE_MESSAGES)
+    ELIGIBILITY_TITLE, KYC_TITLE, LOAN_CONSTANTS, LOAN_PRODUCT_STATES, USER_STATES_PRE_LOAN_SPECIFICATION,
+    USER_STATES_POST_LOAN_SPECIFICATION_PRE_LOAN_AMOUNT_TRANSFERED, USER_STATE_MESSAGES)
 
 
 class Homepage(object):
@@ -19,6 +20,8 @@ class Homepage(object):
             return self.__get_loan_product_homepage_data()
         if self.present_state in USER_STATES_PRE_LOAN_SPECIFICATION:
             return self.__pre_loan_specification_homepage_data()
+        if self.present_state in USER_STATES_POST_LOAN_SPECIFICATION_PRE_LOAN_AMOUNT_TRANSFERED:
+            return self.__post_loan_specification_pre_loan_amount_transfered_homepage_data()
         return default_homepage
 
     def __customer_profile(self):
@@ -78,6 +81,10 @@ class Homepage(object):
         }
         return section
 
+    def __get_message_section(self):
+        print USER_STATE_MESSAGES.get(self.present_state, {})
+        return USER_STATE_MESSAGES.get(self.present_state, {}).get('message', '')
+
     def __get_loan_product_homepage_data(self):
         customer_profile = self.__customer_profile()
         homepage_data = {
@@ -118,5 +125,18 @@ class Homepage(object):
             'mast_message': self.__get_mast_message(customer_profile),
             'sections': {
             },
+        }
+        return homepage_data
+
+    def __post_loan_specification_pre_loan_amount_transfered_homepage_data(self):
+        customer_profile = self.__customer_profile()
+        homepage_data = {
+            'customer': {
+                'id': self.customer_id,
+                'state': self.present_state,
+                'customer_profile': customer_profile,
+            },
+            'mast_message': self.__get_mast_message(customer_profile),
+            'sections': self.__get_message_section(),
         }
         return homepage_data

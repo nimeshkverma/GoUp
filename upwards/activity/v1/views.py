@@ -21,7 +21,8 @@ from activity.model_constants import (ELIGIBILITY_SUBMIT_STATE,
                                       AGGREMENT_SIGNED_LOAN_APPLICATION_PROCCESSING_STATE,
                                       LOAN_APPLICATION_PROCCESSED_STATE,
                                       LOAN_APPLICATION_ERRORED_STATE,
-                                      ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE)
+                                      ELIGIBILITY_APPROVED_KYC_PROCCESSING_STATE,
+                                      )
 
 import logging
 LOGGER = logging.getLogger(__name__)
