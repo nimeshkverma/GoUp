@@ -15,7 +15,6 @@ from customer.models import Customer
 
 from activity.models import register_customer_state
 from activity.model_constants import AADHAAR_SUBMIT_STATE, AADHAAR_DETAIL_SUBMIT_STATE
-from services import loan_agreement_service
 
 import logging
 LOGGER = logging.getLogger(__name__)

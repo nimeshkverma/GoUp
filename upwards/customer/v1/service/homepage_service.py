@@ -82,8 +82,7 @@ class Homepage(object):
         return section
 
     def __get_message_section(self):
-        print USER_STATE_MESSAGES.get(self.present_state, {})
-        return USER_STATE_MESSAGES.get(self.present_state, {}).get('message', '')
+        return USER_STATE_MESSAGES.get(self.present_state, {})
 
     def __get_loan_product_homepage_data(self):
         customer_profile = self.__customer_profile()
