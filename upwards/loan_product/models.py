@@ -80,3 +80,22 @@ class Loan(ActiveModel):
 
     def __unicode__(self):
         return "%s__%s__%s__%s" % (str(self.customer_id), str(self.status), str(self.loan_amount_applied), str(self.application_datetime))
+
+
+class Installment(ActiveModel):
+    loan = models.ForeignKey(
+        'Loan', on_delete=models.CASCADE)
+    installment_number = models.IntegerField()
+    expected_installment_amount = models.IntegerField()
+    expected_repayment_date = models.DateTimeField()
+    actual_installment_amount = models.IntegerField(null=True, blank=True)
+    actual_repayment_date = models.DateTimeField(null=True, blank=True)
+    penalty_amount = models.IntegerField(null=True, blank=True)
+    objects = models.Manager()
+    active_objects = ActiveObjectManager()
+
+    class Meta(object):
+        db_table = "installment"
+
+    def __unicode__(self):
+        return "%s__%s" % (str(self.id), str(self.loan_id))

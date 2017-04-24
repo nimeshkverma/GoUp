@@ -11,8 +11,8 @@ urlpatterns = [
         views.LoanSpecifications.as_view(), name='LoanSpecifications'),
     url(r'^customer/(?P<pk>[0-9]+)/loan_agreement/$',
         views.LoanAgreement.as_view(), name='LoanAgreement'),
-    url(r'^customer/(?P<pk>[0-9]+)/loan_dispersal_details/$',
-        views.LoanDispersalDetails.as_view(), name='LoanDispersalDetails'),
+    url(r'^customer/(?P<pk>[0-9]+)/loan_disbursal_details/$',
+        views.LoanDisbursalDetails.as_view(), name='LoanDisbursalDetails'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
