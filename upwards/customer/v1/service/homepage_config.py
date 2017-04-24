@@ -300,7 +300,7 @@ USER_STATE_MESSAGES = {
         'message': "Please Procceed for Esigning the Loan Agreement.",
     },
     LOAN_SUBMIT_AGGREMENT_UNSIGNED_STATE: {
-        'message': 'Please take a printout of the Loan Agreement emailed to you, Sign it at the specified loactions and send it us.'
+        'message': 'Please take a printout of the Loan Agreement emailed to you, Sign it at the specified locations and send it us.'
     },
     AGGREMENT_SIGNED_LOAN_APPLICATION_PROCCESSING_STATE: {
         'message': 'Please wait while we disburse your loan amount'
