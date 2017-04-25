@@ -51,8 +51,8 @@ class LoanDisbursal(object):
             customer_id=self.customer_id, transaction_type=LOAN_AVAIL)
         if transaction_objects:
             transaction_index = len(transaction_objects) - 1
-            data['amount_transferred'] = transaction_objects[
-                transaction_index].amount - data['processing_fee']
+            data['amount_transferred'] = int(transaction_objects[
+                transaction_index].amount) - int(data['processing_fee'])
             data['transaction_id'] = transaction_objects[transaction_index].id
             data['transfer_date'] = transaction_objects[
                 transaction_index].updated_at.strftime("%Y-%m-%d")
