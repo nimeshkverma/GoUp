@@ -117,3 +117,94 @@ class LoanDisbursalDetails(APIView):
         if auth_data.get('authorized'):
             return Response(loan_disbursal_service.LoanDisbursal(auth_data['customer_id']).details(), status=status.HTTP_200_OK)
         return Response({}, status.HTTP_401_UNAUTHORIZED)
+
+
+class NewLoanDetails(APIView):
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @session_authorize()
+    def post(self, request, auth_data):
+        if auth_data.get('authorized'):
+            data = {
+                "eligible_for_loan": False
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({}, status.HTTP_401_UNAUTHORIZED)
+
+
+class BikeWorthDetails(APIView):
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    def get(self, request):
+        data = {
+            "brand": request.query_params.get("brand", "Please Provide the Brand"),
+            "model": request.query_params.get("model", "Please Provide the model"),
+            "manufacturing_year": request.query_params.get("manufacturing_year", "Please Provide the manufacturing_year"),
+            "approximate_price": 45000,
+            "down_payment": 10000
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class BikeLoanCreate(APIView):
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @session_authorize('customer_id')
+    def post(self, request, auth_data):
+        if auth_data.get('authorized'):
+            data = {
+                "customer_id": auth_data['customer_id'],
+                "brand": "Bajaj",
+                "model": "Pulsar",
+                "manufacturing_year": "1991",
+                "approximate_price": 45000,
+                "down_payment": 10000
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({}, status.HTTP_401_UNAUTHORIZED)
+
+
+class BikeLoanDetail(APIView):
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @session_authorize()
+    def get(self, request, auth_data, *args, **kwargs):
+        if auth_data.get('authorized'):
+            data = {
+                "customer_id": auth_data['customer_id'],
+                "brand": "Bajaj",
+                "model": "Pulsar",
+                "manufacturing_year": "1991",
+                "approximate_price": 45000,
+                "down_payment": 10000
+            }
+            return Response(data, status.HTTP_200_OK)
+        return Response({}, status.HTTP_401_UNAUTHORIZED)
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @session_authorize()
+    def put(self, request, auth_data, *args, **kwargs):
+        if auth_data.get('authorized'):
+            data = {
+                "customer_id": auth_data['customer_id'],
+                "brand": "Bajaj",
+                "model": "Pulsar",
+                "manufacturing_year": "1991",
+                "approximate_price": 45000,
+                "down_payment": 10000
+            }
+            return Response(data, status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_401_UNAUTHORIZED)
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @session_authorize()
+    def delete(self, request, auth_data, *args, **kwargs):
+        if auth_data.get('authorized'):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({}, status.HTTP_401_UNAUTHORIZED)
