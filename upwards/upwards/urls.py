@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'^', include('participant.urls')),
     url(r'^', include('pan.urls')),
     url(r'^', include('social.urls')),
+    url(r'^', include('transaction.urls')),
     url(r'^', include('thirdpartyleads.urls')),
     # url(r'^', include('loan.urls')),
-    # url(r'^', include('transaction.urls')),
 ]
