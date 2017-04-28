@@ -48,7 +48,7 @@ class DropdownData(object):
     def list_tuple_to_list(self, tuple_list, index):
         output_list = []
         for tuple_data in tuple_list:
-            output_list.append(tuple_data[0])
+            output_list.append(str(tuple_data[0]).title())
         return output_list
 
     def __init__(self):
