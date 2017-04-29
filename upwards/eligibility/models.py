@@ -19,23 +19,23 @@ from common.models import (ActiveModel,
 #     (POST_GRADUATE, 'post_graduate'),
 #     (OTHERS, 'others'),
 # )
-MARRIED = 'married'
-UNMARRIED = 'unmarried'
-OTHER_MARITAL_STATUS = 'other'
+MARRIED = 'Married'
+UNMARRIED = 'Unmarried'
+OTHER_MARITAL_STATUS = 'Other'
 
 MARITAL_STATUS_CHOICES = (
-    (MARRIED, 'married'),
-    (UNMARRIED, 'unmarried'),
-    (OTHER_MARITAL_STATUS, 'other'),
+    (MARRIED, 'Married'),
+    (UNMARRIED, 'Unmarried'),
+    (OTHER_MARITAL_STATUS, 'Other'),
 )
 
-CAR = 'car'
-BIKE = 'bike'
-OTHER_VEHICLE_TYPE = 'other'
+CAR = 'Car'
+BIKE = 'Bike'
+OTHER_VEHICLE_TYPE = 'Other'
 VEHICLE_TYPE_CHOICES = (
-    (CAR, 'car'),
-    (BIKE, 'bike'),
-    (OTHER_VEHICLE_TYPE, 'other'),
+    (CAR, 'Car'),
+    (BIKE, 'Bike'),
+    (OTHER_VEHICLE_TYPE, 'Other'),
 )
 
 
@@ -80,16 +80,16 @@ post_save.connect(
     Finance.register_finance_submit_customer_state, sender=Finance)
 
 
-SELF_EMPLOYED = 'self employed'
-SALARIED = 'salaried'
-UNEMPLOYED = 'unemployed'
-OTHER_NATURE_OF_WORK = 'other'
+SELF_EMPLOYED = 'Self Employed'
+SALARIED = 'Salaried'
+UNEMPLOYED = 'Unemployed'
+OTHER_NATURE_OF_WORK = 'Other'
 
 NATURE_OF_WORK_CHOICES = (
-    (SELF_EMPLOYED, 'self employed'),
-    (SALARIED, 'salaried'),
-    (UNEMPLOYED, 'unemployed'),
-    (OTHER_NATURE_OF_WORK, 'other'),
+    (SELF_EMPLOYED, 'Self Employed'),
+    (SALARIED, 'Salaried'),
+    (UNEMPLOYED, 'Unemployed'),
+    (OTHER_NATURE_OF_WORK, 'Other'),
 )
 
 

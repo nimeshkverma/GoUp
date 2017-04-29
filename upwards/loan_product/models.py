@@ -91,6 +91,7 @@ class Installment(ActiveModel):
     actual_installment_amount = models.IntegerField(null=True, blank=True)
     actual_repayment_date = models.DateTimeField(null=True, blank=True)
     penalty_amount = models.IntegerField(null=True, blank=True)
+    installment_paid = models.BooleanField(default=False)
     objects = models.Manager()
     active_objects = ActiveObjectManager()
 
