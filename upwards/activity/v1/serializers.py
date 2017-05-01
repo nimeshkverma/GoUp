@@ -7,6 +7,7 @@ from common.v1.exceptions import NotAcceptableError
 from customer.models import Customer
 from eligibility.v1.services.pre_loan_proccesing_service import CustomerPreLoanProccesing
 from loan_product.v1.services.loan_disbursal_service import LoanDisbursal
+from loan_product.models import Loan, LoanProduct
 from activity.models import register_customer_state
 from activity.model_constants import LOAN_APPLICATION_PROCCESSED_STATE, LOAN_APPLICATION_ERRORED_STATE
 
@@ -60,8 +61,23 @@ class LoanStatusSerializer(serializers.Serializer):
                         model_pk['pk_name'], model_pk['pk'])
 
     def loan_status_update(self):
-        LoanDisbursal(self.validated_data['customer_id'], self.validated_data[
-            'customer_state']).loan_post_processing()
+        loan_status = False
+        customer_id = self.validated_data.get('customer_id')
+        loan_id = None
+        loan_product_id = None
+        loan_product_objects = LoanProduct.objects.filter(
+            customer_id=customer_id)
+        if loan_product_objects:
+            loan_product_index = len(loan_product_objects) - 1
+            loan_product_id = loan_product_objects[loan_product_index].id
+        loan_objects = Loan.objects.filter(customer_id=customer_id)
+        if loan_objects:
+            loan_index = len(loan_objects) - 1
+            loan_id = loan_objects[loan_index].id
+        if customer_id and loan_id and loan_product_id:
+            LoanDisbursal(customer_id, loan_id, loan_product_id, None, self.validated_data[
+                          'customer_state']).loan_post_processing()
+            loan_status = True
         register_customer_state(
-            self.validated_data['customer_state'], self.validated_data['customer_id'])
-        return {'customer_state': self.validated_data['customer_state']}
+            self.validated_data['customer_state'], customer_id)
+        return {'customer_state': self.validated_data['customer_state'], 'loan_post_processing': loan_status}

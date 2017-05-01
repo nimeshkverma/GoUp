@@ -76,3 +76,23 @@ class LoanCalculator(object):
             }
             table_data.append(installment_data)
         return table_data
+
+
+class PenaltyCalulator(object):
+
+    def __init__(self, amount, monthly_interest, monthly_penalty_interest, from_date, on_date=None):
+        self.amount = amount
+        self.monthly_interest = float(monthly_interest)
+        self.monthly_penalty_interest = float(monthly_penalty_interest)
+        self.from_date = from_date
+        self.on_date = on_date if on_date else datetime.date.today()
+        self.penalty = self.__penalty()
+
+    def __penalty(self):
+        penalty = 0
+        if self.on_date > self.from_date:
+            days = (self.on_date - self.from_date).days
+            interest_rate = (self.monthly_interest +
+                             self.monthly_penalty_interest) / 30
+            penalty = ceil(self.amount * days * interest_rate)
+        return penalty

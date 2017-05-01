@@ -7,15 +7,16 @@ from customer.v1.service.homepage_config import LOAN_CONSTANTS
 
 class LoanSpecifications(object):
 
-    def __init__(self, customer_id, loan_start_date=None):
+    def __init__(self, customer_id, loan_id, loan_product_id, loan_start_date=None):
         self.customer_id = customer_id
+        self.loan_id = loan_id
+        self.loan_product_id = loan_product_id
         self.interest_rate = None
         self.emi = None
         self.tenure = None
         self.loan_amount = None
         self.number_of_emi = None
         self.processing_fee = None
-        self.loan_id = None
         self.__set_attributes()
         self.loan_start_date = loan_start_date if loan_start_date else datetime.date.today()
         self.repayment_profile = LoanCalculator(
@@ -23,22 +24,14 @@ class LoanSpecifications(object):
         self.data = self.__data()
 
     def __set_attributes(self):
-        loan_product_objects = LoanProduct.objects.filter(
-            customer_id=self.customer_id)
-        if loan_product_objects:
-            loan_product_index = len(loan_product_objects) - 1
-            self.emi = loan_product_objects[loan_product_index].loan_emi
-            self.tenure = loan_product_objects[loan_product_index].loan_tenure
-            self.loan_amount = loan_product_objects[
-                loan_product_index].loan_amount
-            self.number_of_emi = self.tenure
-        loan_objects = Loan.objects.filter(customer_id=self.customer_id)
-        if loan_objects:
-            loan_index = len(loan_objects) - 1
-            self.interest_rate = float(
-                loan_objects[loan_index].interest_rate_per_tenure)
-            self.processing_fee = loan_objects[loan_index].processing_fee
-            self.loan_id = loan_objects[loan_index].id
+        loan_product_object = LoanProduct.objects.get(pk=self.loan_product_id)
+        self.emi = loan_product_object.loan_emi
+        self.tenure = loan_product_object.loan_tenure
+        self.loan_amount = loan_product_object.loan_amount
+        self.number_of_emi = self.tenure
+        loan_object = Loan.objects.get(pk=self.loan_id)
+        self.interest_rate = float(loan_object.interest_rate_per_tenure)
+        self.processing_fee = loan_object.processing_fee
 
     def __data(self):
         data = {

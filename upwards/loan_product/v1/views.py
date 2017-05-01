@@ -82,12 +82,18 @@ class LoanSpecifications(APIView):
             return Response({}, status=status.HTTP_200_OK)
         return Response({}, status.HTTP_401_UNAUTHORIZED)
 
-    @catch_exception(LOGGER)
+    # @catch_exception(LOGGER)
     @meta_data_response()
     @session_authorize()
     def get(self, request, auth_data, *args, **kwargs):
         if auth_data.get('authorized'):
-            return Response(loan_specifications_service.LoanSpecifications(auth_data['customer_id']).data, status=status.HTTP_200_OK)
+            serializer = serializers.LoanSpecificationsSerializer(
+                data={'customer_id': auth_data['customer_id']})
+            if serializer.is_valid():
+                loan_specifications = serializer.get_loan_specifications()
+                if loan_specifications:
+                    return Response(loan_specifications, status=status.HTTP_200_OK)
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         return Response({}, status.HTTP_401_UNAUTHORIZED)
 
 
@@ -110,12 +116,18 @@ class LoanAgreement(View):
 
 class LoanDisbursalDetails(APIView):
 
-    @catch_exception(LOGGER)
+    # @catch_exception(LOGGER)
     @meta_data_response()
     @session_authorize()
     def post(self, request, auth_data):
         if auth_data.get('authorized'):
-            return Response(loan_disbursal_service.LoanDisbursal(auth_data['customer_id']).details(), status=status.HTTP_200_OK)
+            serializer = serializers.LoanDisbursalSerializer(
+                data={'customer_id': auth_data['customer_id']})
+            if serializer.is_valid():
+                loan_disbursal_details = serializer.get_loan_disbursal_details()
+                if loan_disbursal_details:
+                    return Response(loan_disbursal_details, status=status.HTTP_200_OK)
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         return Response({}, status.HTTP_401_UNAUTHORIZED)
 
 
