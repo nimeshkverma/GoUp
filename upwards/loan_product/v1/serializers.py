@@ -180,42 +180,6 @@ class RepaymentDetailsSerializer(serializers.Serializer):
             loan_id = loan_objects[loan_index].id
         if customer_id and loan_id and loan_product_id:
             repayment_details = loan_installment_service.LoanInstallment(
-                self.customer_id, loan_id, loan_product_id).get_repayment_data()
-        return repayment_details
-
-
-class RepaymentDetailsSerializer(serializers.Serializer):
-    customer_id = serializers.IntegerField()
-
-    def validate_foreign_keys(self, data=None):
-        valid_data = False
-        data = data if data else self.validated_data
-        model_pk_list = [
-            {"model": Customer, "pk": data.get(
-                'customer_id', -1), "pk_name": "customer_id"},
-        ]
-        for model_pk in model_pk_list:
-            if model_pk["pk_name"] in data.keys():
-                if check_pk_existence(model_pk['model'], model_pk['pk']):
-                    valid_data = True
-        return valid_data
-
-    def get_repayment_details(self):
-        repayment_details = None
-        customer_id = self.validated_data.get('customer_id')
-        loan_id = None
-        loan_product_id = None
-        loan_product_objects = models.LoanProduct.objects.filter(
-            customer_id=customer_id)
-        if loan_product_objects:
-            loan_product_index = len(loan_product_objects) - 1
-            loan_product_id = loan_product_objects[loan_product_index].id
-        loan_objects = models.Loan.objects.filter(customer_id=customer_id)
-        if loan_objects:
-            loan_index = len(loan_objects) - 1
-            loan_id = loan_objects[loan_index].id
-        if customer_id and loan_id and loan_product_id:
-            repayment_details = loan_installment_service.LoanInstallment(
                 customer_id, loan_id, loan_product_id).get_repayment_data()
         return repayment_details
 
