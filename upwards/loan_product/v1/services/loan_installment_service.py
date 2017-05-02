@@ -49,7 +49,7 @@ class LoanInstallment(object):
                 'month': installment_object.expected_repayment_date.strftime("%b"),
                 'installment_status': installment_status,
                 'principal_outstanding': loan_principal - installment_object.installment_principal_part if installment_status != 'unpaid_with_penalty' else loan_principal,
-                'penalty': self.__penalty(installment_object)
+                'penalty': self.__penalty(installment_object) if not installment_object.interest_paid else 0
             }
             emi_data.append(installment_data)
         self.emi = installment_object.expected_installment_amount
@@ -82,7 +82,9 @@ class LoanInstallment(object):
         for installment_object in installment_objects:
             past_emi_due = past_emi_due + installment_object.expected_installment_amount if self.__installment_status(
                 installment_object) == 'unpaid_with_penalty' else past_emi_due
-            late_payment_penalty += self.__penalty(installment_object)
+            late_payment_penalty = late_payment_penalty + \
+                self.__penalty(
+                    installment_object) if not installment_object.interest_paid else late_payment_penalty
             next_emi_amount = installment_object.expected_installment_amount
             next_emi_due_date = installment_object.expected_repayment_date.strftime(
                 "%Y-%m-%d")
