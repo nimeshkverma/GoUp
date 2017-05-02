@@ -86,7 +86,7 @@ class LoanInstallment(object):
             next_emi_amount = installment_object.expected_installment_amount
             next_emi_due_date = installment_object.expected_repayment_date.strftime(
                 "%Y-%m-%d")
-            if datetime.date.today() <= installment_object.expected_repayment_date.date():
+            if (datetime.date.today() <= installment_object.expected_repayment_date.date()) and not installment_object.installment_paid:
                 break
         repayment_data = {
             "next_emi_amount": next_emi_amount,
