@@ -83,11 +83,10 @@ class LoanInstallment(object):
             past_emi_due = past_emi_due + installment_object.expected_installment_amount if self.__installment_status(
                 installment_object) == 'unpaid_with_penalty' else past_emi_due
             late_payment_penalty += self.__penalty(installment_object)
-
+            next_emi_amount = installment_object.expected_installment_amount
+            next_emi_due_date = installment_object.expected_repayment_date.strftime(
+                "%Y-%m-%d")
             if datetime.date.today() > installment_object.expected_repayment_date.date():
-                next_emi_amount = installment_object.expected_installment_amount
-                next_emi_due_date = installment_object.expected_repayment_date.strftime(
-                    "%Y-%m-%d")
                 break
         repayment_data = {
             "next_emi_amount": next_emi_amount,
