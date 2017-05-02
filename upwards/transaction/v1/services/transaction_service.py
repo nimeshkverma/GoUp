@@ -15,7 +15,7 @@ class TransactionHistory(object):
         for transaction_object in transaction_objects:
             data = {
                 'loan_id': transaction_object.loan.id,
-                'installment_id': transaction_object.installment.id,
+                'installment_id': transaction_object.installment.id if transaction_object.installment else None,
                 'amount': transaction_object.amount,
                 'utr': transaction_object.utr,
                 'transaction_status': transaction_object.transaction_status,
