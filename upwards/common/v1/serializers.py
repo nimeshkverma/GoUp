@@ -58,3 +58,10 @@ class LoanPurposeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.LoanPurpose
         fields = ('id', 'name', 'is_active')
+
+
+class BikeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Bike
+        exclude = ('created_at', 'updated_at')

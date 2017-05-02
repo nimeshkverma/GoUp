@@ -159,3 +159,21 @@ class LoanPurpose(ActiveModel):
 
     def __unicode__(self):
         return "%s__%s" % (str(self.name), str(self.is_active))
+
+
+class Bike(ActiveModel):
+    brand = models.CharField(blank=False, null=False, max_length=256)
+    model = models.CharField(blank=False, null=False, max_length=256)
+    manufacturing_year = models.CharField(
+        blank=False, null=False, max_length=256)
+    approximate_price = models.IntegerField(blank=False, null=False)
+    down_payment = models.IntegerField(blank=False, null=False)
+
+    objects = models.Manager()
+    active_objects = ActiveObjectManager()
+
+    class Meta(object):
+        db_table = "bike"
+
+    def __unicode__(self):
+        return "%s__%s__%s__%s" % (str(self.brand), str(self.model), str(self.manufacturing_year), str(self.approximate_price))

@@ -225,3 +225,37 @@ class LoanPurposeDetail(mixins.RetrieveModelMixin,
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
+class BikeList(mixins.ListModelMixin,
+               mixins.CreateModelMixin,
+               generics.GenericAPIView):
+    queryset = models.Bike.active_objects.all()
+    serializer_class = serializers.BikeSerializer
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class BikeDetail(mixins.RetrieveModelMixin,
+                 mixins.UpdateModelMixin,
+                 mixins.DestroyModelMixin,
+                 generics.GenericAPIView):
+    queryset = models.Bike.objects.all()
+    serializer_class = serializers.BikeSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)

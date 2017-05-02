@@ -15,12 +15,14 @@ urlpatterns = [
         views.LoanDisbursalDetails.as_view(), name='LoanDisbursalDetails'),
     url(r'^customer/(?P<pk>[0-9]+)/new_loan/$',
         views.NewLoanDetails.as_view(), name='NewLoanDetails'),
-    url(r'^loan_product/bike_worth/$',
-        views.BikeWorthDetails.as_view(), name='BikeWorthDetails'),
     url(r'^customer/loan_product/bike_loan/$',
         views.BikeLoanCreate.as_view(), name='BikeLoanCreate'),
     url(r'^customer/(?P<pk>[0-9]+)/loan_product/bike_loan/$',
-        views.BikeLoanDetail.as_view(), name='BikeLoanDetail'),
+        views.BikeLoanDetails.as_view(), name='BikeLoanDetails'),
+    url(r'^customer/(?P<pk>[0-9]+)/repayment_details/$',
+        views.RepaymentDetails.as_view()),
+    url(r'^customer/(?P<pk>[0-9]+)/repayment_schedule/$',
+        views.RepaymentSchedule.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

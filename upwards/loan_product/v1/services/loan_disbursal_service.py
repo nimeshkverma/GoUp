@@ -6,10 +6,11 @@ from loan_product.v1.services.loan_specifications_service import LoanSpecificati
 
 class LoanDisbursal(object):
 
-    def __init__(self, customer_id, customer_state=None):
+    def __init__(self, customer_id, loan_id, loan_product_id, loan_start_date=None, customer_state=None):
         self.customer_id = customer_id
         self.customer_state = customer_state
-        self.loan_specifications = LoanSpecifications(self.customer_id)
+        self.loan_specifications = LoanSpecifications(
+            self.customer_id, loan_id, loan_product_id, loan_start_date)
 
     def __create_installments(self):
         installments = []
@@ -19,6 +20,8 @@ class LoanDisbursal(object):
                 installment_number=installment_data['serial_no'],
                 expected_installment_amount=installment_data['emi'],
                 expected_repayment_date=installment_data['due_date'],
+                installment_interest_part=installment_data['interest_paid'],
+                installment_principal_part=installment_data['principal_paid']
             ))
         Installment.objects.bulk_create(installments)
 

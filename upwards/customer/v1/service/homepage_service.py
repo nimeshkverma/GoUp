@@ -1,6 +1,7 @@
 from social.models import SocialProfile
 from activity.models import CustomerState
-from loan_product.models import LoanProduct
+from loan_product.models import LoanProduct, Loan
+from loan_product.v1.services import loan_installment_service
 from homepage_config import (
     ELIGIBILITY_TITLE, KYC_TITLE, LOAN_CONSTANTS, LOAN_PRODUCT_STATES, USER_STATES_PRE_LOAN_SPECIFICATION,
     USER_STATES_POST_LOAN_SPECIFICATION_PRE_LOAN_AMOUNT_TRANSFERED, USER_STATE_MESSAGES, LOAN_APPLICATION_PROCCESSED_STATE,)
@@ -23,7 +24,7 @@ class Homepage(object):
         if self.present_state in USER_STATES_POST_LOAN_SPECIFICATION_PRE_LOAN_AMOUNT_TRANSFERED:
             return self.__post_loan_specification_pre_loan_amount_transfered_homepage_data()
         if self.present_state in [LOAN_APPLICATION_PROCCESSED_STATE]:
-            return self.__dummy_homepage_data()
+            return self.__loan_proccessed_homepage_data()
         return default_homepage
 
     def __customer_profile(self):
@@ -142,8 +143,19 @@ class Homepage(object):
         }
         return homepage_data
 
-    def __dummy_homepage_data(self):
+    def __loan_proccessed_homepage_data(self):
         customer_profile = self.__customer_profile()
+        loan_id = None
+        loan_product_id = None
+        loan_product_objects = LoanProduct.objects.filter(
+            customer_id=self.customer_id)
+        if loan_product_objects:
+            loan_product_index = len(loan_product_objects) - 1
+            loan_product_id = loan_product_objects[loan_product_index].id
+        loan_objects = Loan.objects.filter(customer_id=self.customer_id)
+        if loan_objects:
+            loan_index = len(loan_objects) - 1
+            loan_id = loan_objects[loan_index].id
         homepage_data = {
             'customer': {
                 'id': self.customer_id,
@@ -151,107 +163,6 @@ class Homepage(object):
                 'customer_profile': customer_profile,
             },
             'mast_message': self.__get_mast_message(customer_profile),
-            "sections": {
-                "loan_details": {
-                    "loan_amount": 20000,
-                    "loan_interest": 0.03,
-                    "emi": 2345,
-                    "processing_fee": 500,
-                    "tenure": 10
-                },
-                "emi_schedule": [
-                    {
-                        "due_date": "2017-05-26",
-                        "serial_no": 1,
-                        "emi": 2345,
-                        "principal_outstanding": 20000,
-                        "principal_paid": 1745,
-                        "interest_paid": 600,
-                        "month": "May"
-                    },
-                    {
-                        "due_date": "2017-06-26",
-                        "serial_no": 2,
-                        "emi": 2345,
-                        "principal_outstanding": 18256,
-                        "principal_paid": 1797,
-                        "interest_paid": 548,
-                        "month": "June"
-                    },
-                    {
-                        "due_date": "2017-07-26",
-                        "serial_no": 3,
-                        "emi": 2345,
-                        "principal_outstanding": 16459,
-                        "principal_paid": 1851,
-                        "interest_paid": 494,
-                        "month": "July"
-                    },
-                    {
-                        "due_date": "2017-08-26",
-                        "serial_no": 4,
-                        "emi": 2345,
-                        "principal_outstanding": 14608,
-                        "principal_paid": 1907,
-                        "interest_paid": 439,
-                        "month": "August"
-                    },
-                    {
-                        "due_date": "2017-09-26",
-                        "serial_no": 5,
-                        "emi": 2345,
-                        "principal_outstanding": 12702,
-                        "principal_paid": 1964,
-                        "interest_paid": 382,
-                        "month": "September"
-                    },
-                    {
-                        "due_date": "2017-10-26",
-                        "serial_no": 6,
-                        "emi": 2345,
-                        "principal_outstanding": 10738,
-                        "principal_paid": 2023,
-                        "interest_paid": 323,
-                        "month": "October"
-                    },
-                    {
-                        "due_date": "2017-11-26",
-                        "serial_no": 7,
-                        "emi": 2345,
-                        "principal_outstanding": 8716,
-                        "principal_paid": 2084,
-                        "interest_paid": 262,
-                        "month": "November"
-                    },
-                    {
-                        "due_date": "2017-12-26",
-                        "serial_no": 8,
-                        "emi": 2345,
-                        "principal_outstanding": 6632,
-                        "principal_paid": 2146,
-                        "interest_paid": 199,
-                        "month": "December"
-                    },
-                    {
-                        "due_date": "2018-01-26",
-                        "serial_no": 9,
-                        "emi": 2345,
-                        "principal_outstanding": 4487,
-                        "principal_paid": 2211,
-                        "interest_paid": 135,
-                        "month": "January"
-                    },
-                    {
-                        "due_date": "2018-02-26",
-                        "serial_no": 10,
-                        "emi": 2345,
-                        "principal_outstanding": 2277,
-                        "principal_paid": 2277,
-                        "interest_paid": 69,
-                        "month": "Febrary"
-                    }
-                ],
-                "repayment_breakup": {}
-            }
+            "sections": loan_installment_service.LoanInstallment(self.customer_id, loan_id, loan_product_id).get_loan_installment_data()
         }
         return homepage_data

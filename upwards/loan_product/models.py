@@ -54,6 +54,25 @@ post_save.connect(
     LoanProduct.register_product_submit_customer_state, sender=LoanProduct)
 
 
+class BikeLoan(ActiveModel):
+    customer = models.ForeignKey(
+        'customer.Customer', on_delete=models.CASCADE)
+    brand = models.CharField(blank=False, null=False, max_length=256)
+    model = models.CharField(blank=False, null=False, max_length=256)
+    manufacturing_year = models.CharField(
+        blank=False, null=False, max_length=256)
+    approximate_price = models.IntegerField(blank=False, null=False)
+    down_payment = models.IntegerField(blank=False, null=False)
+    objects = models.Manager()
+    active_objects = ActiveObjectManager()
+
+    class Meta(object):
+        db_table = 'bike_loan'
+
+    def __unicode__(self):
+        return "%s__%s__%s__%s__%s" % (str(self.customer_id), str(self.brand), str(self.model), str(self.manufacturing_year), str(self.approximate_price))
+
+
 class Loan(ActiveModel):
     customer = models.ForeignKey(
         'customer.Customer', on_delete=models.CASCADE)
@@ -92,6 +111,8 @@ class Installment(ActiveModel):
     actual_repayment_date = models.DateTimeField(null=True, blank=True)
     penalty_amount = models.IntegerField(null=True, blank=True)
     installment_paid = models.BooleanField(default=False)
+    installment_interest_part = models.IntegerField()
+    installment_principal_part = models.IntegerField()
     objects = models.Manager()
     active_objects = ActiveObjectManager()
 
