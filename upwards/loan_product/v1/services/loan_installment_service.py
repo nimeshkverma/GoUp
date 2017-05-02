@@ -63,10 +63,38 @@ class LoanInstallment(object):
             "processing_fee": self.loan_object.processing_fee,
             "tenure": self.loan_object.tenure,
         }
+        return loan_data
 
-    def get_graph_data(self):
+    def get_loan_installment_data(self):
         graph_data = {
             'loan_details': self.loan_data,
             'emi_details': self.emi_data,
         }
         return graph_data
+
+    def get_repayment_data(self):
+        next_emi_amount = 0
+        next_emi_due_date = None
+        past_emi_due = 0
+        late_payment_penalty = 0
+        installment_objects = Installment.objects.filter(
+            loan_id=self.loan_id).order_by('installment_number')
+        for installment_object in installment_objects:
+            past_emi_due = past_emi_due + installment_object.expected_installment_amount if self.__installment_status(
+                installment_object) == 'unpaid_with_penalty' else past_emi_due
+            late_payment_penalty += self.__penalty(installment_object)
+
+            if datetime.date.today() > installment_object.expected_repayment_date.date():
+                next_emi_amount = installment_object.expected_installment_amount
+                next_emi_due_date = installment_object.expected_repayment_date.strftime(
+                    "%Y-%m-%d")
+                break
+        repayment_data = {
+            "next_emi_amount": next_emi_amount,
+            "next_emi_due_date": next_emi_due_date,
+            "past_emi_due": past_emi_due,
+            "late_payment_penalty": late_payment_penalty,
+            "total_past_payment_due": past_emi_due + late_payment_penalty,
+            "total_past_and_next_payment_due": past_emi_due + late_payment_penalty + next_emi_amount,
+        }
+        return repayment_data

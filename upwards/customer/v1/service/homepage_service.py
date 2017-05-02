@@ -163,6 +163,6 @@ class Homepage(object):
                 'customer_profile': customer_profile,
             },
             'mast_message': self.__get_mast_message(customer_profile),
-            "sections": loan_installment_service.LoanInstallment(self.customer_id, loan_id, loan_product_id).get_graph_data()
+            "sections": loan_installment_service.LoanInstallment(self.customer_id, loan_id, loan_product_id).get_loan_installment_data()
         }
         return homepage_data

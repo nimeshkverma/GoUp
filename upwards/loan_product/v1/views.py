@@ -82,7 +82,7 @@ class LoanSpecifications(APIView):
             return Response({}, status=status.HTTP_200_OK)
         return Response({}, status.HTTP_401_UNAUTHORIZED)
 
-    # @catch_exception(LOGGER)
+    @catch_exception(LOGGER)
     @meta_data_response()
     @session_authorize()
     def get(self, request, auth_data, *args, **kwargs):
@@ -116,7 +116,7 @@ class LoanAgreement(View):
 
 class LoanDisbursalDetails(APIView):
 
-    # @catch_exception(LOGGER)
+    @catch_exception(LOGGER)
     @meta_data_response()
     @session_authorize()
     def post(self, request, auth_data):
@@ -127,6 +127,40 @@ class LoanDisbursalDetails(APIView):
                 loan_disbursal_details = serializer.get_loan_disbursal_details()
                 if loan_disbursal_details:
                     return Response(loan_disbursal_details, status=status.HTTP_200_OK)
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({}, status.HTTP_401_UNAUTHORIZED)
+
+
+class RepaymentDetails(APIView):
+
+    # @catch_exception(LOGGER)
+    @meta_data_response()
+    @session_authorize()
+    def post(self, request, auth_data):
+        if auth_data.get('authorized'):
+            serializer = serializers.RepaymentDetailsSerializer(
+                data={'customer_id': auth_data['customer_id']})
+            if serializer.is_valid():
+                repayment_details = serializer.get_repayment_details()
+                if repayment_details:
+                    return Response(repayment_details, status=status.HTTP_200_OK)
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({}, status.HTTP_401_UNAUTHORIZED)
+
+
+class RepaymentSchedule(APIView):
+
+    # @catch_exception(LOGGER)
+    @meta_data_response()
+    @session_authorize()
+    def post(self, request, auth_data):
+        if auth_data.get('authorized'):
+            serializer = serializers.RepaymentScheduleSerializer(
+                data={'customer_id': auth_data['customer_id']})
+            if serializer.is_valid():
+                repayment_schedule = serializer.get_repayment_schedule()
+                if repayment_schedule:
+                    return Response(repayment_schedule, status=status.HTTP_200_OK)
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         return Response({}, status.HTTP_401_UNAUTHORIZED)
 
@@ -145,21 +179,6 @@ class NewLoanDetails(APIView):
         return Response({}, status.HTTP_401_UNAUTHORIZED)
 
 
-class BikeWorthDetails(APIView):
-
-    @catch_exception(LOGGER)
-    @meta_data_response()
-    def get(self, request):
-        data = {
-            "brand": request.query_params.get("brand", "Please Provide the Brand"),
-            "model": request.query_params.get("model", "Please Provide the model"),
-            "manufacturing_year": request.query_params.get("manufacturing_year", "Please Provide the manufacturing_year"),
-            "approximate_price": 45000,
-            "down_payment": 10000
-        }
-        return Response(data, status=status.HTTP_200_OK)
-
-
 class BikeLoanCreate(APIView):
 
     @catch_exception(LOGGER)
@@ -167,34 +186,26 @@ class BikeLoanCreate(APIView):
     @session_authorize('customer_id')
     def post(self, request, auth_data):
         if auth_data.get('authorized'):
-            data = {
-                "customer_id": auth_data['customer_id'],
-                "brand": "Bajaj",
-                "model": "Pulsar",
-                "manufacturing_year": "1991",
-                "approximate_price": 45000,
-                "down_payment": 10000
-            }
-            return Response(data, status=status.HTTP_200_OK)
+            serializer = serializers.BikeLoanSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.validate_foreign_keys()
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         return Response({}, status.HTTP_401_UNAUTHORIZED)
 
 
-class BikeLoanDetail(APIView):
+class BikeLoanDetails(APIView):
 
     @catch_exception(LOGGER)
     @meta_data_response()
     @session_authorize()
     def get(self, request, auth_data, *args, **kwargs):
         if auth_data.get('authorized'):
-            data = {
-                "customer_id": auth_data['customer_id'],
-                "brand": "Bajaj",
-                "model": "Pulsar",
-                "manufacturing_year": "1991",
-                "approximate_price": 45000,
-                "down_payment": 10000
-            }
-            return Response(data, status.HTTP_200_OK)
+            bike_loan_object = get_object_or_404(
+                models.BikeLoan, customer_id=auth_data['customer_id'])
+            serializer = serializers.BikeLoanSerializer(bike_loan_object)
+            return Response(serializer.data, status.HTTP_200_OK)
         return Response({}, status.HTTP_401_UNAUTHORIZED)
 
     @catch_exception(LOGGER)
@@ -202,15 +213,12 @@ class BikeLoanDetail(APIView):
     @session_authorize()
     def put(self, request, auth_data, *args, **kwargs):
         if auth_data.get('authorized'):
-            data = {
-                "customer_id": auth_data['customer_id'],
-                "brand": "Bajaj",
-                "model": "Pulsar",
-                "manufacturing_year": "1991",
-                "approximate_price": 45000,
-                "down_payment": 10000
-            }
-            return Response(data, status.HTTP_200_OK)
+            bike_loan_object = get_object_or_404(
+                models.BikeLoan, customer_id=auth_data['customer_id'])
+            serializers.BikeLoanSerializer().validate_foreign_keys(request.data)
+            bike_loan_object_updated = serializers.BikeLoanSerializer().update(
+                bike_loan_object, request.data)
+            return Response(serializers.BikeLoanSerializer(bike_loan_object_updated).data, status.HTTP_200_OK)
         return Response({}, status=status.HTTP_401_UNAUTHORIZED)
 
     @catch_exception(LOGGER)
@@ -218,5 +226,8 @@ class BikeLoanDetail(APIView):
     @session_authorize()
     def delete(self, request, auth_data, *args, **kwargs):
         if auth_data.get('authorized'):
+            bike_loan_object = get_object_or_404(
+                models.BikeLoan, customer_id=auth_data['customer_id'])
+            bike_loan_object.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response({}, status.HTTP_401_UNAUTHORIZED)

@@ -5,8 +5,8 @@ from aadhaar.models import AADHAAR_DATA_SOURCE_CHOICES
 from documents.models import DOCUMENT_STATUS_CHOICES
 from messenger.models import MESSAGE_TYPE_CHOICES
 from social.models import PLATFORM_CHOICES, SOURCE_CHOICES
-from common.models import OrganisationType, SalaryPaymentMode, ProfessionType, College, Company, GENDER_CHOICES
-from . serializers import SalaryPaymentModeSerializer, OrganisationTypeSerializer, ProfessionTypeSerializer, CompanySerializer, CollegeSerializer
+from common.models import OrganisationType, SalaryPaymentMode, ProfessionType, College, Company, Bike, GENDER_CHOICES
+from . serializers import SalaryPaymentModeSerializer, OrganisationTypeSerializer, ProfessionTypeSerializer, CompanySerializer, CollegeSerializer, BikeSerializer
 from customer.v1.service.homepage_config import LOAN_CONSTANTS
 
 
@@ -74,6 +74,10 @@ class DropdownData(object):
         college_objects = College.objects.all()
         return CollegeSerializer(college_objects, many=True).data
 
+    def __get_bike_list(self):
+        bike_objects = Bike.objects.all()
+        return BikeSerializer(bike_objects, many=True).data
+
     def __get_data(self):
         dropdown_data = {
             'salary_payment_mode': self.__get_salary_payment_mode(),
@@ -81,6 +85,7 @@ class DropdownData(object):
             'profession_type': self.__get_profession_type(),
             'company': self.__get_company_list(),
             'college': self.__get_college_list(),
+            'bike': self.__get_bike_list(),
             'maritial_status': self.list_tuple_to_list(MARITAL_STATUS_CHOICES, 0),
             'vehicle_type': self.list_tuple_to_list(VEHICLE_TYPE_CHOICES, 0),
             'nature_of_work': self.list_tuple_to_list(NATURE_OF_WORK_CHOICES, 0),
