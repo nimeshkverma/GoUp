@@ -14,6 +14,7 @@ class TransactionHistory(object):
             customer_id=self.customer_id, transaction_status=COMPLETED).order_by('created_at')
         for transaction_object in transaction_objects:
             data = {
+                'transaction_id': transaction_object.id,
                 'loan_id': transaction_object.loan.id,
                 'installment_id': transaction_object.installment.id if transaction_object.installment else None,
                 'amount': transaction_object.amount,
