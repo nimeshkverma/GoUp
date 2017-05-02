@@ -5,9 +5,9 @@ from django.db import models
 from common.models import ActiveObjectManager, ActiveModel
 
 
-INITIATED = 'initiated'
-PROCESSING = 'processing'
-COMPLETED = 'completed'
+INITIATED = 'Initiated'
+PROCESSING = 'Processing'
+COMPLETED = 'Completed'
 
 TRANSACTION_STATUS_CHOICES = (
     (INITIATED, 'Initiated'),
