@@ -15,18 +15,21 @@ TRANSACTION_STATUS_CHOICES = (
     (COMPLETED, 'Completed'),
 )
 
-LOAN_AVAIL = 'loan_avail'
-INSTALLMENT_PAY = 'installment_pay'
-PENALTY_PAY = 'penalty_pay'
-INTEREST_AND_PENALTY_PAY = 'installment_and_penalty_pay'
-PROCESSING_FEE_PAY = 'processing_fee_pay'
+LOAN_AVAIL = 'Loan Availed'
+INSTALLMENT_PAY = 'EMI Paid'
+PENALTY_PAY = 'Penalty Paid'
+PAST_INSTALLMENT_AND_PENALTY_PAY = 'Past EMI and Penalty Paid'
+CURRENT_INSTALLMENT_PAST_INSTALLMENT_AND_PENALTY_PAY = 'Current EMI, Past EMI and Penalty Paid'
+PROCESSING_FEE_PAY = 'Processing Fees Paid'
 
 TRANSACTION_TYPE_CHOICES = (
-    (LOAN_AVAIL, 'loan_avail'),
-    (INSTALLMENT_PAY, 'installment_pay'),
-    (PENALTY_PAY, 'penalty_pay'),
-    (INTEREST_AND_PENALTY_PAY, 'installment_and_penalty_pay'),
-    (PROCESSING_FEE_PAY, 'processing_fee_pay'),
+    (LOAN_AVAIL, 'Loan Availed'),
+    (INSTALLMENT_PAY, 'EMI Paid'),
+    (PENALTY_PAY, 'Penalty Paid'),
+    (PAST_INSTALLMENT_AND_PENALTY_PAY, 'Past EMI and Penalty Paid'),
+    (CURRENT_INSTALLMENT_PAST_INSTALLMENT_AND_PENALTY_PAY,
+     'Current EMI, Past EMI and Penalty Paid'),
+    (PROCESSING_FEE_PAY, 'Processing Fees Paid'),
 )
 
 NBFC = 'nbfc'
