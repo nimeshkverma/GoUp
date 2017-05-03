@@ -6,8 +6,8 @@ from documents.models import DOCUMENT_STATUS_CHOICES
 from messenger.models import MESSAGE_TYPE_CHOICES
 from social.models import PLATFORM_CHOICES, SOURCE_CHOICES
 from analytics.models import LOG_TYPE_CHOICES
-from common.models import OrganisationType, SalaryPaymentMode, ProfessionType, College, Company, Bike, GENDER_CHOICES
-from . serializers import SalaryPaymentModeSerializer, OrganisationTypeSerializer, ProfessionTypeSerializer, CompanySerializer, CollegeSerializer, BikeSerializer
+from common.models import OrganisationType, SalaryPaymentMode, ProfessionType, College, Company, Bike, LoanPurpose, GENDER_CHOICES
+from . serializers import SalaryPaymentModeSerializer, OrganisationTypeSerializer, ProfessionTypeSerializer, CompanySerializer, CollegeSerializer, BikeSerializer, LoanPurposeSerializer
 from customer.v1.service.homepage_config import LOAN_CONSTANTS
 
 
@@ -79,6 +79,10 @@ class DropdownData(object):
         bike_objects = Bike.objects.all()
         return BikeSerializer(bike_objects, many=True).data
 
+    def __get_loan_purpose_list(self):
+        loan_purpose_objects = LoanPurpose.objects.all()
+        return LoanPurposeSerializer(loan_purpose_objects, many=True).data
+
     def __get_data(self):
         dropdown_data = {
             'salary_payment_mode': self.__get_salary_payment_mode(),
@@ -87,6 +91,7 @@ class DropdownData(object):
             'company': self.__get_company_list(),
             'college': self.__get_college_list(),
             'bike': self.__get_bike_list(),
+            'loan_purpose': self.__get_loan_purpose_list(),
             'maritial_status': self.list_tuple_to_list(MARITAL_STATUS_CHOICES, 0),
             'vehicle_type': self.list_tuple_to_list(VEHICLE_TYPE_CHOICES, 0),
             'nature_of_work': self.list_tuple_to_list(NATURE_OF_WORK_CHOICES, 0),
