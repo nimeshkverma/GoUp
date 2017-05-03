@@ -75,3 +75,24 @@ class CreditReportSerializer(serializers.Serializer):
 
     def report_data(self):
         return credit_service.CreditReport(self.validated_data.get('customer_id')).data
+
+
+class DataLogSerializer(serializers.ModelSerializer):
+    customer_id = serializers.IntegerField()
+
+    def validate_foreign_keys(self, data=None):
+        valid_data = False
+        data = data if data else self.validated_data
+        model_pk_list = [
+            {"model": Customer, "pk": data.get(
+                'customer_id', -1), "pk_name": "customer_id"},
+        ]
+        for model_pk in model_pk_list:
+            if model_pk["pk_name"] in data.keys():
+                if check_pk_existence(model_pk['model'], model_pk['pk']):
+                    valid_data = True
+        return valid_data
+
+    class Meta:
+        model = models.DataLog
+        exclude = ('customer', 'is_active', 'id')
