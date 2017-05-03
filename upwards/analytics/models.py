@@ -43,3 +43,27 @@ class Algo360(ActiveModel):
 
     def __unicode__(self):
         return '%s__%s__%s' % (str(self.customer), str(self.monthly_average_balance_lifetime), str(self.salary))
+
+CALL = 'Call'
+SMS = 'SMS'
+DATA_USAGE = 'Data Usage'
+
+LOG_TYPE_CHOICES = (
+    (CALL, 'Call'),
+    (SMS, 'SMS'),
+    (DATA_USAGE, 'Data Usage'),
+)
+
+
+class DataLog(ActiveModel):
+    customer = models.ForeignKey(
+        'customer.Customer', on_delete=models.CASCADE)
+    log_type = models.CharField(
+        max_length=50, default=SMS, choices=LOG_TYPE_CHOICES)
+    log_data = models.TextField(blank=False, null=False)
+
+    class Meta(object):
+        db_table = "data_log"
+
+    def __unicode__(self):
+        return '%s__%s__%s' % (str(self.customer), str(self.log_type), str(self.created_at))

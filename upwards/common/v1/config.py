@@ -5,6 +5,7 @@ from aadhaar.models import AADHAAR_DATA_SOURCE_CHOICES
 from documents.models import DOCUMENT_STATUS_CHOICES
 from messenger.models import MESSAGE_TYPE_CHOICES
 from social.models import PLATFORM_CHOICES, SOURCE_CHOICES
+from analytics.models import LOG_TYPE_CHOICES
 from common.models import OrganisationType, SalaryPaymentMode, ProfessionType, College, Company, Bike, GENDER_CHOICES
 from . serializers import SalaryPaymentModeSerializer, OrganisationTypeSerializer, ProfessionTypeSerializer, CompanySerializer, CollegeSerializer, BikeSerializer
 from customer.v1.service.homepage_config import LOAN_CONSTANTS
@@ -95,5 +96,6 @@ class DropdownData(object):
             'email_type': self.list_tuple_to_list(MESSAGE_TYPE_CHOICES, 0),
             'social_login_source': self.list_tuple_to_list(SOURCE_CHOICES, 0),
             'social_login_platform': self.list_tuple_to_list(PLATFORM_CHOICES, 0),
+            'log_type': self.list_tuple_to_list(LOG_TYPE_CHOICES, 0),
         }
         return dropdown_data

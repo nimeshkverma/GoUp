@@ -25,8 +25,8 @@ AADHAAR_DATA_SOURCE_CHOICES = (
 class Aadhaar(ActiveModel):
     customer = models.OneToOneField(
         'customer.Customer', on_delete=models.CASCADE)
-    aadhaar = aadhaar = models.CharField(max_length=12, validators=[
-                                         aadhaar_regex], blank=True, null=False)
+    aadhaar = models.CharField(max_length=12, validators=[
+        aadhaar_regex], blank=True, null=False)
     aadhaar_source = models.CharField(
         max_length=25, default=UPWARDS, choices=AADHAAR_DATA_SOURCE_CHOICES, blank=True)
     is_verified = models.BooleanField(default=False)
