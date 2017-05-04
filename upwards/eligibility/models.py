@@ -21,11 +21,13 @@ from common.models import (ActiveModel,
 # )
 MARRIED = 'Married'
 UNMARRIED = 'Unmarried'
+DIVORCED = 'Divorced'
 OTHER_MARITAL_STATUS = 'Other'
 
 MARITAL_STATUS_CHOICES = (
     (MARRIED, 'Married'),
     (UNMARRIED, 'Unmarried'),
+    (DIVORCED, 'Divorced'),
     (OTHER_MARITAL_STATUS, 'Other'),
 )
 
