@@ -25,6 +25,12 @@ class Notification(object):
         for i in range(0, len(input_list), chunk_length):
             yield input_list[i:i + chunk_length]
 
+    def __clean_pre_signup_data(self):
+        non_unknown_state_registartion_ids = Login.objects.all(
+        ).values_list('app_registration_id', flat=True)
+        PreSignupData.objects.filter(
+            app_registration_id__in=non_unknown_state_registartion_ids).delete()
+
     def __get_unknown_state_registration_ids(self):
         return PreSignupData.objects.values_list('app_registration_id', flat=True)
 
@@ -36,6 +42,7 @@ class Notification(object):
     def __registration_ids(self):
         registration_ids = []
         if self.notification_type == UNKNOWN_STATE:
+            self.__clean_pre_signup_data()
             registration_ids = self.__get_unknown_state_registration_ids()
         elif self.notification_type in CUSTOMER_STATE_ORDER_LIST:
             registration_ids = self.__get_other_state_registration_ids()
