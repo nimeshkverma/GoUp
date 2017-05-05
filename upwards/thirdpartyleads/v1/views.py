@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from . import serializers
 from thirdpartyleads import models
-from common.v1.decorators import meta_data_response, catch_exception, thirdparty_authorize
+from common.v1.decorators import meta_data_response, catch_exception, iam
 
 import logging
 LOGGER = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ class ThirdPartyLeadList(mixins.ListModelMixin,
 
     @catch_exception(LOGGER)
     @meta_data_response()
-    @thirdparty_authorize()
+    @iam('borrower_leads')
     def get(self, request, third_party_auth, *args, **kwargs):
         if third_party_auth:
             return self.list(request, *args, **kwargs)
@@ -28,7 +28,7 @@ class ThirdPartyLeadList(mixins.ListModelMixin,
 
     @catch_exception(LOGGER)
     @meta_data_response()
-    @thirdparty_authorize()
+    @iam('borrower_leads')
     def post(self, request, third_party_auth, *args, **kwargs):
         if third_party_auth:
             return self.create(request, *args, **kwargs)
@@ -45,7 +45,7 @@ class ThirdPartyLeadDetail(mixins.RetrieveModelMixin,
 
     @catch_exception(LOGGER)
     @meta_data_response()
-    @thirdparty_authorize()
+    @iam('borrower_leads')
     def get(self, request, third_party_auth, *args, **kwargs):
         if third_party_auth:
             return self.retrieve(request, *args, **kwargs)
@@ -54,7 +54,7 @@ class ThirdPartyLeadDetail(mixins.RetrieveModelMixin,
 
     @catch_exception(LOGGER)
     @meta_data_response()
-    @thirdparty_authorize()
+    @iam('borrower_leads')
     def put(self, request, third_party_auth, *args, **kwargs):
         if third_party_auth:
             return self.update(request, *args, **kwargs)
@@ -63,7 +63,7 @@ class ThirdPartyLeadDetail(mixins.RetrieveModelMixin,
 
     @catch_exception(LOGGER)
     @meta_data_response()
-    @thirdparty_authorize()
+    @iam('borrower_leads')
     def delete(self, request, third_party_auth, *args, **kwargs):
         if third_party_auth:
             return self.destroy(request, *args, **kwargs)
@@ -77,7 +77,7 @@ class ThirdPartyLeadDocumentsCreate(APIView):
 
     @catch_exception(LOGGER)
     @meta_data_response()
-    @thirdparty_authorize()
+    @iam('borrower_leads')
     def post(self, request, third_party_auth, *args, **kwargs):
         if third_party_auth:
             serializer = serializers.ThirdPartyLeadDocumentsSerializer(
@@ -96,9 +96,9 @@ class ThirdPartyLeadDocumentsDetail(APIView):
 
     parser_classes = (FormParser, MultiPartParser)
 
-    # @catch_exception(LOGGER)
+    @catch_exception(LOGGER)
     @meta_data_response()
-    @thirdparty_authorize()
+    @iam('borrower_leads')
     def get(self, request, third_party_auth, pk, *args, **kwargs):
         if third_party_auth:
             documents_object = get_object_or_404(
@@ -109,9 +109,9 @@ class ThirdPartyLeadDocumentsDetail(APIView):
         else:
             return Response({}, status.HTTP_401_UNAUTHORIZED)
 
-    # @catch_exception(LOGGER)
+    @catch_exception(LOGGER)
     @meta_data_response()
-    @thirdparty_authorize()
+    @iam('borrower_leads')
     def put(self, request, third_party_auth, pk, *args, **kwargs):
         if third_party_auth:
             documents_object = get_object_or_404(
@@ -128,9 +128,9 @@ class ThirdPartyLeadDocumentsDetail(APIView):
         else:
             return Response({}, status.HTTP_401_UNAUTHORIZED)
 
-    # @catch_exception(LOGGER)
+    @catch_exception(LOGGER)
     @meta_data_response()
-    @thirdparty_authorize()
+    @iam('borrower_leads')
     def delete(self, request, third_party_auth, pk, *args, **kwargs):
         if third_party_auth:
             documents_object = get_object_or_404(

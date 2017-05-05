@@ -1,9 +1,9 @@
 from copy import deepcopy
-from rest_framework import status
+from rest_framework import status, mixins, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from common.v1.decorators import session_authorize, meta_data_response, catch_exception
+from common.v1.decorators import session_authorize, meta_data_response, catch_exception, iam
 from customer.models import Customer
 
 from . import serializers
@@ -79,3 +79,48 @@ class SocialProfiles(APIView):
             return Response(utils.get_customer_profiles(customer_id), status.HTTP_200_OK)
         else:
             return Response({}, status.HTTP_404_NOT_FOUND)
+
+
+class SessionDataList(mixins.ListModelMixin,
+                      mixins.CreateModelMixin,
+                      generics.GenericAPIView):
+    queryset = models.Login.objects.all()
+    serializer_class = serializers.SessionDataSerializer
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @iam('admin')
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @iam('admin')
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class SessionDataDetail(mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin,
+                        mixins.DestroyModelMixin,
+                        generics.GenericAPIView):
+    queryset = models.Login.objects.all()
+    serializer_class = serializers.SessionDataSerializer
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @iam('admin')
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @iam('admin')
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @iam('admin')
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
