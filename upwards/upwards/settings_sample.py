@@ -329,7 +329,12 @@ FCM_API_KEY = 'FCM_API_KEY'
 CUSTOMER_DEFAULT_PROFILE_PIC = 'CUSTOMER_DEFAULT_PROFILE_PIC'
 
 THIRTY_PARTY_SECRETS = {
-    'THIRTY_PARTY_SECRETS_KEY': 'THIRTY_PARTY_SECRETS_VALUE'
+    'borrower_leads': {
+        'borrower_leads_username': 'borrower_leads_token',
+    },
+    'admin': {
+        'admin_username': 'admin_token'
+    }
 }
 
 ELIGIBILITY_LIMIT = {

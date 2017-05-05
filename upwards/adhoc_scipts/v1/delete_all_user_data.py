@@ -1,27 +1,26 @@
 import sys
 
-# from aadhaar.models import Aadhaar
+from aadhaar.models import Aadhaar
 from activity.models import CustomerState
 from common.models import College, Company, OrganisationType, SalaryPaymentMode
 from customer.models import BankDetails, Customer
-# from documents.models import DocumentType, Documents
+from documents.models import DocumentType, Documents
 from eligibility.models import Education, Finance, Profession
-from loan_product.models import LoanProduct
-# from loan.models import Installment, Loan, LoanType
+from loan_product.models import LoanProduct, Installment, Loan, BikeLoan
 from messenger.models import EmailVerification, Otp
 from pan.models import Pan
-# from participant.models import Borrower, BorrowerType, Lender
+from participant.models import Borrower
 from social.models import LinkedinProfile, Login, SocialProfile
 
 
 def delete_user_all_data(customer_id):
     response = ""
-    # loan_objects = Loan.objects.filter(customer_id=customer_id)
-    # for loan_object in loan_objects:
-    #     response += str(Installment.objects.filter(loan_id=loan_object.id).delete())
+    loan_objects = Loan.objects.filter(customer_id=customer_id)
+    for loan_object in loan_objects:
+        response += str(Installment.objects.filter(loan_id=loan_object.id).delete())
     model_list = [BankDetails, Otp, EmailVerification, Finance, Education,
-                  Profession, Pan, CustomerState, LinkedinProfile, SocialProfile, Customer, Login]
-    # Aadhaar,Loan, Borrower, Installment, Documents
+                  Profession, Pan, CustomerState, LinkedinProfile, SocialProfile,
+                  Customer, Login, Aadhaar, Loan, Borrower, Installment, Documents]
     for model in model_list:
         try:
             response += str(model.objects.filter(customer_id=customer_id).delete())

@@ -78,7 +78,7 @@ def meta_data_response(meta=""):
     return deco
 
 
-def thirdparty_authorize():
+def iam(user_group, *args, **kwargs):
     def deco(f):
         def abstract_session_token(request):
             session_token_header_key = 'HTTP_SESSION_TOKEN'
@@ -86,11 +86,11 @@ def thirdparty_authorize():
 
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            third_party_auth = False
-            third_party = kwargs.get('third_party')
-            third_party_token = abstract_session_token(args[1])
-            if settings.THIRTY_PARTY_SECRETS.get(third_party) == third_party_token:
-                third_party_auth = True
-            return f(third_party_auth=third_party_auth, *args, **kwargs)
+            user_name_auth = False
+            user_name = kwargs.get('user_name')
+            user_name_token = abstract_session_token(args[1])
+            if settings.THIRTY_PARTY_SECRETS.get(user_group, {}).get(user_name) == user_name_token:
+                user_name_auth = True
+            return f(user_name_auth=user_name_auth, *args, **kwargs)
         return decorated_function
     return deco

@@ -67,3 +67,10 @@ class SocialProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SocialProfile
         exclude = ('created_at', 'updated_at', 'id', 'is_active')
+
+
+class SessionDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Login
+        exclude = ('created_at', 'updated_at', 'social_data', 'is_active')
