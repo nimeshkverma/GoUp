@@ -73,4 +73,5 @@ class SessionDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Login
-        exclude = ('created_at', 'updated_at', 'social_data', 'is_active')
+        exclude = ('created_at', 'updated_at', 'source',
+                   'deleted_at', 'social_data', 'is_active')
