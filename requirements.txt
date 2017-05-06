@@ -17,6 +17,7 @@ greenlet==0.4.12
 gunicorn==19.6.0
 kombu==4.0.2
 mccabe==0.5.3
+newrelic==2.86.0.65
 packaging==16.8
 psycopg2==2.7.1
 pycodestyle==2.2.0
