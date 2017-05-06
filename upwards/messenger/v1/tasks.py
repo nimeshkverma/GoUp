@@ -14,6 +14,10 @@ def update_email_models(email_object_updated):
     email_service.update_email_models(email_object_updated)
 
 
+@app.task
+def send_loan_agreement_mail(customer_id):
+    email_service.send_loan_agreement_email(customer_id)
+
 # @app.task
 # def send_otp(otp_data):
 #     otp_service.send_otp(otp_data)
