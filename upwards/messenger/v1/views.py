@@ -10,7 +10,7 @@ from social.models import Login
 from . import serializers
 from messenger import models
 
-from . tasks import send_verification_mail, update_email_models
+from . tasks import send_verification_mail, update_email_models, send_loan_agreement_mail
 from . services import otp_service
 
 import logging
@@ -113,3 +113,15 @@ class NotificationDetails(mixins.ListModelMixin,
             serializer.send_notification()
             return Response({}, status.HTTP_200_OK)
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoanAgreementEmailer(APIView):
+
+    @catch_exception(LOGGER)
+    @meta_data_response()
+    @session_authorize('customer_id')
+    def post(self, request, auth_data):
+        if auth_data.get('authorized'):
+            send_loan_agreement_mail(auth_data['customer_id'])
+            return Response({}, status=status.HTTP_200_OK)
+        return Response({}, status.HTTP_401_UNAUTHORIZED)

@@ -13,6 +13,9 @@ urlpatterns = [
         name='PreSignupDataDetails'),
     url(r'^customer/notification/$', views.NotificationDetails.as_view(),
         name='NotificationDetails'),
+    url(r'^customer/send_loan_agreement_email/$', views.LoanAgreementEmailer.as_view(),
+        name='LoanAgreementEmailer'),
 ]
+
 
 urlpatterns = format_suffix_patterns(urlpatterns)
