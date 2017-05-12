@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from decimal import Decimal
 from django.db import models
 
 from django.db.models.signals import post_save
@@ -67,3 +68,71 @@ class DataLog(ActiveModel):
 
     def __unicode__(self):
         return '%s__%s__%s' % (str(self.customer), str(self.log_type), str(self.created_at))
+
+
+DEVICE_DATA_CALL = 'Call'
+DEVICE_DATA_SMS = 'SMS'
+DEVICE_DATA_INTERNET = 'Internet'
+
+DEVICE_DATA_TYPE_CHOICES = (
+    (DEVICE_DATA_CALL, 'Call'),
+    (DEVICE_DATA_SMS, 'SMS'),
+    (DEVICE_DATA_INTERNET, 'Internet'),
+)
+
+INCOMMING = 'Incomming'
+OUTGOING = 'Outgoing'
+MISSED = 'Missed'
+
+STATUS_CHOICES = (
+    (INCOMMING, 'Incomming'),
+    (OUTGOING, 'Outgoing'),
+    (MISSED, 'Missed'),
+)
+
+COUNT = 'Count'
+DURATION = 'Duration'
+RATIO = 'Ratio'
+
+ATTRIBUTE_CHOICES = (
+    (COUNT, 'Count'),
+    (DURATION, 'Duration'),
+    (RATIO, 'Ratio'),
+)
+
+WEEKDAY = 'Weekday'
+WEEKEND = 'Weekend'
+
+WEEKDAY_CHOICES = (
+    (WEEKDAY, 'Weekday'),
+    (WEEKEND, 'Weekend'),
+)
+
+MORNING = 'Morning'
+OFFICE_HOURS = 'Office Hours'
+EVENING = 'Evening'
+LATE_NIGHT = 'Late Night'
+ALL = 'All'
+
+DAY_HOUR_TYPE_CHOICES = (
+    (MORNING, 'Morning'),
+    (OFFICE_HOURS, 'Office Hours'),
+    (EVENING, 'Evening'),
+    (LATE_NIGHT, 'Late Night'),
+    (ALL, 'All'),
+)
+
+
+class DeviceData(ActiveModel):
+    customer = models.ForeignKey('customer.Customer', on_delete=models.CASCADE)
+    data_type = models.CharField(
+        max_length=50, default=DEVICE_DATA_CALL, choices=DEVICE_DATA_TYPE_CHOICES)
+    status = models.CharField(
+        max_length=50, default=INCOMMING, choices=STATUS_CHOICES)
+    attribute = models.CharField(
+        max_length=50, default=COUNT, choices=ATTRIBUTE_CHOICES)
+    value = models.DecimalField(max_digits=10, decimal_places=4)
+    weekday_type = models.CharField(
+        max_length=50, default=WEEKDAY, choices=WEEKDAY_CHOICES)
+    day_hour_type = models.CharField(
+        max_length=50, default=ALL, choices=DAY_HOUR_TYPE_CHOICES)
