@@ -92,12 +92,14 @@ STATUS_CHOICES = (
 
 COUNT = 'Count'
 DURATION = 'Duration'
-RATIO = 'Ratio'
+COUNT_RATIO = 'Count Ratio'
+DURATION_RATIO = 'Duration Ratio'
 
 ATTRIBUTE_CHOICES = (
     (COUNT, 'Count'),
     (DURATION, 'Duration'),
-    (RATIO, 'Ratio'),
+    (COUNT_RATIO, 'Count Ratio'),
+    (DURATION_RATIO, 'Duration Ratio'),
 )
 
 WEEKDAY = 'Weekday'
