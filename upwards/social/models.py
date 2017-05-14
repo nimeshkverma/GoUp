@@ -117,7 +117,7 @@ class SocialProfile(ActiveModel):
     last_name = models.CharField(max_length=25, validators=[
         alphabet_whitespace_regex_allow_empty], default="")
     gender = models.CharField(
-        max_length=1, default=MALE, choices=GENDER_CHOICES)
+        max_length=20, default=MALE, choices=GENDER_CHOICES)
     profile_link = models.URLField()
     profile_pic_link = models.URLField()
 
