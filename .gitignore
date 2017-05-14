@@ -9,4 +9,3 @@ settings.py
 *.swo
 *.DS_Store
 db.sqlite3
-migrations
