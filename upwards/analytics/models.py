@@ -128,7 +128,7 @@ class DeviceData(ActiveModel):
     data_type = models.CharField(
         max_length=50, default=DEVICE_DATA_CALL, choices=DEVICE_DATA_TYPE_CHOICES)
     status = models.CharField(
-        max_length=50, default=INCOMMING, choices=STATUS_CHOICES)
+        max_length=50, blank=True, null=True, default=INCOMMING, choices=STATUS_CHOICES)
     attribute = models.CharField(
         max_length=50, default=COUNT, choices=ATTRIBUTE_CHOICES)
     value = models.DecimalField(max_digits=10, decimal_places=4)
