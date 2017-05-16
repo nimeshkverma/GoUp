@@ -56,31 +56,38 @@ class DropdownData(object):
         self.data = self.__get_data()
 
     def __get_profession_type(self):
-        profession_type_objects = ProfessionType.objects.all()
+        profession_type_objects = ProfessionType.objects.all().order_by('pk')
+
         return ProfessionTypeSerializer(profession_type_objects, many=True).data
 
     def __get_salary_payment_mode(self):
-        salary_payment_mode_objects = SalaryPaymentMode.objects.all()
+        salary_payment_mode_objects = SalaryPaymentMode.objects.all().order_by('pk')
+
         return SalaryPaymentModeSerializer(salary_payment_mode_objects, many=True).data
 
     def __get_organisation_type(self):
-        organisation_type_objects = OrganisationType.objects.all()
+        organisation_type_objects = OrganisationType.objects.all().order_by('pk')
+
         return OrganisationTypeSerializer(organisation_type_objects, many=True).data
 
     def __get_company_list(self):
-        company_objects = Company.objects.all()
+        company_objects = Company.objects.all().order_by('pk')
+
         return CompanySerializer(company_objects, many=True).data
 
     def __get_college_list(self):
-        college_objects = College.objects.all()
+        college_objects = College.objects.all().order_by('pk')
+
         return CollegeSerializer(college_objects, many=True).data
 
     def __get_bike_list(self):
-        bike_objects = Bike.objects.all()
+        bike_objects = Bike.objects.all().order_by('pk')
+
         return BikeSerializer(bike_objects, many=True).data
 
     def __get_loan_purpose_list(self):
-        loan_purpose_objects = LoanPurpose.objects.all()
+        loan_purpose_objects = LoanPurpose.objects.all().order_by('pk')
+
         return LoanPurposeSerializer(loan_purpose_objects, many=True).data
 
     def __get_data(self):

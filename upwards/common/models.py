@@ -68,7 +68,7 @@ class InActiveModel(models.Model):
 class ActiveObjectManager(models.Manager):
 
     def get_queryset(self):
-        return super(ActiveObjectManager, self).get_queryset().filter(is_active=True)
+        return super(ActiveObjectManager, self).get_queryset().filter(is_active=True).order_by('pk')
 
 
 class College(ActiveModel):
