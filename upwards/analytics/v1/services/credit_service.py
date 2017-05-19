@@ -1,6 +1,13 @@
-from analytics.models import Algo360
-from eligibility.models import Profession
-from analytics_service_constants import MAB_VARIABLES, SALARY_VARIABLE, CREDIT_REPORT_MAPPING
+import json
+from analytics.models import Algo360, DeviceData
+from aadhaar.models import Aadhaar
+from eligibility.models import Profession, Education, Finance
+from loan_product.models import LoanProduct, BikeLoan
+from customer.models import BankDetails
+from social.models import SocialProfile
+from pan.models import Pan
+from analytics_service_constants import MAB_VARIABLES, SALARY_VARIABLE, CREDIT_REPORT_MAPPING, CREDIT_REPORT_VARIABLE_NAME_MAP
+from common.v1.utils.general_utils import get_class, string_similarity
 from django.conf import settings
 
 
@@ -77,41 +84,211 @@ class CreditReport(object):
             self.customer_id).limit
         self.data = self.__get_report_data()
 
-    def __get_algo360_data(self):
-        data = {key: None for key in CREDIT_REPORT_MAPPING['Algo360'].values()}
-        data['credit_limit'] = self.customer_credit_limit
+    def __get_model_data(self):
+        data = dict()
+        for model_key, model_data in CREDIT_REPORT_MAPPING.iteritems():
+            data[model_key] = {field_key: {'display_name': field_value, 'value': None}
+                               for field_key, field_value in CREDIT_REPORT_MAPPING[model_key]['fields'].iteritems()}
+            model_class = get_class(model_data['model_class'])
+            model_objects = model_class.objects.filter(
+                customer_id=self.customer_id)
+            if model_objects:
+                model_object = model_objects[len(model_objects) - 1]
+                for field in data[model_key].keys():
+                    data[model_key][field]['value'] = reduce(
+                        getattr, field.split('__'), model_object)
+        return data
+
+    def __get_device_data(self):
+        data = {
+            'DeviceData': {
+            },
+        }
+        device_data_objects = DeviceData.objects.filter(customer_id=self.customer_id).order_by(
+            'data_type', 'attribute', 'weekday_type', 'day_hour_type')
+        for device_data_object in device_data_objects:
+            key = "{data_type}_{status}_{attribute}_{weekday_type}_{day_hour_type}".format(data_type=device_data_object.data_type,
+                                                                                           status=device_data_object.status,
+                                                                                           attribute=device_data_object.attribute,
+                                                                                           weekday_type=device_data_object.weekday_type,
+                                                                                           day_hour_type=device_data_object.day_hour_type)
+            display_name = "Custmer's {attribute} of {status} {data_type} in {weekday_type} in {day_hour_type} time".format(data_type=device_data_object.data_type,
+                                                                                                                            status=device_data_object.status,
+                                                                                                                            attribute=device_data_object.attribute,
+                                                                                                                            weekday_type=device_data_object.weekday_type,
+                                                                                                                            day_hour_type=device_data_object.day_hour_type)
+            data['DeviceData'][key] = {
+                'display_name': display_name,
+                'value': float(device_data_object.value)
+            }
+        return data
+
+    def __get_aadhaar_data(self):
+        data = {
+            'Aadhaar': {
+                'ekyc_applicable': {
+                    'display_name': 'EKYC Applicable',
+                    'value': 'No',
+                },
+            }
+        }
+        aadhaar_objects = Aadhaar.objects.filter(customer_id=self.customer_id)
+        if aadhaar_objects:
+            if aadhaar_objects[len(aadhaar_objects) - 1].first_name_source == 'ekyc':
+                data['Aadhaar']['value'] = 'Yes'
+        return data
+
+    def __update_algo360_variables(self, report_data):
         algo360_objects = Algo360.objects.filter(customer_id=self.customer_id)
         if algo360_objects:
-            for data_key, data_value in algo360_objects[0].__dict__.iteritems():
-                if data_key in CREDIT_REPORT_MAPPING['Algo360'].keys():
-                    data[CREDIT_REPORT_MAPPING['Algo360'][data_key]] = data_value
+            for algo360_variable_data in json.loads(algo360_objects[len(algo360_objects) - 1].algo360_data):
+                variable_key = algo360_variable_data.keys()[0] if algo360_variable_data and isinstance(
+                    algo360_variable_data, dict) else None
+                if variable_key in CREDIT_REPORT_VARIABLE_NAME_MAP['Algo360']:
+                    report_data['Algo360'][variable_key] = {
+                        'display_name': CREDIT_REPORT_VARIABLE_NAME_MAP['Algo360'][variable_key],
+                        'value': algo360_variable_data[variable_key]
+                    }
+        return report_data
+
+    def __salary_deviation_percentage(self, base_salary, deviated_salary):
+        print base_salary, deviated_salary
+        return round((int(deviated_salary) - int(base_salary)) * 100.0 / int(base_salary), 2)
+
+    def __salary_deviation(self, report_data):
+        sms_salary = report_data['Algo360']['salary']['value'] if report_data[
+            'Algo360']['salary']['value'] != 'N.A' else 0
+        print report_data['Profession']['salary']['value']
+        print sms_salary
+        print report_data['LoanProduct']['monthly_income']['value']
+        data = {
+            'SalaryDeviation': {
+                'base_salary': {
+                    'display_name': 'Type of Salary taken as base value',
+                    'value': 'Salary disclosed by Customer in Eligibility Section'
+                },
+                'eligibility_salary': {
+                    'display_name': 'Salary value disclosed by Customer in Eligibility Section',
+                    'value': report_data['Profession']['salary']['value']
+                },
+                'loan_specification_salary': {
+                    'display_name': 'Salary value disclosed by Customer in Loan Specification Section',
+                    'value': report_data['LoanProduct']['monthly_income']['value']
+                },
+                'sms_salary': {
+                    'display_name': 'Salary value obtained by SMS',
+                    'value': sms_salary
+                },
+                'loan_specification_salary_deviation': {
+                    'display_name': 'Loan Specification Section Salary deviation from Eligibility Section Salary',
+                    'value': self.__salary_deviation_percentage(report_data['Profession']['salary']['value'], report_data['LoanProduct']['monthly_income']['value'])
+                },
+                'sms_salary_deviation': {
+                    'display_name': 'SMS Salary deviation from Eligibility Section Salary',
+                    'value': self.__salary_deviation_percentage(report_data['Profession']['salary']['value'], sms_salary)
+                },
+
+            }
+        }
         return data
 
-    def __get_professional_data(self):
-        data = {key: None for key in CREDIT_REPORT_MAPPING[
-            'Profession'].values()}
-        profession_objects = Profession.objects.filter(
+    def __get_social_name(self):
+        name = ''
+        social_profile_objects = SocialProfile.objects.filter(
+            customer_id=self.customer_id).order_by('-platform')
+        if social_profile_objects:
+            name = social_profile_objects[
+                0].first_name + ' ' + social_profile_objects[0].last_name
+        return name
+
+    def __get_bank_holder_name(self):
+        name = ''
+        bank_detail_objects = BankDetails.objects.filter(
             customer_id=self.customer_id)
-        if profession_objects:
-            for data_key, data_value in profession_objects[0].__dict__.iteritems():
-                if data_key in CREDIT_REPORT_MAPPING['Profession'].keys():
-                    data[CREDIT_REPORT_MAPPING['Profession']
-                         [data_key]] = data_value
+        if bank_detail_objects:
+            name = bank_detail_objects[0].account_holder_name
+        return name
+
+    def __get_aadhaar_name(self):
+        name = ''
+        aadhaar_objects = Aadhaar.objects.filter(
+            customer_id=self.customer_id)
+        if aadhaar_objects:
+            name = aadhaar_objects[0].first_name + \
+                ' ' + aadhaar_objects[0].last_name
+        return name
+
+    def __name_deviation(self, report_data):
+        social_name = self.__get_social_name()
+        bank_holder_name = self.__get_bank_holder_name()
+        aadhaar_name = self.__get_aadhaar_name()
+        pan_name = aadhaar_name
+
+        data = {
+            'NameDeviation': {
+                'social_name': {
+                    'display_name': 'Customer Name from Social Media',
+                    'value': social_name,
+                },
+                'bank_holder_name': {
+                    'display_name': 'Customer Name from Bank Details',
+                    'value': bank_holder_name,
+                },
+                'aadhaar_name': {
+                    'display_name': 'Customer Name from Aadhaar',
+                    'value': aadhaar_name,
+                },
+                'pan_name': {
+                    'display_name': 'Customer Name from PAN ',
+                    'value': pan_name,
+                },
+                'social_pan_name_deviation': {
+                    'display_name': 'Deviation between Customer Social Media and PAN Name',
+                    'value': 100 * (1 - string_similarity(social_name, pan_name))
+                },
+                'pan_aadhaar_name_deviation': {
+                    'display_name': 'Deviation between Customer PAN Name and Aadhaar',
+                    'value': 100 * (1 - string_similarity(pan_name, aadhaar_name))
+                },
+                'aadhaar_bank_name_deviation': {
+                    'display_name': 'Deviation between Aadhaar and Bank Holder Name',
+                    'value': 100 * (1 - string_similarity(aadhaar_name, bank_holder_name))
+                },
+                'bank_social_name_deviation': {
+                    'display_name': 'Deviation between Customers Bank Holder and Social Media Name',
+                    'value': 100 * (1 - string_similarity(bank_holder_name, social_name))
+                },
+
+            }
+        }
         return data
 
-    def __get_derived_data(self, report_data):
-        derived_data = {}
-        credit_card_last_payment_due = report_data.get(
-            'credit_card_last_payment_due', 'N.A') if report_data.get('credit_card_last_payment_due') else 'N.A'
-        if credit_card_last_payment_due == 'N.A' or report_data.get('monthly_average_balance_lifetime') == 'N.A':
-            derived_data['leverage'] = 'N.A'
-        else:
-            derived_data['leverage'] = round(float(report_data.get(
-                'monthly_average_balance_lifetime', 0)) * 1.0 / credit_card_last_payment_due, 3)
-        return derived_data
+    def __dummy_processing(self, report_data):
+        report_data['Pan']['is_verified']['value'] = 'Yes'
+        report_data['Pan']['cibil_score'] = {
+            'display_name': 'CIBIL score of the Customer',
+            'value': 'Not found',
+        }
+        report_data['Pan']['cibil_existing_emi'] = {
+            'display_name': 'Is there a CIBIL Score vs. existing EMI mismatch for the customer?',
+            'value': 'No',
+        }
+        report_data['Algo360']['online_salary_payment_mode_verified'] = {
+            'display_name': 'Online Salary payment mode is verified?',
+            'value': 'No'
+        }
+        report_data['Profession']['upwards_prefered_partner'] = {
+            'display_name': 'Upwards Preferred Partner Company',
+            'value': 'Yes'
+        }
+        return report_data
 
     def __get_report_data(self):
-        report_data = self.__get_algo360_data()
-        report_data.update(self.__get_professional_data())
-        report_data.update(self.__get_derived_data(report_data))
+        report_data = self.__get_model_data()
+        report_data.update(self.__get_aadhaar_data())
+        report_data.update(self.__get_device_data())
+        report_data.update(self.__name_deviation(report_data))
+        report_data.update(self.__salary_deviation(report_data))
+        report_data = self.__update_algo360_variables(report_data)
+        report_data = self.__dummy_processing(report_data)
         return report_data
