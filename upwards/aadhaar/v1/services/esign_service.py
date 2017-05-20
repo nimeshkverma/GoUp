@@ -87,7 +87,7 @@ class ESign(object):
             'unsigned_loan_agreement_uploaded'] = self.__upload_loan_agreement(customer_id)
         response['loan_agreement_url'] = self.__s3_loan_agreement_url(
             customer_id)
-        if self.__sign_document(otp, customer_id):
+        if otp and self.__sign_document(otp, customer_id):
             response['esigned_process_completed'] = True
             response['signed_loan_agreement_uploaded'] = self.__upload_loan_agreement(
                 customer_id, True)
