@@ -102,7 +102,7 @@ class KYCReviewSubmit(APIView):
 
 class LoanStatus(APIView):
 
-    # @catch_exception(LOGGER)
+    @catch_exception(LOGGER)
     @meta_data_response()
     @session_authorize()
     def get(self, request, auth_data):
@@ -116,6 +116,5 @@ class LoanStatus(APIView):
             if serializer.is_valid():
                 serializer.validate_foreign_keys()
                 return Response(serializer.loan_status_update(), status=status.HTTP_200_OK)
-            print serializer.errors, 1
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         return Response({}, status.HTTP_401_UNAUTHORIZED)

@@ -6,9 +6,11 @@ from loan_product.models import LoanProduct, BikeLoan
 from customer.models import BankDetails
 from social.models import SocialProfile
 from pan.models import Pan
-from analytics_service_constants import MAB_VARIABLES, SALARY_VARIABLE, CREDIT_REPORT_MAPPING, CREDIT_REPORT_VARIABLE_NAME_MAP
 from common.v1.utils.general_utils import get_class, string_similarity
 from django.conf import settings
+from analytics_service_constants import (MAB_VARIABLES, SALARY_VARIABLE, CREDIT_REPORT_MAPPING,
+                                         CREDIT_REPORT_VARIABLE_NAME_MAP, CREDIT_REPORT_SUBSECTION_ORDER,
+                                         CREDIT_REPORT_SECTION_ORDER)
 
 
 class CustomerCreditLimit(object):
@@ -83,6 +85,7 @@ class CreditReport(object):
         self.customer_credit_limit = CustomerCreditLimit(
             self.customer_id).limit
         self.data = self.__get_report_data()
+        self.context_data = self.__get_context_data()
 
     def __get_model_data(self):
         data = dict()
@@ -125,17 +128,23 @@ class CreditReport(object):
 
     def __get_aadhaar_data(self):
         data = {
-            'Aadhaar': {
+            'AADHAAR': {
                 'ekyc_applicable': {
                     'display_name': 'EKYC Applicable',
                     'value': 'No',
+                },
+                'dob': {
+                    'display_name': 'Date of Birth of the Customer in AADHAAR',
+                    'value': None,
                 },
             }
         }
         aadhaar_objects = Aadhaar.objects.filter(customer_id=self.customer_id)
         if aadhaar_objects:
+            data['AADHAAR']['dob']['value'] = aadhaar_objects[
+                len(aadhaar_objects) - 1].dob
             if aadhaar_objects[len(aadhaar_objects) - 1].first_name_source == 'ekyc':
-                data['Aadhaar']['value'] = 'Yes'
+                data['AADHAAR']['ekyc_applicable']['value'] = 'Yes'
         return data
 
     def __update_algo360_variables(self, report_data):
@@ -152,15 +161,11 @@ class CreditReport(object):
         return report_data
 
     def __salary_deviation_percentage(self, base_salary, deviated_salary):
-        print base_salary, deviated_salary
         return round((int(deviated_salary) - int(base_salary)) * 100.0 / int(base_salary), 2)
 
     def __salary_deviation(self, report_data):
         sms_salary = report_data['Algo360']['salary']['value'] if report_data[
             'Algo360']['salary']['value'] != 'N.A' else 0
-        print report_data['Profession']['salary']['value']
-        print sms_salary
-        print report_data['LoanProduct']['monthly_income']['value']
         data = {
             'SalaryDeviation': {
                 'base_salary': {
@@ -188,6 +193,29 @@ class CreditReport(object):
                     'value': self.__salary_deviation_percentage(report_data['Profession']['salary']['value'], sms_salary)
                 },
 
+            }
+        }
+        return data
+
+    def __dob_deviation(self, report_data):
+        aadhaar_dob = report_data['AADHAAR']['dob']['value']
+        pan_dob = report_data['PAN']['dob']['value'] if report_data['PAN'][
+            'dob']['value'] else report_data['AADHAAR']['dob']['value']
+
+        data = {
+            'DOBDeviation': {
+                'pan_dob': {
+                    'display_name': 'Date of Birth of the Customer in PAN',
+                    'value': pan_dob,
+                },
+                'aadhaar_dob': {
+                    'display_name': 'Date of Birth of the Customer in AADHAAR',
+                    'value': aadhaar_dob,
+                },
+                'aadhaar_pan_dob': {
+                    'display_name': 'Is the Date of Birth of the Customer same on the AADHAAR and PAN',
+                    'value': 'Yes',
+                },
             }
         }
         return data
@@ -264,12 +292,12 @@ class CreditReport(object):
         return data
 
     def __dummy_processing(self, report_data):
-        report_data['Pan']['is_verified']['value'] = 'Yes'
-        report_data['Pan']['cibil_score'] = {
+        report_data['PAN']['is_verified']['value'] = 'Yes'
+        report_data['PAN']['cibil_score'] = {
             'display_name': 'CIBIL score of the Customer',
             'value': 'Not found',
         }
-        report_data['Pan']['cibil_existing_emi'] = {
+        report_data['PAN']['cibil_existing_emi'] = {
             'display_name': 'Is there a CIBIL Score vs. existing EMI mismatch for the customer?',
             'value': 'No',
         }
@@ -289,6 +317,23 @@ class CreditReport(object):
         report_data.update(self.__get_device_data())
         report_data.update(self.__name_deviation(report_data))
         report_data.update(self.__salary_deviation(report_data))
+        report_data.update(self.__dob_deviation(report_data))
         report_data = self.__update_algo360_variables(report_data)
         report_data = self.__dummy_processing(report_data)
         return report_data
+
+    def __get_context_data(self):
+        context_data = []
+        for section in CREDIT_REPORT_SECTION_ORDER:
+            section_data = []
+            for subsection in CREDIT_REPORT_SUBSECTION_ORDER[section]:
+                if self.data[section].get(subsection):
+                    section_data.append({
+                        'display_name': self.data[section][subsection]['display_name'],
+                        'value': str(self.data[section][subsection]['value']) if self.data[section][subsection]['value'] else 'N.A'
+                    })
+            context_data.append({
+                'name': section,
+                'data': section_data
+            })
+        return {'data': context_data}

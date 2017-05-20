@@ -74,7 +74,7 @@ class CreditReportSerializer(serializers.Serializer):
         return valid_data
 
     def report_data(self):
-        return credit_service.CreditReport(self.validated_data.get('customer_id')).data
+        return credit_service.CreditReport(self.validated_data.get('customer_id')).context_data
 
 
 class DataLogSerializer(serializers.ModelSerializer):

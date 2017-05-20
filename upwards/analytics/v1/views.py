@@ -3,7 +3,7 @@ from copy import deepcopy
 from rest_framework import status, mixins, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from common.v1.decorators import session_authorize, meta_data_response, catch_exception
 from analytics import models
 
@@ -30,15 +30,18 @@ class Algo360DataDetails(APIView):
 
 
 class CreditReportDetails(APIView):
+    credit_report_template = 'analytics/v1/credit_report.html'
+    unauthorized_template = 'analytics/v1/unauthorized.html'
 
     @catch_exception(LOGGER)
-    @meta_data_response()
     def get(self, request, pk, *args, **kwargs):
         data = {'customer_id': pk}
         serializer = serializers.CreditReportSerializer(data=data)
         if serializer.is_valid():
-            serializer.validate_foreign_keys()
-            return Response(serializer.report_data(), status.HTTP_200_OK)
+            if serializer.validate_foreign_keys():
+                return render(request, self.credit_report_template, serializer.report_data())
+            else:
+                return render(request, self.unauthorized_template)
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -73,40 +76,3 @@ class DataLogDetail(mixins.RetrieveModelMixin,
     @session_authorize()
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
-
-# class DataLogDetail(APIView):
-
-#     # @catch_exception(LOGGER)
-#     @meta_data_response()
-#     @session_authorize()
-#     def get(self, request, auth_data, *args, **kwargs):
-#         if auth_data.get('authorized'):
-#             datalog_object = get_object_or_404(
-#                 models.DataLog, customer_id=auth_data['customer_id'])
-#             serializer = serializers.DataLogSerializer(datalog_object)
-#             return Response(serializer.data, status.HTTP_200_OK)
-#         return Response({}, status.HTTP_401_UNAUTHORIZED)
-
-    # @catch_exception(LOGGER)
-    # @meta_data_response()
-    # @session_authorize()
-    # def put(self, request, auth_data, *args, **kwargs):
-    #     if auth_data.get('authorized'):
-    #         datalog_object = get_object_or_404(
-    #             models.DataLog, customer_id=auth_data['customer_id'])
-    #         serializers.DataLogSerializer().validate_foreign_keys(request.data)
-    #         datalog_object_updated = serializers.DataLogSerializer().update(
-    #             datalog_object, request.data)
-    #         return Response(serializers.DataLogSerializer(datalog_object_updated).data, status.HTTP_200_OK)
-    #     return Response({}, status=status.HTTP_401_UNAUTHORIZED)
-
-    # @catch_exception(LOGGER)
-    # @meta_data_response()
-    # @session_authorize()
-    # def delete(self, request, auth_data, *args, **kwargs):
-    #     if auth_data.get('authorized'):
-    #         datalog_object = get_object_or_404(
-    #             models.DataLog, customer_id=auth_data['customer_id'])
-    #         datalog_object.delete()
-    #         return Response(status=status.HTTP_204_NO_CONTENT)
-    #     return Response({}, status.HTTP_401_UNAUTHORIZED)
