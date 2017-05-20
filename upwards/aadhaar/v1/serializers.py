@@ -102,7 +102,7 @@ class AadhaarESignSerializer(serializers.Serializer):
     aadhaar = serializers.CharField(
         max_length=12, min_length=12, allow_blank=False)
     otp = serializers.CharField(
-        max_length=6, min_length=6, allow_blank=True)
+        max_length=6, min_length=6, required=False)
 
     def validate_foreign_keys(self, data=None):
         data = data if data else self.validated_data
