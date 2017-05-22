@@ -454,12 +454,12 @@
                                               </div>
                                               <div style="text-align: center; margin-bottom: 36px">
                                                 <h1> Credit Report for {{data.8.data.2.value}}</h1>
-                                              </dir>
+                                              </div>
                                               <div style="text-align: left; word-wrap: break-word;">
                                               {% for section in data %}
                                                   <div style="text-align: left; margin-bottom: 36px">
                                                     <h2>{{section.name}}</h2>
-                                                    <table border="1">
+                                                    <table border="1" cellpadding="18" cellspacing="0" class="mcnTextContentContainer" width="100%" style="background-color: #D6EAF8;">
                                                       {% for subsection in section.data %}
                                                         <tr>
                                                             <td><h4>{{subsection.display_name}}</h4></td> 
