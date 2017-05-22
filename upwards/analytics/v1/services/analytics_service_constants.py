@@ -29,7 +29,7 @@ CREDIT_REPORT_MAPPING = {
     'BikeLoan': {
         'fields': {
             'brand': 'Brand of the Bike',
-            'model_class': 'Model of the Bike',
+            'model': 'Model of the Bike',
             'manufacturing_year': 'Manufacturing year of the Bike',
             'approximate_price': 'Approximate price of the Bike',
             'down_payment': 'Down Payment of the Bike',
