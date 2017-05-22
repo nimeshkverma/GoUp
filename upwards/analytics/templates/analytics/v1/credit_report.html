@@ -452,11 +452,14 @@
                                               <div style="text-align: center; margin-bottom: 36px">
                                                 <img align="none" src="http://i.imgur.com/Rkr5iSs.png" style="width: 226px; height: 58px; margin: 0;" width="226" height="58">
                                               </div>
+                                              <div style="text-align: center; margin-bottom: 36px">
+                                                <h1> Credit Report for {{data.8.data.2.value}}</h1>
+                                              </dir>
                                               <div style="text-align: left; word-wrap: break-word;">
                                               {% for section in data %}
                                                   <div style="text-align: left; margin-bottom: 36px">
                                                     <h2>{{section.name}}</h2>
-                                                    <table>
+                                                    <table border="1">
                                                       {% for subsection in section.data %}
                                                         <tr>
                                                             <td><h4>{{subsection.display_name}}</h4></td> 
