@@ -19,6 +19,9 @@ class Config(object):
     def __get_base_url(self):
         return settings.BASE_URL
 
+    def __get_lambda_base_url(self):
+        return settings.LAMBDA_BASE_URL
+
     def __get_versions(self):
         return settings.VERSIONS
 
@@ -39,6 +42,7 @@ class Config(object):
             'versioned_base_url': self.__get_versioned_base_url(),
             'post_otp_message': self.__get_post_otp_message(),
             'customer_default_profile_pic': self.__get_customer_default_profile_pic(),
+            'lambda_base_url': self.__get_lambda_base_url(),
             'loan_constants': LOAN_CONSTANTS,
         }
         return config_data
