@@ -142,3 +142,76 @@ class DeviceData(ActiveModel):
         max_length=50, default=WEEKDAY, choices=WEEKDAY_CHOICES)
     day_hour_type = models.CharField(
         max_length=50, default=ALL, choices=DAY_HOUR_TYPE_CHOICES)
+
+    def __unicode__(self):
+        return '%s__%s__%s' % (str(self.customer), str(self.data_type), str(self.status))
+
+
+SIGNUP = 'signup'
+LOAN_PRODUCT = 'loan product'
+PAN = 'pan'
+PROFESSION = 'profession'
+EDUCATION = 'education'
+FINANCEAADHAAR = 'financeaadhaar'
+AADHAAR_DETAILS = 'aadhaar details'
+BANK = 'bank'
+PERSONAL_CONTACT = 'personal contact'
+DOCUMENTS = 'documents'
+ELIGIBILITY_REVIEW = 'eligibility review'
+KYC_REVIEW = 'kyc_review'
+
+SCREEN_CHOICES = (
+    (SIGNUP, 'signup'),
+    (LOAN_PRODUCT, 'loan product'),
+    (PAN, 'pan'),
+    (PROFESSION, 'profession'),
+    (EDUCATION, 'education'),
+    (FINANCEAADHAAR, 'financeaadhaar'),
+    (AADHAAR_DETAILS, 'aadhaar details'),
+    (BANK, 'bank'),
+    (PERSONAL_CONTACT, 'personal contact'),
+    (DOCUMENTS, 'documents'),
+    (ELIGIBILITY_REVIEW, 'eligibility review'),
+    (KYC_REVIEW, 'kyc_review'),
+)
+
+CREATE = 'create'
+UPDATE = 'update'
+
+MODE_CHOICES = (
+    (CREATE, 'create'),
+    (UPDATE, 'update'),
+)
+
+
+class ScreenEventData(ActiveModel):
+    customer = models.ForeignKey('customer.Customer', on_delete=models.CASCADE)
+    time_spent = models.IntegerField(null=False, blank=False, default=0)
+    sessions = models.IntegerField(null=False, blank=False, default=1)
+    screen = models.CharField(
+        max_length=50, default=SIGNUP, choices=SCREEN_CHOICES)
+    mode = models.CharField(
+        max_length=50, default=CREATE, choices=MODE_CHOICES)
+
+    class Meta(object):
+        db_table = "analytics_screen_eventdata"
+
+    def __unicode__(self):
+        return '%s__%s__%s' % (str(self.customer), str(self.screen), str(self.time_spent))
+
+
+class FieldEventData(ActiveModel):
+    customer = models.ForeignKey('customer.Customer', on_delete=models.CASCADE)
+    screen = models.CharField(
+        max_length=50, default=SIGNUP, choices=SCREEN_CHOICES)
+    field = models.CharField(max_length=100, default="")
+    edits = models.IntegerField(null=False, blank=False, default=1)
+    deviation = models.DecimalField(max_digits=10, decimal_places=4)
+    mode = models.CharField(
+        max_length=50, default=CREATE, choices=MODE_CHOICES)
+
+    class Meta(object):
+        db_table = "analytics_field_eventdata"
+
+    def __unicode__(self):
+        return '%s__%s__%s' % (str(self.customer), str(self.screen), str(self.field))
