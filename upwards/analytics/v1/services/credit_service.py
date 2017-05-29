@@ -363,6 +363,8 @@ class CreditReport(object):
             'display_name': 'Upwards Preferred Partner Company',
             'value': 'Yes'
         }
+        report_data['PAN']['dob']['value'] = report_data[
+            'AADHAAR']['dob']['value']
         return report_data
 
     def __get_report_data(self):
