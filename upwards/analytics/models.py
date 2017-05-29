@@ -147,6 +147,23 @@ class DeviceData(ActiveModel):
         return '%s__%s__%s' % (str(self.customer), str(self.data_type), str(self.status))
 
 
+CONTACT_DATA_NO_OF_CONTACTS = 'Number of Contacts'
+
+CONTACT_DATA_TYPE_CHOICES = (
+    (CONTACT_DATA_NO_OF_CONTACTS, 'Number of Contacts'),
+)
+
+
+class ContactData(ActiveModel):
+    customer = models.ForeignKey('customer.Customer', on_delete=models.CASCADE)
+    data_type = models.CharField(
+        max_length=50, default=CONTACT_DATA_NO_OF_CONTACTS, choices=CONTACT_DATA_TYPE_CHOICES)
+    value = models.DecimalField(max_digits=10, decimal_places=4)
+
+    def __unicode__(self):
+        return '%s__%s__%s' % (str(self.customer), str(self.data_type), str(self.status))
+
+
 SIGNUP = 'signup'
 LOAN_PRODUCT = 'loan product'
 PAN = 'pan'
