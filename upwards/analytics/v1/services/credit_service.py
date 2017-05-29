@@ -1,5 +1,5 @@
 import json
-from analytics.models import Algo360, DeviceData
+from analytics.models import Algo360, DeviceData, ScreenEventData, FieldEventData
 from aadhaar.models import Aadhaar
 from eligibility.models import Profession, Education, Finance
 from loan_product.models import LoanProduct, BikeLoan
@@ -126,6 +126,57 @@ class CreditReport(object):
             }
         return data
 
+    def __screenevent_data(self):
+        data = {
+            'ScreenEventData': {
+            },
+        }
+        screenevent_data_objects = ScreenEventData.objects.filter(
+            customer_id=self.customer_id)
+        for screenevent_data_object in screenevent_data_objects:
+            key_prefix = "{screen}_{mode}".format(screen=screenevent_data_object.screen,
+                                                  mode=screenevent_data_object.mode)
+            session_display_name = "Custmer's Number of Sessions at {screen} screen in {mode} mode".format(screen=screenevent_data_object.screen,
+                                                                                                           mode=screenevent_data_object.mode)
+            timespent_display_name = "Custmer's Time spent at {screen} screen in {mode} mode".format(screen=screenevent_data_object.screen,
+                                                                                                     mode=screenevent_data_object.mode)
+            data['ScreenEventData'][key_prefix + "_session"] = {
+                'display_name': session_display_name,
+                'value': int(screenevent_data_object.sessions)
+            }
+            data['ScreenEventData'][key_prefix + "_timespent"] = {
+                'display_name': session_display_name,
+                'value': int(screenevent_data_object.time_spent)
+            }
+        return data
+
+    def __fieldevent_data(self):
+        data = {
+            'FieldEventData': {
+            },
+        }
+        fieldevent_data_objects = FieldEventData.objects.filter(
+            customer_id=self.customer_id)
+        for fieldevent_data_object in fieldevent_data_objects:
+            key_prefix = "{screen}_{mode}_{field}".format(screen=fieldevent_data_object.screen,
+                                                          mode=fieldevent_data_object.mode,
+                                                          field=fieldevent_data_object.field)
+            edits_display_name = "Custmer's Number of Changes in {field} field at {screen} screen in {mode} mode".format(screen=fieldevent_data_object.screen,
+                                                                                                                         mode=fieldevent_data_object.mode,
+                                                                                                                         field=fieldevent_data_object.field)
+            deviation_display_name = "Custmer's Input Deviation in {field} field at {screen} screen in {mode} mode".format(screen=fieldevent_data_object.screen,
+                                                                                                                           mode=fieldevent_data_object.mode,
+                                                                                                                           field=fieldevent_data_object.field)
+            data['FieldEventData'][key_prefix + "_edits"] = {
+                'display_name': edits_display_name,
+                'value': int(fieldevent_data_object.edits)
+            }
+            data['FieldEventData'][key_prefix + "_deviation"] = {
+                'display_name': deviation_display_name,
+                'value': int(fieldevent_data_object.deviation)
+            }
+        return data
+
     def __get_aadhaar_data(self):
         data = {
             'AADHAAR': {
@@ -161,7 +212,10 @@ class CreditReport(object):
         return report_data
 
     def __salary_deviation_percentage(self, base_salary, deviated_salary):
-        return round((int(deviated_salary) - int(base_salary)) * 100.0 / int(base_salary), 2)
+        if deviated_salary and base_salary:
+            return round((int(deviated_salary) - int(base_salary)) * 100.0 / int(base_salary), 2)
+        else:
+            return 0
 
     def __salary_deviation(self, report_data):
         sms_salary = report_data['Algo360']['salary']['value'] if report_data[
@@ -318,6 +372,9 @@ class CreditReport(object):
         report_data.update(self.__name_deviation(report_data))
         report_data.update(self.__salary_deviation(report_data))
         report_data.update(self.__dob_deviation(report_data))
+        report_data.update(self.__screenevent_data())
+        report_data.update(self.__fieldevent_data())
+
         report_data = self.__update_algo360_variables(report_data)
         report_data = self.__dummy_processing(report_data)
         return report_data
