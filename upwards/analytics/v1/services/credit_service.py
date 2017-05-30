@@ -121,7 +121,7 @@ class CreditReport(object):
                                                                                                                              attribute=device_data_object.attribute,
                                                                                                                              weekday_type=device_data_object.weekday_type,
                                                                                                                              day_hour_type=device_data_object.day_hour_type)
-            if display_name in ["Duration Ratio", "Count Ratio"]:
+            if attribute in ["Duration Ratio", "Count Ratio"]:
                 display_name += " (%)"
             elif display_name in ["Duration"]:
                 display_name += " (Seconds)"
