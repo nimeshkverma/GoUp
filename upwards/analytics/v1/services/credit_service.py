@@ -127,6 +127,10 @@ class CreditReport(object):
                 display_name += " (Seconds)"
             else:
                 pass
+            data['Call & SMS Log Data'][key] = {
+                'display_name': display_name,
+                'value': float(device_data_object.value),
+            }
         return data
 
     def __screenevent_data(self):
@@ -238,7 +242,7 @@ class CreditReport(object):
                     'value': report_data['Loan Product']['monthly_income']['value']
                 },
                 'sms_salary': {
-                    'display_name': 'Salary value obtained by SMS',
+                    'display_name': 'Salary value obtained by SMS (Rs)',
                     'value': sms_salary
                 },
                 'loan_specification_salary_deviation': {
