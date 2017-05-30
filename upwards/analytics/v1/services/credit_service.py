@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal
 from analytics.models import Algo360, DeviceData, ScreenEventData, FieldEventData
 from aadhaar.models import Aadhaar
 from eligibility.models import Profession, Education, Finance
@@ -346,7 +347,7 @@ class CreditReport(object):
         return data
 
     def __dummy_processing(self, report_data):
-        report_data['PAN']['is_verified']['value'] = 'Yes'
+        report_data['PAN']['status']['value'] = 'Verified'
         report_data['PAN']['cibil_score'] = {
             'display_name': 'CIBIL score of the Customer',
             'value': 'Not found',
@@ -381,6 +382,13 @@ class CreditReport(object):
         report_data = self.__dummy_processing(report_data)
         return report_data
 
+    def __process_context_value(self, value):
+        if type(value) in [Decimal, float]:
+            return round(value, 2)
+        if type(value) == bool:
+            return 'Yes' if value else 'No'
+        return str(value) if value else 'N.A'
+
     def __get_context_data(self):
         context_data = []
         for section in CREDIT_REPORT_SECTION_ORDER:
@@ -389,7 +397,7 @@ class CreditReport(object):
                 if self.data[section].get(subsection):
                     section_data.append({
                         'display_name': self.data[section][subsection]['display_name'],
-                        'value': str(self.data[section][subsection]['value']) if self.data[section][subsection]['value'] else 'N.A'
+                        'value': self.__process_context_value(self.data[section][subsection]['value']),
                     })
             context_data.append({
                 'name': section,
