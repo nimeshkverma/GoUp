@@ -121,10 +121,12 @@ class CreditReport(object):
                                                                                                                             attribute=device_data_object.attribute,
                                                                                                                             weekday_type=device_data_object.weekday_type,
                                                                                                                             day_hour_type=device_data_object.day_hour_type)
-            data['DeviceData'][key] = {
-                'display_name': display_name,
-                'value': float(device_data_object.value)
-            }
+            if display_name in ["Duration Ratio", "Count Ratio"]:
+                display_name += " (%)"
+            elif display_name in ["Duration"]:
+                display_name += " (Seconds)"
+            else:
+                pass
         return data
 
     def __screenevent_data(self):
@@ -146,7 +148,7 @@ class CreditReport(object):
                 'value': int(screenevent_data_object.sessions)
             }
             data['ScreenEventData'][key_prefix + "_timespent"] = {
-                'display_name': session_display_name,
+                'display_name': timespent_display_name,
                 'value': int(screenevent_data_object.time_spent)
             }
         return data
@@ -208,7 +210,7 @@ class CreditReport(object):
                 if variable_key in CREDIT_REPORT_VARIABLE_NAME_MAP['Algo360']:
                     report_data['Algo360'][variable_key] = {
                         'display_name': CREDIT_REPORT_VARIABLE_NAME_MAP['Algo360'][variable_key],
-                        'value': algo360_variable_data[variable_key]
+                        'value': round(float(algo360_variable_data[variable_key]), 2)
                     }
         return report_data
 
@@ -225,14 +227,14 @@ class CreditReport(object):
             'SalaryDeviation': {
                 'base_salary': {
                     'display_name': 'Type of Salary taken as base value',
-                    'value': 'Salary disclosed by Customer in Eligibility Section'
+                    'value': 'Salary disclosed by Customer in Eligibility Section (Rs)'
                 },
                 'eligibility_salary': {
-                    'display_name': 'Salary value disclosed by Customer in Eligibility Section',
+                    'display_name': 'Salary value disclosed by Customer in Eligibility Section (Rs)',
                     'value': report_data['Profession']['salary']['value']
                 },
                 'loan_specification_salary': {
-                    'display_name': 'Salary value disclosed by Customer in Loan Specification Section',
+                    'display_name': 'Salary value disclosed by Customer in Loan Specification Section (Rs)',
                     'value': report_data['LoanProduct']['monthly_income']['value']
                 },
                 'sms_salary': {
@@ -240,11 +242,11 @@ class CreditReport(object):
                     'value': sms_salary
                 },
                 'loan_specification_salary_deviation': {
-                    'display_name': 'Loan Specification Section Salary deviation from Eligibility Section Salary',
+                    'display_name': 'Loan Specification Section Salary deviation from Eligibility Section Salary (%)',
                     'value': self.__salary_deviation_percentage(report_data['Profession']['salary']['value'], report_data['LoanProduct']['monthly_income']['value'])
                 },
                 'sms_salary_deviation': {
-                    'display_name': 'SMS Salary deviation from Eligibility Section Salary',
+                    'display_name': 'SMS Salary deviation from Eligibility Section Salary (%)',
                     'value': self.__salary_deviation_percentage(report_data['Profession']['salary']['value'], sms_salary)
                 },
 
@@ -326,19 +328,19 @@ class CreditReport(object):
                     'value': pan_name,
                 },
                 'social_pan_name_deviation': {
-                    'display_name': 'Deviation between Customer Social Media and PAN Name',
+                    'display_name': 'Deviation between Customer Social Media and PAN Name (%)',
                     'value': 100 * (1 - string_similarity(social_name, pan_name))
                 },
                 'pan_aadhaar_name_deviation': {
-                    'display_name': 'Deviation between Customer PAN Name and Aadhaar',
+                    'display_name': 'Deviation between Customer PAN Name and Aadhaar (%)',
                     'value': 100 * (1 - string_similarity(pan_name, aadhaar_name))
                 },
                 'aadhaar_bank_name_deviation': {
-                    'display_name': 'Deviation between Aadhaar and Bank Holder Name',
+                    'display_name': 'Deviation between Aadhaar and Bank Holder Name (%)',
                     'value': 100 * (1 - string_similarity(aadhaar_name, bank_holder_name))
                 },
                 'bank_social_name_deviation': {
-                    'display_name': 'Deviation between Customers Bank Holder and Social Media Name',
+                    'display_name': 'Deviation between Customers Bank Holder and Social Media Name (%)',
                     'value': 100 * (1 - string_similarity(bank_holder_name, social_name))
                 },
 
