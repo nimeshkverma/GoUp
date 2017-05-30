@@ -18,7 +18,7 @@ ALGO360_UPWARDS_MAPPING = {
 }
 
 CREDIT_REPORT_MAPPING = {
-    'LoanProduct': {
+    'Loan Product': {
         'fields': {
             'monthly_income': 'Monthly Income Specified on Loan Specification Screen (Rs)',
             'existing_emi': 'Any Existing EMIs  (Rs)',
@@ -26,7 +26,7 @@ CREDIT_REPORT_MAPPING = {
         },
         'model_class': 'loan_product.models.LoanProduct',
     },
-    'BikeLoan': {
+    'Bike Loan': {
         'fields': {
             'brand': 'Brand of the Bike',
             'model': 'Model of the Bike',
@@ -81,7 +81,7 @@ CREDIT_REPORT_MAPPING = {
         },
         'model_class': 'eligibility.models.Finance',
     },
-    'Algo360': {
+    'SMS Scraping': {
         'fields':     {
             'monthly_average_balance_lifetime': 'Monthly average balance of the Customer in his lifetime (Rs)',
             'monthly_average_balance_12': 'Monthly average balance of the Customer in in last 12 months (Rs)',
@@ -97,7 +97,7 @@ CREDIT_REPORT_MAPPING = {
 }
 
 CREDIT_REPORT_VARIABLE_NAME_MAP = {
-    'Algo360': {
+    'SMS Scraping': {
         'var206002': 'Flag - Missed Loan Payments/ EMIs',
         'var206003': 'Number Of Loan Accounts Lifetime',
         'var206004': 'Number Of Loan Accounts Last 12 Months',
@@ -180,7 +180,7 @@ CREDIT_REPORT_VARIABLE_NAME_MAP = {
         'var207018': 'Amount Of Money Transfers (Debit) (Rs)',
         'var207019': 'Amount Of Money Transfers (Credit) (Rs)',
     },
-    'DeviceData': {
+    'Call & SMS Log Data': {
         'data_type': 'data_type',
         'status': 'status',
         'attribute': 'attribute',
@@ -191,29 +191,29 @@ CREDIT_REPORT_VARIABLE_NAME_MAP = {
 }
 
 CREDIT_REPORT_SECTION_ORDER = [
-    'LoanProduct',
-    'BikeLoan',
+    'Loan Product',
+    'Bike Loan',
     'PAN',
     'Profession',
     'Education',
     'Finance',
     'AADHAAR',
-    'SalaryDeviation',
-    'NameDeviation',
-    'DOBDeviation',
-    'Algo360',
-    'DeviceData',
-    'ScreenEventData',
-    'FieldEventData'
+    'Salary Deviation',
+    'Name Deviation',
+    'DOB Deviation',
+    'SMS Scraping',
+    'Call & SMS Log Data',
+    'Screen Event Data',
+    'Field Event Data'
 ]
 
 CREDIT_REPORT_SUBSECTION_ORDER = {
-    'LoanProduct': [
+    'Loan Product': [
         'loan_purpose__name',
         'monthly_income',
         'existing_emi',
     ],
-    'BikeLoan': [
+    'Bike Loan': [
         'model_class',
         'brand',
         'down_payment',
@@ -264,7 +264,7 @@ CREDIT_REPORT_SUBSECTION_ORDER = {
         'ekyc_applicable',
         'dob',
     ],
-    'SalaryDeviation': [
+    'Salary Deviation': [
         'loan_specification_salary',
         'eligibility_salary',
         'sms_salary',
@@ -272,7 +272,7 @@ CREDIT_REPORT_SUBSECTION_ORDER = {
         'loan_specification_salary_deviation',
         'sms_salary_deviation',
     ],
-    'NameDeviation': [
+    'Name Deviation': [
         'social_name',
         'pan_name',
         'aadhaar_name',
@@ -282,12 +282,12 @@ CREDIT_REPORT_SUBSECTION_ORDER = {
         'aadhaar_bank_name_deviation',
         'bank_social_name_deviation',
     ],
-    'DOBDeviation': [
+    'DOB Deviation': [
         "aadhaar_pan_dob",
         "pan_dob",
         "aadhaar_dob",
     ],
-    'Algo360': [
+    'SMS Scraping': [
         'var206002',
         'var206003',
         'var206004',
@@ -370,7 +370,7 @@ CREDIT_REPORT_SUBSECTION_ORDER = {
         'var207018',
         'var207019'
     ],
-    'DeviceData': [
+    'Call & SMS Log Data': [
         'Call_Incoming_Count_Week_All',
         'Call_Incoming_Count_Week_Evening',
         'Call_Incoming_Count_Week_Late Night',
@@ -507,7 +507,7 @@ CREDIT_REPORT_SUBSECTION_ORDER = {
         'SMS_Outgoing/Incoming_Count Ratio_Weekend_Morning',
         'SMS_Outgoing/Incoming_Count Ratio_Weekend_Office Hours',
     ],
-    'ScreenEventData': [
+    'Screen Event Data': [
         'signup_create_session',
         'signup_create_timespent',
         'signup_update_session',
@@ -553,7 +553,7 @@ CREDIT_REPORT_SUBSECTION_ORDER = {
         'documents_update_session',
         'documents_update_timespent',
     ],
-    'FieldEventData': [
+    'Field Event Data': [
         'loan_product_create_loan_purpose_edits',
         'loan_product_create_loan_purpose_deviation',
         'loan_product_create_loan_amount_edits',

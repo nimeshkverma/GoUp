@@ -105,7 +105,7 @@ class CreditReport(object):
 
     def __get_device_data(self):
         data = {
-            'DeviceData': {
+            'Call & SMS Log Data': {
             },
         }
         device_data_objects = DeviceData.objects.filter(customer_id=self.customer_id).order_by(
@@ -116,11 +116,11 @@ class CreditReport(object):
                                                                                            attribute=device_data_object.attribute,
                                                                                            weekday_type=device_data_object.weekday_type,
                                                                                            day_hour_type=device_data_object.day_hour_type)
-            display_name = "Custmer's {attribute} of {status} {data_type} in {weekday_type} in {day_hour_type} time".format(data_type=device_data_object.data_type,
-                                                                                                                            status=device_data_object.status,
-                                                                                                                            attribute=device_data_object.attribute,
-                                                                                                                            weekday_type=device_data_object.weekday_type,
-                                                                                                                            day_hour_type=device_data_object.day_hour_type)
+            display_name = "Customer's {attribute} of {status} {data_type} in {weekday_type} in {day_hour_type} time".format(data_type=device_data_object.data_type,
+                                                                                                                             status=device_data_object.status,
+                                                                                                                             attribute=device_data_object.attribute,
+                                                                                                                             weekday_type=device_data_object.weekday_type,
+                                                                                                                             day_hour_type=device_data_object.day_hour_type)
             if display_name in ["Duration Ratio", "Count Ratio"]:
                 display_name += " (%)"
             elif display_name in ["Duration"]:
@@ -131,7 +131,7 @@ class CreditReport(object):
 
     def __screenevent_data(self):
         data = {
-            'ScreenEventData': {
+            'Screen Event Data': {
             },
         }
         screenevent_data_objects = ScreenEventData.objects.filter(
@@ -139,15 +139,15 @@ class CreditReport(object):
         for screenevent_data_object in screenevent_data_objects:
             key_prefix = "{screen}_{mode}".format(screen=screenevent_data_object.screen,
                                                   mode=screenevent_data_object.mode)
-            session_display_name = "Custmer's Number of Sessions at {screen} screen in {mode} mode".format(screen=screenevent_data_object.screen,
-                                                                                                           mode=screenevent_data_object.mode)
-            timespent_display_name = "Custmer's Time spent at {screen} screen in {mode} mode".format(screen=screenevent_data_object.screen,
-                                                                                                     mode=screenevent_data_object.mode)
-            data['ScreenEventData'][key_prefix + "_session"] = {
+            session_display_name = "Customer's Number of Sessions at {screen} screen in {mode} mode".format(screen=screenevent_data_object.screen,
+                                                                                                            mode=screenevent_data_object.mode)
+            timespent_display_name = "Customer's Time spent at {screen} screen in {mode} mode".format(screen=screenevent_data_object.screen,
+                                                                                                      mode=screenevent_data_object.mode)
+            data['Screen Event Data'][key_prefix + "_session"] = {
                 'display_name': session_display_name,
                 'value': int(screenevent_data_object.sessions)
             }
-            data['ScreenEventData'][key_prefix + "_timespent"] = {
+            data['Screen Event Data'][key_prefix + "_timespent"] = {
                 'display_name': timespent_display_name,
                 'value': int(screenevent_data_object.time_spent)
             }
@@ -155,7 +155,7 @@ class CreditReport(object):
 
     def __fieldevent_data(self):
         data = {
-            'FieldEventData': {
+            'Field Event Data': {
             },
         }
         fieldevent_data_objects = FieldEventData.objects.filter(
@@ -164,17 +164,17 @@ class CreditReport(object):
             key_prefix = "{screen}_{mode}_{field}".format(screen=fieldevent_data_object.screen,
                                                           mode=fieldevent_data_object.mode,
                                                           field=fieldevent_data_object.field)
-            edits_display_name = "Custmer's Number of Changes in {field} field at {screen} screen in {mode} mode".format(screen=fieldevent_data_object.screen,
-                                                                                                                         mode=fieldevent_data_object.mode,
-                                                                                                                         field=fieldevent_data_object.field)
-            deviation_display_name = "Custmer's Input Deviation in {field} field at {screen} screen in {mode} mode".format(screen=fieldevent_data_object.screen,
-                                                                                                                           mode=fieldevent_data_object.mode,
-                                                                                                                           field=fieldevent_data_object.field)
-            data['FieldEventData'][key_prefix + "_edits"] = {
+            edits_display_name = "Customer's Number of Changes in {field} field at {screen} screen in {mode} mode".format(screen=fieldevent_data_object.screen,
+                                                                                                                          mode=fieldevent_data_object.mode,
+                                                                                                                          field=fieldevent_data_object.field)
+            deviation_display_name = "Customer's Input Deviation in {field} field at {screen} screen in {mode} mode".format(screen=fieldevent_data_object.screen,
+                                                                                                                            mode=fieldevent_data_object.mode,
+                                                                                                                            field=fieldevent_data_object.field)
+            data['Field Event Data'][key_prefix + "_edits"] = {
                 'display_name': edits_display_name,
                 'value': int(fieldevent_data_object.edits)
             }
-            data['FieldEventData'][key_prefix + "_deviation"] = {
+            data['Field Event Data'][key_prefix + "_deviation"] = {
                 'display_name': deviation_display_name,
                 'value': int(fieldevent_data_object.deviation)
             }
@@ -207,9 +207,9 @@ class CreditReport(object):
             for algo360_variable_data in json.loads(algo360_objects[len(algo360_objects) - 1].algo360_data):
                 variable_key = algo360_variable_data.keys()[0] if algo360_variable_data and isinstance(
                     algo360_variable_data, dict) else None
-                if variable_key in CREDIT_REPORT_VARIABLE_NAME_MAP['Algo360']:
-                    report_data['Algo360'][variable_key] = {
-                        'display_name': CREDIT_REPORT_VARIABLE_NAME_MAP['Algo360'][variable_key],
+                if variable_key in CREDIT_REPORT_VARIABLE_NAME_MAP['SMS Scraping']:
+                    report_data['SMS Scraping'][variable_key] = {
+                        'display_name': CREDIT_REPORT_VARIABLE_NAME_MAP['SMS Scraping'][variable_key],
                         'value': round(float(algo360_variable_data[variable_key]), 2)
                     }
         return report_data
@@ -221,10 +221,10 @@ class CreditReport(object):
             return 0
 
     def __salary_deviation(self, report_data):
-        sms_salary = report_data['Algo360']['salary']['value'] if report_data[
-            'Algo360']['salary']['value'] != 'N.A' else 0
+        sms_salary = report_data['SMS Scraping']['salary']['value'] if report_data[
+            'SMS Scraping']['salary']['value'] != 'N.A' else 0
         data = {
-            'SalaryDeviation': {
+            'Salary Deviation': {
                 'base_salary': {
                     'display_name': 'Type of Salary taken as base value',
                     'value': 'Salary disclosed by Customer in Eligibility Section (Rs)'
@@ -235,7 +235,7 @@ class CreditReport(object):
                 },
                 'loan_specification_salary': {
                     'display_name': 'Salary value disclosed by Customer in Loan Specification Section (Rs)',
-                    'value': report_data['LoanProduct']['monthly_income']['value']
+                    'value': report_data['Loan Product']['monthly_income']['value']
                 },
                 'sms_salary': {
                     'display_name': 'Salary value obtained by SMS',
@@ -243,7 +243,7 @@ class CreditReport(object):
                 },
                 'loan_specification_salary_deviation': {
                     'display_name': 'Loan Specification Section Salary deviation from Eligibility Section Salary (%)',
-                    'value': self.__salary_deviation_percentage(report_data['Profession']['salary']['value'], report_data['LoanProduct']['monthly_income']['value'])
+                    'value': self.__salary_deviation_percentage(report_data['Profession']['salary']['value'], report_data['Loan Product']['monthly_income']['value'])
                 },
                 'sms_salary_deviation': {
                     'display_name': 'SMS Salary deviation from Eligibility Section Salary (%)',
@@ -260,7 +260,7 @@ class CreditReport(object):
             'dob']['value'] else report_data['AADHAAR']['dob']['value']
 
         data = {
-            'DOBDeviation': {
+            'DOB Deviation': {
                 'pan_dob': {
                     'display_name': 'Date of Birth of the Customer in PAN',
                     'value': pan_dob,
@@ -310,7 +310,7 @@ class CreditReport(object):
         pan_name = aadhaar_name
 
         data = {
-            'NameDeviation': {
+            'Name Deviation': {
                 'social_name': {
                     'display_name': 'Customer Name from Social Media',
                     'value': social_name,
@@ -358,7 +358,7 @@ class CreditReport(object):
             'display_name': 'Is there a CIBIL Score vs. existing EMI mismatch for the customer?',
             'value': 'No',
         }
-        report_data['Algo360']['online_salary_payment_mode_verified'] = {
+        report_data['SMS Scraping']['online_salary_payment_mode_verified'] = {
             'display_name': 'Online Salary payment mode is verified?',
             'value': 'No'
         }
