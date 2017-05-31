@@ -230,27 +230,27 @@ class CreditReport(object):
         data = {
             'Salary Deviation': {
                 'base_salary': {
-                    'display_name': 'Type of Salary taken as base value',
-                    'value': 'Salary disclosed by Customer in Eligibility Section (Rs)'
+                    'display_name': 'Type Of Salary Taken As Base Value',
+                    'value': 'Salary Disclosed By Customer In Eligibility Section (Rs)'
                 },
                 'eligibility_salary': {
-                    'display_name': 'Salary value disclosed by Customer in Eligibility Section (Rs)',
+                    'display_name': 'Salary Value Disclosed By Customer In Eligibility Section (Rs)',
                     'value': report_data['Profession']['salary']['value']
                 },
                 'loan_specification_salary': {
-                    'display_name': 'Salary value disclosed by Customer in Loan Specification Section (Rs)',
+                    'display_name': 'Salary Value Disclosed By Customer In Loan Specification Section (Rs)',
                     'value': report_data['Loan Product']['monthly_income']['value']
                 },
                 'sms_salary': {
-                    'display_name': 'Salary value obtained by SMS (Rs)',
+                    'display_name': 'Salary Value Obtained By SMS (Rs)',
                     'value': sms_salary
                 },
                 'loan_specification_salary_deviation': {
-                    'display_name': 'Loan Specification Section Salary deviation from Eligibility Section Salary (%)',
+                    'display_name': 'Loan Specification Section Salary deviation From Eligibility Section Salary (%)',
                     'value': self.__salary_deviation_percentage(report_data['Profession']['salary']['value'], report_data['Loan Product']['monthly_income']['value'])
                 },
                 'sms_salary_deviation': {
-                    'display_name': 'SMS Salary deviation from Eligibility Section Salary (%)',
+                    'display_name': 'SMS Salary Deviation From Eligibility Section Salary (%)',
                     'value': self.__salary_deviation_percentage(report_data['Profession']['salary']['value'], sms_salary)
                 },
 
@@ -266,15 +266,15 @@ class CreditReport(object):
         data = {
             'DOB Deviation': {
                 'pan_dob': {
-                    'display_name': 'Date of Birth of the Customer in PAN',
+                    'display_name': 'Date Of Birth Of The Customer In PAN',
                     'value': pan_dob,
                 },
                 'aadhaar_dob': {
-                    'display_name': 'Date of Birth of the Customer in AADHAAR',
+                    'display_name': 'Date Of Birth Of The Customer In AADHAAR',
                     'value': aadhaar_dob,
                 },
                 'aadhaar_pan_dob': {
-                    'display_name': 'Is the Date of Birth of the Customer same on the AADHAAR and PAN',
+                    'display_name': 'Is The Date Of Birth Of The Customer Same On The AADHAAR And PAN',
                     'value': 'Yes',
                 },
             }
@@ -316,35 +316,35 @@ class CreditReport(object):
         data = {
             'Name Deviation': {
                 'social_name': {
-                    'display_name': 'Customer Name from Social Media',
+                    'display_name': 'Customer Name From Social Media',
                     'value': social_name,
                 },
                 'bank_holder_name': {
-                    'display_name': 'Customer Name from Bank Details',
+                    'display_name': 'Customer Name From Bank Details',
                     'value': bank_holder_name,
                 },
                 'aadhaar_name': {
-                    'display_name': 'Customer Name from Aadhaar',
+                    'display_name': 'Customer Name From Aadhaar',
                     'value': aadhaar_name,
                 },
                 'pan_name': {
-                    'display_name': 'Customer Name from PAN ',
+                    'display_name': 'Customer Name From PAN ',
                     'value': pan_name,
                 },
                 'social_pan_name_deviation': {
-                    'display_name': 'Deviation between Customer Social Media and PAN Name (%)',
+                    'display_name': 'Deviation Between Customer Social Media And PAN Name (%)',
                     'value': 100 * (1 - string_similarity(social_name, pan_name))
                 },
                 'pan_aadhaar_name_deviation': {
-                    'display_name': 'Deviation between Customer PAN Name and Aadhaar (%)',
+                    'display_name': 'Deviation Between Customer PAN Name And Aadhaar (%)',
                     'value': 100 * (1 - string_similarity(pan_name, aadhaar_name))
                 },
                 'aadhaar_bank_name_deviation': {
-                    'display_name': 'Deviation between Aadhaar and Bank Holder Name (%)',
+                    'display_name': 'Deviation Between Aadhaar And Bank Holder Name (%)',
                     'value': 100 * (1 - string_similarity(aadhaar_name, bank_holder_name))
                 },
                 'bank_social_name_deviation': {
-                    'display_name': 'Deviation between Customers Bank Holder and Social Media Name (%)',
+                    'display_name': 'Deviation Between Customers Bank Holder And Social Media Name (%)',
                     'value': 100 * (1 - string_similarity(bank_holder_name, social_name))
                 },
 
@@ -355,15 +355,15 @@ class CreditReport(object):
     def __dummy_processing(self, report_data):
         report_data['PAN']['status']['value'] = 'Verified'
         report_data['PAN']['cibil_score'] = {
-            'display_name': 'CIBIL score of the Customer',
+            'display_name': 'CIBIL Score Of The Customer',
             'value': 'Not found',
         }
         report_data['PAN']['cibil_existing_emi'] = {
-            'display_name': 'Is there a CIBIL Score vs. existing EMI mismatch for the customer?',
+            'display_name': 'Is There A CIBIL Score Vs. Existing EMI Mismatch For The customer?',
             'value': 'No',
         }
         report_data['SMS Scraping']['online_salary_payment_mode_verified'] = {
-            'display_name': 'Online Salary payment mode is verified?',
+            'display_name': 'Online Salary Payment Mode Is Verified?',
             'value': 'No'
         }
         report_data['Profession']['upwards_prefered_partner'] = {
