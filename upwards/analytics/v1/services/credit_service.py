@@ -116,17 +116,18 @@ class CreditReport(object):
                                                                                            attribute=device_data_object.attribute,
                                                                                            weekday_type=device_data_object.weekday_type,
                                                                                            day_hour_type=device_data_object.day_hour_type)
-            display_name = "Customer's {attribute} of {status} {data_type} in {weekday_type} in {day_hour_type} time".format(data_type=device_data_object.data_type,
-                                                                                                                             status=device_data_object.status,
-                                                                                                                             attribute=device_data_object.attribute,
-                                                                                                                             weekday_type=device_data_object.weekday_type,
-                                                                                                                             day_hour_type=device_data_object.day_hour_type)
+            display_name = "Customer's {attribute} Of {status} {data_type} In {weekday_type} In {day_hour_type} Time".format(data_type=device_data_object.data_type.title(),
+                                                                                                                             status=device_data_object.status.title(),
+                                                                                                                             attribute=device_data_object.attribute.title(),
+                                                                                                                             weekday_type=device_data_object.weekday_type.title(),
+                                                                                                                             day_hour_type=device_data_object.day_hour_type.title())
             if device_data_object.attribute in ["Duration Ratio", "Count Ratio"]:
                 display_name += " (%)"
-            elif display_name in ["Duration"]:
+            elif device_data_object.attribute in ["Duration"]:
                 display_name += " (Seconds)"
             else:
                 pass
+
             data['Call & SMS Log Data'][key] = {
                 'display_name': display_name,
                 'value': float(device_data_object.value),
@@ -143,10 +144,15 @@ class CreditReport(object):
         for screenevent_data_object in screenevent_data_objects:
             key_prefix = "{screen}_{mode}".format(screen=screenevent_data_object.screen,
                                                   mode=screenevent_data_object.mode)
-            session_display_name = "Customer's Number of Sessions at {screen} screen in {mode} mode".format(screen=screenevent_data_object.screen,
-                                                                                                            mode=screenevent_data_object.mode)
-            timespent_display_name = "Customer's Time spent at {screen} screen in {mode} mode".format(screen=screenevent_data_object.screen,
-                                                                                                      mode=screenevent_data_object.mode)
+            screen_name = screenevent_data_object.screen.title()
+            mode_name = screenevent_data_object.mode.title()
+
+            screen_name = screenevent_data_object.screen.upper() if screenevent_data_object.screen in [
+                'Pan', 'pan', 'Aadhaar', 'aadhaar'] else screenevent_data_object.screen.title()
+            session_display_name = "Customer's Number Of Sessions At {screen} Screen In {mode} Mode".format(screen=screen_name,
+                                                                                                            mode=mode_name)
+            timespent_display_name = "Customer's Time Spent At {screen} Screen In {mode} Mode (Seconds)".format(screen=screen_name,
+                                                                                                                mode=mode_name)
             data['Screen Event Data'][key_prefix + "_session"] = {
                 'display_name': session_display_name,
                 'value': int(screenevent_data_object.sessions)
@@ -168,12 +174,15 @@ class CreditReport(object):
             key_prefix = "{screen}_{mode}_{field}".format(screen=fieldevent_data_object.screen,
                                                           mode=fieldevent_data_object.mode,
                                                           field=fieldevent_data_object.field)
-            edits_display_name = "Customer's Number of Changes in {field} field at {screen} screen in {mode} mode".format(screen=fieldevent_data_object.screen,
-                                                                                                                          mode=fieldevent_data_object.mode,
-                                                                                                                          field=fieldevent_data_object.field)
-            deviation_display_name = "Customer's Input Deviation in {field} field at {screen} screen in {mode} mode".format(screen=fieldevent_data_object.screen,
-                                                                                                                            mode=fieldevent_data_object.mode,
-                                                                                                                            field=fieldevent_data_object.field)
+            screen_name = fieldevent_data_object.screen.title()
+            mode_name = fieldevent_data_object.mode.title()
+            field_name = fieldevent_data_object.field.title()
+            edits_display_name = "Customer's Number Of Changes In {field} Field At {screen} Screen In {mode} Mode".format(screen=screen_name,
+                                                                                                                          mode=mode_name,
+                                                                                                                          field=field_name)
+            deviation_display_name = "Customer's Input Deviation In {field} Field At {screen} Screen In {mode} Mode (%)".format(screen=screen_name,
+                                                                                                                                mode=mode_name,
+                                                                                                                                field=field_name)
             data['Field Event Data'][key_prefix + "_edits"] = {
                 'display_name': edits_display_name,
                 'value': int(fieldevent_data_object.edits)
@@ -230,27 +239,27 @@ class CreditReport(object):
         data = {
             'Salary Deviation': {
                 'base_salary': {
-                    'display_name': 'Type of Salary taken as base value',
-                    'value': 'Salary disclosed by Customer in Eligibility Section (Rs)'
+                    'display_name': 'Type Of Salary Taken As Base Value',
+                    'value': 'Salary Disclosed By Customer In Eligibility Section (Rs)'
                 },
                 'eligibility_salary': {
-                    'display_name': 'Salary value disclosed by Customer in Eligibility Section (Rs)',
+                    'display_name': 'Salary Value Disclosed By Customer In Eligibility Section (Rs)',
                     'value': report_data['Profession']['salary']['value']
                 },
                 'loan_specification_salary': {
-                    'display_name': 'Salary value disclosed by Customer in Loan Specification Section (Rs)',
+                    'display_name': 'Salary Value Disclosed By Customer In Loan Specification Section (Rs)',
                     'value': report_data['Loan Product']['monthly_income']['value']
                 },
                 'sms_salary': {
-                    'display_name': 'Salary value obtained by SMS (Rs)',
+                    'display_name': 'Salary Value Obtained By SMS (Rs)',
                     'value': sms_salary
                 },
                 'loan_specification_salary_deviation': {
-                    'display_name': 'Loan Specification Section Salary deviation from Eligibility Section Salary (%)',
+                    'display_name': 'Loan Specification Section Salary deviation From Eligibility Section Salary (%)',
                     'value': self.__salary_deviation_percentage(report_data['Profession']['salary']['value'], report_data['Loan Product']['monthly_income']['value'])
                 },
                 'sms_salary_deviation': {
-                    'display_name': 'SMS Salary deviation from Eligibility Section Salary (%)',
+                    'display_name': 'SMS Salary Deviation From Eligibility Section Salary (%)',
                     'value': self.__salary_deviation_percentage(report_data['Profession']['salary']['value'], sms_salary)
                 },
 
@@ -266,15 +275,15 @@ class CreditReport(object):
         data = {
             'DOB Deviation': {
                 'pan_dob': {
-                    'display_name': 'Date of Birth of the Customer in PAN',
+                    'display_name': 'Date Of Birth Of The Customer In PAN',
                     'value': pan_dob,
                 },
                 'aadhaar_dob': {
-                    'display_name': 'Date of Birth of the Customer in AADHAAR',
+                    'display_name': 'Date Of Birth Of The Customer In AADHAAR',
                     'value': aadhaar_dob,
                 },
                 'aadhaar_pan_dob': {
-                    'display_name': 'Is the Date of Birth of the Customer same on the AADHAAR and PAN',
+                    'display_name': 'Is The Date Of Birth Of The Customer Same On The AADHAAR And PAN',
                     'value': 'Yes',
                 },
             }
@@ -316,35 +325,35 @@ class CreditReport(object):
         data = {
             'Name Deviation': {
                 'social_name': {
-                    'display_name': 'Customer Name from Social Media',
+                    'display_name': 'Customer Name From Social Media',
                     'value': social_name,
                 },
                 'bank_holder_name': {
-                    'display_name': 'Customer Name from Bank Details',
+                    'display_name': 'Customer Name From Bank Details',
                     'value': bank_holder_name,
                 },
                 'aadhaar_name': {
-                    'display_name': 'Customer Name from Aadhaar',
+                    'display_name': 'Customer Name From AADHAAR',
                     'value': aadhaar_name,
                 },
                 'pan_name': {
-                    'display_name': 'Customer Name from PAN ',
+                    'display_name': 'Customer Name From PAN ',
                     'value': pan_name,
                 },
                 'social_pan_name_deviation': {
-                    'display_name': 'Deviation between Customer Social Media and PAN Name (%)',
+                    'display_name': 'Deviation Between Customer Social Media And PAN Name (%)',
                     'value': 100 * (1 - string_similarity(social_name, pan_name))
                 },
                 'pan_aadhaar_name_deviation': {
-                    'display_name': 'Deviation between Customer PAN Name and Aadhaar (%)',
+                    'display_name': 'Deviation Between Customer PAN Name And AADHAAR (%)',
                     'value': 100 * (1 - string_similarity(pan_name, aadhaar_name))
                 },
                 'aadhaar_bank_name_deviation': {
-                    'display_name': 'Deviation between Aadhaar and Bank Holder Name (%)',
+                    'display_name': 'Deviation Between AADHAAR And Bank Holder Name (%)',
                     'value': 100 * (1 - string_similarity(aadhaar_name, bank_holder_name))
                 },
                 'bank_social_name_deviation': {
-                    'display_name': 'Deviation between Customers Bank Holder and Social Media Name (%)',
+                    'display_name': 'Deviation Between Customers Bank Holder And Social Media Name (%)',
                     'value': 100 * (1 - string_similarity(bank_holder_name, social_name))
                 },
 
@@ -355,15 +364,15 @@ class CreditReport(object):
     def __dummy_processing(self, report_data):
         report_data['PAN']['status']['value'] = 'Verified'
         report_data['PAN']['cibil_score'] = {
-            'display_name': 'CIBIL score of the Customer',
+            'display_name': 'CIBIL Score Of The Customer',
             'value': 'Not found',
         }
         report_data['PAN']['cibil_existing_emi'] = {
-            'display_name': 'Is there a CIBIL Score vs. existing EMI mismatch for the customer?',
+            'display_name': 'Is There A CIBIL Score Vs. Existing EMI Mismatch For The customer?',
             'value': 'No',
         }
         report_data['SMS Scraping']['online_salary_payment_mode_verified'] = {
-            'display_name': 'Online Salary payment mode is verified?',
+            'display_name': 'Online Salary Payment Mode Is Verified?',
             'value': 'No'
         }
         report_data['Profession']['upwards_prefered_partner'] = {
