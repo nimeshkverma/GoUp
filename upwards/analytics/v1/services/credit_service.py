@@ -116,17 +116,18 @@ class CreditReport(object):
                                                                                            attribute=device_data_object.attribute,
                                                                                            weekday_type=device_data_object.weekday_type,
                                                                                            day_hour_type=device_data_object.day_hour_type)
-            display_name = "Customer's {attribute} of {status} {data_type} in {weekday_type} in {day_hour_type} time".format(data_type=device_data_object.data_type,
-                                                                                                                             status=device_data_object.status,
-                                                                                                                             attribute=device_data_object.attribute,
-                                                                                                                             weekday_type=device_data_object.weekday_type,
-                                                                                                                             day_hour_type=device_data_object.day_hour_type)
+            display_name = "Customer's {attribute} Of {status} {data_type} In {weekday_type} In {day_hour_type} Time".format(data_type=device_data_object.data_type.title(),
+                                                                                                                             status=device_data_object.status.title(),
+                                                                                                                             attribute=device_data_object.attribute.title(),
+                                                                                                                             weekday_type=device_data_object.weekday_type.title(),
+                                                                                                                             day_hour_type=device_data_object.day_hour_type.title())
             if device_data_object.attribute in ["Duration Ratio", "Count Ratio"]:
                 display_name += " (%)"
-            elif display_name in ["Duration"]:
+            elif device_data_object.attribute in ["Duration"]:
                 display_name += " (Seconds)"
             else:
                 pass
+
             data['Call & SMS Log Data'][key] = {
                 'display_name': display_name,
                 'value': float(device_data_object.value),
@@ -143,10 +144,15 @@ class CreditReport(object):
         for screenevent_data_object in screenevent_data_objects:
             key_prefix = "{screen}_{mode}".format(screen=screenevent_data_object.screen,
                                                   mode=screenevent_data_object.mode)
-            session_display_name = "Customer's Number of Sessions at {screen} screen in {mode} mode".format(screen=screenevent_data_object.screen,
-                                                                                                            mode=screenevent_data_object.mode)
-            timespent_display_name = "Customer's Time spent at {screen} screen in {mode} mode".format(screen=screenevent_data_object.screen,
-                                                                                                      mode=screenevent_data_object.mode)
+            screen_name = screenevent_data_object.screen.title()
+            mode_name = screenevent_data_object.mode.title()
+
+            screen_name = screenevent_data_object.screen.upper() if screenevent_data_object.screen in [
+                'Pan', 'pan', 'Aadhaar', 'aadhaar'] else screenevent_data_object.screen.title()
+            session_display_name = "Customer's Number Of Sessions At {screen} Screen In {mode} Mode".format(screen=screen_name,
+                                                                                                            mode=mode_name)
+            timespent_display_name = "Customer's Time Spent At {screen} Screen In {mode} Mode (Seconds)".format(screen=screen_name,
+                                                                                                                mode=mode_name)
             data['Screen Event Data'][key_prefix + "_session"] = {
                 'display_name': session_display_name,
                 'value': int(screenevent_data_object.sessions)
@@ -168,12 +174,15 @@ class CreditReport(object):
             key_prefix = "{screen}_{mode}_{field}".format(screen=fieldevent_data_object.screen,
                                                           mode=fieldevent_data_object.mode,
                                                           field=fieldevent_data_object.field)
-            edits_display_name = "Customer's Number of Changes in {field} field at {screen} screen in {mode} mode".format(screen=fieldevent_data_object.screen,
-                                                                                                                          mode=fieldevent_data_object.mode,
-                                                                                                                          field=fieldevent_data_object.field)
-            deviation_display_name = "Customer's Input Deviation in {field} field at {screen} screen in {mode} mode".format(screen=fieldevent_data_object.screen,
-                                                                                                                            mode=fieldevent_data_object.mode,
-                                                                                                                            field=fieldevent_data_object.field)
+            screen_name = fieldevent_data_object.screen.title()
+            mode_name = fieldevent_data_object.mode.title()
+            field_name = fieldevent_data_object.field.title()
+            edits_display_name = "Customer's Number Of Changes In {field} Field At {screen} Screen In {mode} Mode".format(screen=screen_name,
+                                                                                                                          mode=mode_name,
+                                                                                                                          field=field_name)
+            deviation_display_name = "Customer's Input Deviation In {field} Field At {screen} Screen In {mode} Mode (%)".format(screen=screen_name,
+                                                                                                                                mode=mode_name,
+                                                                                                                                field=field_name)
             data['Field Event Data'][key_prefix + "_edits"] = {
                 'display_name': edits_display_name,
                 'value': int(fieldevent_data_object.edits)
@@ -324,7 +333,7 @@ class CreditReport(object):
                     'value': bank_holder_name,
                 },
                 'aadhaar_name': {
-                    'display_name': 'Customer Name From Aadhaar',
+                    'display_name': 'Customer Name From AADHAAR',
                     'value': aadhaar_name,
                 },
                 'pan_name': {
@@ -336,11 +345,11 @@ class CreditReport(object):
                     'value': 100 * (1 - string_similarity(social_name, pan_name))
                 },
                 'pan_aadhaar_name_deviation': {
-                    'display_name': 'Deviation Between Customer PAN Name And Aadhaar (%)',
+                    'display_name': 'Deviation Between Customer PAN Name And AADHAAR (%)',
                     'value': 100 * (1 - string_similarity(pan_name, aadhaar_name))
                 },
                 'aadhaar_bank_name_deviation': {
-                    'display_name': 'Deviation Between Aadhaar And Bank Holder Name (%)',
+                    'display_name': 'Deviation Between AADHAAR And Bank Holder Name (%)',
                     'value': 100 * (1 - string_similarity(aadhaar_name, bank_holder_name))
                 },
                 'bank_social_name_deviation': {

@@ -22,7 +22,8 @@ CREDIT_REPORT_MAPPING = {
         'fields': {
             'monthly_income': 'Monthly Income Specified On Loan Specification Screen (Rs)',
             'existing_emi': 'Any Existing Emis  (Rs)',
-            'loan_purpose__name': 'Purpose Of The Loan'
+            'loan_purpose__name': 'Purpose Of The Loan',
+            'loan_amount': 'Loan Amount (Rs)',
         },
         'model_class': 'loan_product.models.LoanProduct',
     },
@@ -209,6 +210,7 @@ CREDIT_REPORT_SECTION_ORDER = [
 
 CREDIT_REPORT_SUBSECTION_ORDER = {
     'Loan Product': [
+        'loan_amount',
         'loan_purpose__name',
         'monthly_income',
         'existing_emi',
