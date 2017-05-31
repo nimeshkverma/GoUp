@@ -34,26 +34,29 @@ class CustomerCreditLimit(object):
 
     def __get_limit_from_variables(self, salary, algo360_salary, minimum_average_balance):
         limit = 0
-        if algo360_salary == None and minimum_average_balance == None:
-            limit = salary / settings.CREDIT_ELIGIBILITY_FACTOR if salary else 0
-        elif algo360_salary == None:
-            if minimum_average_balance:
-                limit = min(salary, minimum_average_balance) / \
-                    settings.CREDIT_ELIGIBILITY_FACTOR if salary else minimum_average_balance / \
-                    settings.CREDIT_ELIGIBILITY_FACTOR
-            else:
+        if settings.ALGO360_CREDIT_LIMIT:
+            if algo360_salary == None and minimum_average_balance == None:
                 limit = salary / settings.CREDIT_ELIGIBILITY_FACTOR if salary else 0
-        elif minimum_average_balance == None:
-            if algo360_salary:
-                limit = min(algo360_salary, salary) / \
-                    settings.CREDIT_ELIGIBILITY_FACTOR if salary else algo360_salary / \
-                    settings.CREDIT_ELIGIBILITY_FACTOR
+            elif algo360_salary == None:
+                if minimum_average_balance:
+                    limit = min(salary, minimum_average_balance) / \
+                        settings.CREDIT_ELIGIBILITY_FACTOR if salary else minimum_average_balance / \
+                        settings.CREDIT_ELIGIBILITY_FACTOR
+                else:
+                    limit = salary / settings.CREDIT_ELIGIBILITY_FACTOR if salary else 0
+            elif minimum_average_balance == None:
+                if algo360_salary:
+                    limit = min(algo360_salary, salary) / \
+                        settings.CREDIT_ELIGIBILITY_FACTOR if salary else algo360_salary / \
+                        settings.CREDIT_ELIGIBILITY_FACTOR
+                else:
+                    limit = salary / settings.CREDIT_ELIGIBILITY_FACTOR if salary else 0
             else:
-                limit = salary / settings.CREDIT_ELIGIBILITY_FACTOR if salary else 0
+                limit = min(min(algo360_salary, minimum_average_balance), salary) / \
+                    settings.CREDIT_ELIGIBILITY_FACTOR if salary else min(
+                    algo360_salary, minimum_average_balance) / settings.CREDIT_ELIGIBILITY_FACTOR
         else:
-            limit = min(min(algo360_salary, minimum_average_balance), salary) / \
-                settings.CREDIT_ELIGIBILITY_FACTOR if salary else min(
-                algo360_salary, minimum_average_balance) / settings.CREDIT_ELIGIBILITY_FACTOR
+            limit = salary / settings.CREDIT_ELIGIBILITY_FACTOR if salary else 0
         return int(limit)
 
     def __get_limit(self):

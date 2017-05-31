@@ -1,6 +1,7 @@
 import sys
 
 from aadhaar.models import Aadhaar
+from analytics.models import Algo360, ContactData, DataLog, DeviceData, FieldEventData, ScreenEventData
 from activity.models import CustomerState
 from common.models import College, Company, OrganisationType, SalaryPaymentMode
 from customer.models import BankDetails, Customer
@@ -20,7 +21,8 @@ def delete_user_all_data(customer_id):
         response += str(Installment.objects.filter(loan_id=loan_object.id).delete())
     model_list = [BankDetails, Otp, EmailVerification, Finance, Education,
                   Profession, Pan, CustomerState, LinkedinProfile, SocialProfile,
-                  Customer, Login, Aadhaar, Loan, Borrower, Installment, Documents]
+                  Customer, Login, Aadhaar, Loan, Borrower, Installment, Documents,
+                  Algo360, ContactData, DataLog, DeviceData, FieldEventData, ScreenEventData]
     for model in model_list:
         try:
             response += str(model.objects.filter(customer_id=customer_id).delete())

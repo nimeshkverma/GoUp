@@ -338,6 +338,8 @@ THIRTY_PARTY_SECRETS = {
     }
 }
 
+ALGO360_CREDIT_LIMIT = False
+
 ELIGIBILITY_LIMIT = {
     'lower': 7500,
 }
