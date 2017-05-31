@@ -84,7 +84,7 @@ class SocialProfiles(APIView):
 class SessionDataList(mixins.ListModelMixin,
                       mixins.CreateModelMixin,
                       generics.GenericAPIView):
-    queryset = models.Login.objects.all()
+    queryset = models.Login.objects.all().order_by('customer')
     serializer_class = serializers.SessionDataSerializer
 
     @catch_exception(LOGGER)
