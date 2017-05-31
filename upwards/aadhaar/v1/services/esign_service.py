@@ -119,10 +119,13 @@ class ESign(object):
 
     def generate_otp(self):
         otp_generation_successful = False
-        if self.__aadhaar:
-            response = requests.post(self.__otp_url, data=self.__otp_payload,
-                                     headers={'Content-Type': 'application/xml'})
-            otp_tree = ET.ElementTree(ET.fromstring(response.content))
-            if otp_tree.getroot().attrib.get('status') in ['1', 1]:
-                otp_generation_successful = True
+        try:
+            if self.__aadhaar:
+                response = requests.post(self.__otp_url, data=self.__otp_payload,
+                                         headers={'Content-Type': 'application/xml'})
+                otp_tree = ET.ElementTree(ET.fromstring(response.content))
+                if otp_tree.getroot().attrib.get('status') in ['1', 1]:
+                    otp_generation_successful = True
+        except Exception as e:
+            pass
         return otp_generation_successful
