@@ -146,6 +146,10 @@ class DeviceData(ActiveModel):
     def __unicode__(self):
         return '%s__%s__%s' % (str(self.customer), str(self.data_type), str(self.status))
 
+    class Meta(object):
+        unique_together = ('customer', 'data_type', 'status',
+                           'attribute', 'weekday_type', 'day_hour_type')
+
 
 CONTACT_DATA_NO_OF_CONTACTS = 'Number of Contacts'
 
@@ -162,6 +166,9 @@ class ContactData(ActiveModel):
 
     def __unicode__(self):
         return '%s__%s__%s' % (str(self.customer), str(self.data_type), str(self.status))
+
+    class Meta(object):
+        unique_together = ('customer', 'data_type')
 
 
 SIGNUP = 'signup'
@@ -211,6 +218,7 @@ class ScreenEventData(ActiveModel):
         max_length=50, default=CREATE, choices=MODE_CHOICES)
 
     class Meta(object):
+        unique_together = ('customer', 'screen', 'mode')
         db_table = "analytics_screen_eventdata"
 
     def __unicode__(self):
@@ -228,6 +236,7 @@ class FieldEventData(ActiveModel):
         max_length=50, default=CREATE, choices=MODE_CHOICES)
 
     class Meta(object):
+        unique_together = ('customer', 'screen', 'field', 'mode')
         db_table = "analytics_field_eventdata"
 
     def __unicode__(self):
