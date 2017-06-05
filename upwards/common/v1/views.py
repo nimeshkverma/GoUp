@@ -13,6 +13,7 @@ LOGGER = logging.getLogger(__name__)
 
 class Config(APIView):
 
+    @catch_exception(LOGGER)
     def get(self, request):
         return response.MetaDataResponse(config.Config().data, status=status.HTTP_200_OK)
 

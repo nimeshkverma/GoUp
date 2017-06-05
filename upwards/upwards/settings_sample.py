@@ -140,20 +140,80 @@ LOGGING = {
         },
     },
     'loggers': {
-        ''''':{
-            'handlers': ['file'],
-            'propagate': True,
-            'level': 'ERROR',
-        },'''
         'django': {
             'handlers': ['file'],
             'propagate': True,
             'level': 'ERROR',
         },
-
+        'aadhaar': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'activity': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'analytics': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'common': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'customer': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'documents': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'eligibility': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'loan_product': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'messenger': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'pan': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'participant': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
         'social': {
             'handlers': ['file'],
             'level': 'ERROR',
+            'propagate': True,
+        },
+        'transaction': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'thirdpartyleads': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
         },
 
     },
